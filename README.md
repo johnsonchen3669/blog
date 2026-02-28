@@ -68,6 +68,12 @@ If you're eager to deploy your own version right away:
 
 [![Deploy with Netlify](https://raw.githubusercontent.com/lin-stephanie/assets/refs/heads/main/astro-antfustyle-theme/deploy_netlify.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/lin-stephanie/astro-antfustyle-theme) [![Deploy with Vercel](https://raw.githubusercontent.com/lin-stephanie/assets/refs/heads/main/astro-antfustyle-theme/deploy_vercel.svg)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flin-stephanie%2Fastro-antfustyle-theme&project-name=astro-antfustyle-theme)
 
+## Node Version
+
+- Recommended: Node.js 22 LTS
+- This repository includes `.nvmrc` and `.node-version` with `22` for automatic version selection in supported tools.
+- With `nvm`/`fnm`, run `nvm use` or `fnm use` in project root.
+
 ## Preview
 
 ![plum](https://raw.githubusercontent.com/lin-stephanie/assets/refs/heads/main/astro-antfustyle-theme/blog_2x.png)

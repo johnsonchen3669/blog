@@ -2,11 +2,11 @@ import {
   defineConfig,
   presetWind3,
   presetAttributify,
-  presetIcons,
   presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
+import presetIcons from '@unocss/preset-icons'
 
 import { UI } from './src/config'
 import projecstData from './src/content/projects/data.json'
@@ -48,9 +48,9 @@ const githubVersionClass = Object.keys(githubVersionColor).map(
 const githubSubLogos = githubView.subLogoMatches.map((item) => item[1])
 
 export default defineConfig({
-  // Astro 5 no longer pipes `src/content/**/*.{md,mdx}` through Vite
+  // Ensure utilities used in Astro components/layouts/scripts are extracted
   content: {
-    filesystem: ['./src/{content,pages}/**/*.{md,mdx}'],
+    filesystem: ['./src/**/*.{astro,html,js,ts,md,mdx}'],
   },
 
   // will be deep-merged to the default theme
@@ -94,11 +94,14 @@ export default defineConfig({
   presets: [
     presetWind3(),
     presetAttributify({
-      strict: true,
+      strict: false,
       prefix: 'u-',
       prefixedOnly: false,
     }),
     presetIcons({
+      cdn: 'https://esm.sh/',
+      collectionsNodeResolvePath: process.cwd(),
+      warn: true,
       extraProperties: {
         'display': 'inline-block',
         'height': '1.2em',

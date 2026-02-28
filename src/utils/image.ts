@@ -140,11 +140,19 @@ export async function fetchRemoteImageWithSharp(
   }
 
   // 2. GET + download & metadata
-  const res = await fetch(url, {
-    method: 'GET',
-    redirect: 'follow',
-    signal: makeTimeout(timeoutMs),
-  })
+  let res: Response
+  try {
+    res = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      signal: makeTimeout(timeoutMs),
+    })
+  } catch (err) {
+    console.warn(
+      `[fetchRemoteImageWithSharp] Download request failed: ${(err as Error).message}`
+    )
+    return { isImage: false, data: null, width: null, height: null }
+  }
 
   if (!res.ok || !res.body) {
     console.warn(
@@ -159,17 +167,24 @@ export async function fetchRemoteImageWithSharp(
 
   // stream reading to monitor size
   const reader = res.body.getReader()
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-    total += value.byteLength
-    if (total > maxBytes) {
-      console.warn(
-        `[fetchRemoteImageWithSharp] Exceeded size limit ${maxBytes}B`
-      )
-      return { isImage: false, data: null, width: null, height: null }
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      total += value.byteLength
+      if (total > maxBytes) {
+        console.warn(
+          `[fetchRemoteImageWithSharp] Exceeded size limit ${maxBytes}B`
+        )
+        return { isImage: false, data: null, width: null, height: null }
+      }
+      chunks.push(value)
     }
-    chunks.push(value)
+  } catch (err) {
+    console.warn(
+      `[fetchRemoteImageWithSharp] Download stream failed: ${(err as Error).message}`
+    )
+    return { isImage: false, data: null, width: null, height: null }
   }
 
   const buffer = concat(chunks, total)

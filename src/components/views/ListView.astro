@@ -18,6 +18,12 @@ interface Props {
   pageToc: boolean
 }
 
+interface NormalizedFeedItem {
+  title: string
+  link: string
+  pubDate: Date
+}
+
 const { collectionType, pageToc } = Astro.props
 
 const VALID_COLLECTION_TYPE = ['blog', 'changelog', 'streams', 'feeds']
@@ -71,21 +77,47 @@ if (collectionType === 'streams') {
 }
 
 /* Feeds */
-let sortedFeedItems: CollectionEntry<'feeds'>[] = []
+let sortedFeedItems: NormalizedFeedItem[] = []
 if (collectionType === 'feeds') {
   const feedItems = await getCollection(collectionType)
 
-  sortedFeedItems = feedItems.sort((a, b) => {
-    if (!a.data.pubdate || !b.data.pubdate)
-      throw new Error("Feed item is missing 'pubdate' field.")
+  const toValidDate = (value: unknown) => {
+    if (!value) return
 
-    return b.data.pubdate.valueOf() - a.data.pubdate.valueOf()
-  })
+    const date = value instanceof Date ? value : new Date(value as string)
+    if (Number.isNaN(date.valueOf())) return
+
+    return date
+  }
+
+  const normalizedFeedItems: NormalizedFeedItem[] = feedItems
+    .map((item) => {
+      const data = item.data as Record<string, unknown>
+
+      const pubDate = toValidDate(
+        data.pubdate ?? data.published ?? data.updated ?? data.date
+      )
+      const link = (data.link ?? data.url) as string | undefined
+      const title = data.title as string | undefined
+
+      if (!pubDate || !link || !title) return
+
+      return {
+        title,
+        link,
+        pubDate,
+      }
+    })
+    .filter((item): item is NormalizedFeedItem => Boolean(item))
+
+  sortedFeedItems = normalizedFeedItems.sort(
+    (a, b) => b.pubDate.valueOf() - a.pubDate.valueOf()
+  )
 
   if (tocEnabled) {
     const yearsSet = new Set<number>()
     sortedFeedItems.forEach((item) => {
-      const year = getYear(item.data.pubdate as Date)
+      const year = getYear(item.pubDate)
       yearsSet.add(year)
     })
 
@@ -186,34 +218,21 @@ if (collectionType === 'feeds') {
         <div class="py-2 op-50">nothing here yet</div>
       ) : (
         sortedFeedItems.map((item, idx) => {
-          const { data } = item
-          if (!data.link)
-            throw new Error(
-              `Feed item with id '${item.id}' is missing 'link' field.`
-            )
-          if (!data.title)
-            throw new Error(
-              `Feed item with id '${item.id}' is missing 'title' field.`
-            )
-
           return (
             <>
-              {!isSameYear(
-                item.data.pubdate as Date,
-                sortedFeedItems[idx - 1]?.data.pubdate as Date
-              ) && (
+              {!isSameYear(item.pubDate, sortedFeedItems[idx - 1]?.pubDate) && (
                 <Categorizer
                   {idx}
                   needId={tocEnabled}
-                  text={getYear(item.data.pubdate as Date).toString()}
+                  text={getYear(item.pubDate).toString()}
                 />
               )}
               <ListItem
                 {idx}
                 {collectionType}
-                redirect={item.data.link as string}
-                title={item.data.title as string}
-                date={item.data.pubdate as Date | string}
+                redirect={item.link}
+                title={item.title}
+                date={item.pubDate}
               />
             </>
           )

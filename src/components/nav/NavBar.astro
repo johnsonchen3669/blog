@@ -61,7 +61,7 @@ for (const item of new Set(left)) {
       right.length !== 0 && (
         <div
           class={`grid grid-flow-col items-center gap-4.8 print:op-0
-              ${!right.includes('themeButton') && !right.includes('searchButton') && 'lt-md:hidden'}
+            ${!right.includes('themeButton') && !right.includes('searchButton') ? 'lt-md:hidden' : ''}
               ${mergeOnMobile ? '' : 'lt-md:(gap-3)'}`}
         >
           {right.map((key) =>
