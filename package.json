@@ -18,7 +18,8 @@
     "toolbar:on": "astro preferences enable devToolbar",
     "toolbar:off": "astro preferences disable devToolbar",
     "prepare": "simple-git-hooks",
-    "postbuild": "pagefind --site dist --exclude-selectors \"pre\" --include-characters \"<>\" && del-cli \"dist/pagefind/*ui*\""
+    "postbuild": "pagefind --site dist --exclude-selectors \"pre\" --include-characters \"<>\" && del-cli \"dist/pagefind/*ui*\"",
+    "deploy": "bun run build && gh-pages -d dist --nojekyll"
   },
   "devDependencies": {
     "@ascorbic/feed-loader": "^2.0.1",
@@ -83,7 +84,7 @@
   },
   "lint-staged": {
     "*": [
-      "eslint"
+      "eslint -f json"
     ]
   },
   "pnpm": {
@@ -94,6 +95,9 @@
     ]
   },
   "engines": {
-    "node": "18.20.8 || ^20.9.0 || ^22.0.0"
+    "node": ">=22.0.0 <23"
+  },
+  "dependencies": {
+    "gh-pages": "^6.3.0"
   }
 }
