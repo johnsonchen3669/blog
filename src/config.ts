@@ -1,7 +1,7 @@
 import type { Site, Ui, Features } from './types'
 
 export const SITE: Site = {
-  website: 'https://blog.johnsonchen.dev/',
+  website: 'https://johnsonchen.dev/',
   base: '/',
   title: 'Astro AntfuStyle Theme',
   description:
