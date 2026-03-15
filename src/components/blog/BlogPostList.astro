@@ -1,0 +1,44 @@
+---
+import { render } from 'astro:content'
+
+import ListItem from '~/components/views/ListItem.astro'
+import { getBlogPostPath } from '~/utils/blog'
+
+import type { BlogPost } from '~/utils/blog'
+
+interface Props {
+  posts: BlogPost[]
+}
+
+const { posts } = Astro.props
+---
+
+<div aria-label="Blog post list">
+  {
+    posts.length === 0 ? (
+      <div class="py-2 op-50">nothing here yet</div>
+    ) : (
+      posts.map(async (post, idx) => {
+        const { remarkPluginFrontmatter } = await render(post)
+        const minutesRead =
+          post.data.minutesRead || remarkPluginFrontmatter.minutesRead
+
+        return (
+          <ListItem
+            idx={idx}
+            collectionType="blog"
+            href={getBlogPostPath(post)}
+            redirect={post.data.redirect}
+            postSlug={post.id}
+            title={post.data.title}
+            video={post.data.video}
+            radio={post.data.radio}
+            date={post.data.pubDate}
+            minutesRead={minutesRead}
+            platform={post.data.platform}
+          />
+        )
+      })
+    )
+  }
+</div>

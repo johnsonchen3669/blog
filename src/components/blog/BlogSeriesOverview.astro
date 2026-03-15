@@ -1,0 +1,17 @@
+---
+import SeriesGrid from '~/components/blog/SeriesGrid.astro'
+import { getAllBlogPosts, getSeriesSummaries } from '~/utils/blog'
+
+const posts = await getAllBlogPosts()
+const items = getSeriesSummaries(posts)
+---
+
+{
+  items.length > 0 && (
+    <section class="mb-12">
+      <h2 class="mb-2">Series</h2>
+      <p class="mt-0! mb-4! op-60">從系列入口快速瀏覽完整學習路線。</p>
+      <SeriesGrid {items} />
+    </section>
+  )
+}
