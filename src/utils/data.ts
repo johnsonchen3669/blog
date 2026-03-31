@@ -8,7 +8,7 @@ import {
 } from '@atproto/api'
 import { atUriToPostUri } from 'astro-loader-bluesky-posts'
 
-import { getBlogPostPath } from './blog'
+import { getBlogPostPath, getBlogPostSlug } from './blog'
 
 import type { CollectionEntry, CollectionKey } from 'astro:content'
 import type { CardItemData } from '~/components/views/CardItem.astro'
@@ -256,7 +256,7 @@ export async function getShortsFromBlog(data: CollectionEntryList<'blog'>) {
 
   for (const item of sortedData) {
     const postPath = getBlogPostPath(item)
-    const slug = item.data.slug ?? item.id
+    const slug = getBlogPostSlug(item)
     const title = item.data.title
     const date = item.data.pubDate
 
