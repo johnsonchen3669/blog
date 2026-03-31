@@ -99,15 +99,7 @@ if (hasCustomCursor) style['--external-link-cursor'] = cursorType
 
     <!-- Progress Bar -->
     <script>
-      import nprogress from 'nprogress'
-
-      document.addEventListener('astro:before-preparation', () => {
-        nprogress.start()
-      })
-
-      document.addEventListener('astro:page-load', () => {
-        nprogress.done()
-      })
+      import '~/scripts/base-layout-client'
     </script>
   </body>
 </html>
