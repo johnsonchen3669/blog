@@ -1,14 +1,15 @@
 ---
-title: Day 7 - 資料繫結
-description: "說明 Angular 的 Property Binding、Attribute Binding、Class Binding 與 Style Binding 用法。"
-slug: data-binding
+title: Day 6 - 元件資料定義
+description: "介紹 Angular 元件中的變數定義方式、型別系統（Interface、Type、Class），以及字串插值的使用。"
+slug: component-data-definition
 series: angular-training
 order: 6
 tags:
   - angular
   - angular-training
-  - data-binding
-  - template-syntax
+  - components
+  - typescript
+  - string-interpolation
 pubDate: 2025-09-06
 lastModDate: ''
 ogImage: true
@@ -17,85 +18,99 @@ share: false
 giscus: true
 search: true
 ---
-上一篇文章，我們介紹了動態處理資料的字串插值，這篇會介紹另一個重要技術：Binding
-## 繫結 Binding 
-- 透過在屬性值周圍加上 `[]` 來綁定屬性值，動態更新資料。
-- 繫結的值可以是變數、表達式或函式呼叫。
-## 屬性繫結 Property Binding
-- 直接綁定到 DOM 元素的屬性（property），例如：`[disabled]="isDisabled"`  
-- 會根據變數值動態更新 DOM 屬性，會直接影響 DOM 物件的行為，推薦用於互動性元件。
+目前元件部分，我們只學習到顯示靜態的資料，接下來我們會學習如何在元件中處理資料，並且顯示在畫面上。
+## Angular 變數儲存方式
+目前 Angular 支援兩種主要的變數儲存方式：
+- 傳統 TypeScript 變數
+- Angular Signals (Angular 16+)
 
-```html
-<!-- `isDisabled` 為 `true` 時，按鈕會被禁用 -->
-<button [disabled]="isDisabled"></button>
-<!--
-雖然看起來像是在綁定 `<img>` 標籤本身的 src 屬性 ，但實際上是會將底層 HTMLImageElement DOM 物件的 src 屬性綁定到 `someSrc` 變數中儲存的值。
--->
-<img [src]="someSrc">
+在剛開始時，我們先從傳統 TypeScript 變數開始，等到對基礎有一定的了解後，再來學習 Signals。
+### 傳統 TypeScript 變數
+
+在 Angular 元件中，可以使用 JavaScript 類別的相關語法來定義變數，並且可以使用 TypeScript 的型別系統來定義變數的資料結構。
+
+```ts
+export class MyComponent {
+  // 基本變數
+  // 過於簡單的型別，其實可以省略不寫，交由 TypeScript 自動推斷，會比較適合。
+  title: string = 'Todo App';
+  count: number = 0;
+  isVisible: boolean = true;
+  
+  // 陣列和物件
+  items: string[] = [];
+  user: { name: string; email: string } = { name: '', email: '' };
+  tasks: Array<{ id: number; title: string; completed: boolean }> = [];
+}
 ```
 
-## 屬性值繫結 Attribute Binding  
-- 只會設定或移除 HTML 屬性，不會動態更新 DOM 屬性。
-- 只影響 HTML 標籤本身，通常用於自訂屬性或特殊情境，像是無障礙屬性（ARIA）。
+可以將型別額外抽離成介面 (Interface)、或型別 (Type Alias)，來定義更複雜的資料結構。
 
-```html
-<!--
-當綁定 ARIA 屬性時，無法針對底層 DOM 物件屬性進行操作，因為這些屬性沒有對應的物件屬性，
-因此可以透過在想要動態綁定的屬性名稱前面加上 `attr`，來綁定到 HTML 的屬性（attribute）上
--->
-<div 
-  [attr.aria-valuenow]="currentVal" 
-  [attr.aria-valuemax]="maxVal"
-  aria-valuemin="0">
-  ...
-</div>
+至於檔案檔案擺放的位置，則看團隊的習慣，以下是常見的做法：
+- 若是專案共用的型別，共用資料夾下，例如：
+	- `src/app/models/user.model.ts`、`src/app/types/task.type.ts`
+- 若只在單一元件或模組中使用，也可以直接放在該元件或模組的檔案旁邊。
+	- `src/app/todo/todo.model.ts`
+
+```ts
+interface IUser {
+	name: string;
+	email: string;
+	age?: number; // 可選屬性
+}
+type TTask = {
+	id: number;
+	title: string;
+	completed: boolean;
+};
 ```
 
-## 綁定和字串插值搭配運用
-
-- 若運用情境單純，也可以在屬性中使用字串插值，Angular 會自動處理，將賦值視為 Property Binding。
-```html
-<img src="profile-photo.jpg" alt="Profile photo of {{ firstName }}" >
-```
-- 綁定原生 HTML 屬性時，需要在 屬性名稱前加上 `attr.`，來區別是綁定 HTML 屬性還是 DOM 屬性。
-```html
-<button attr.aria-label="Save changes to {{ objectType }}">
+```ts
+user: IUser = { name: '', email: '' };
+tasks: TTask[] = [];
 ```
 
-## 類別繫結 Class Binding
-- 單一類別繫結：可以針對單一 class 進行動態綁定樣式
-	- `[class.className]` 語法，將 class 名稱與布林值綁定。
-- 多重類別繫結：可以針對多個 class 進行動態綁定樣式
-	- 使用字串語法，將 class 名稱以空格分隔。 `[class]="className1 className2"`
-	- 使用物件語法，將 class 名稱作為鍵，布林值作為值。 `[class]="{ className1: condition1, className2: condition2 }`
-	- 使用陣列語法，將 class 名稱作為陣列元素。`[class]="['className1', 'className2']`
-```html
-<div [class.active]="isActive" 
-	[class]="{ 'text-large': isLargeText, 'text-bold': isBoldText }">
-	Content>
-</div>
+- 若還需要更複雜的結構，可以考慮使用類別 (Class) 來定義，不過大部分情況下，介面和型別就足夠使用了。
+```ts
+export class CTask {
+  constructor(
+    public id: number,
+    public title: string,
+    public completed = false,
+  ) {}
+
+  toggle() {
+    this.completed = !this.completed;
+  }
+}
 ```
-## 樣式繫結 Style Binding
-- 單一樣式繫結：可以針對單一 CSS 屬性進行動態綁定樣式
-	- `[style.property]` 語法，將 CSS 屬性名稱與值綁定。
-		- `-`：連字符（dash）會被轉換為駝峰式命名（camelCase），例如 `font-size` 會變成 `fontSize`。
-		- 可以加上單位，例如 `px`、`rem` 等。 `[style.fontSize.px]="value"` 或`[style.fontSize.rem]="value"`
-- 多重樣式繫結：可以針對多個 CSS 屬性進行動態綁定樣式
-	- 使用字串語法，將 CSS 屬性名稱與值以分號分隔。 `[style]="property1: value1; property2: value2"`
-	- 使用物件語法，將 CSS 屬性名稱作為鍵，值作為值。 `[style]="{ 'property1': value1, 'property2': value2 }`
+
+```ts
+tasks: CTask[] = [new Task(1, 'Learn Angular')]
+```
+
+## 字串插值 (String Interpolation)
+字串插值是 Angular 中最常用的資料綁定方式之一，可以將元件中的資料顯示在 HTML 模板中。字串插值使用雙大括號 `{{ }}` 包裹要顯示的資料。
+
+```ts
+export class MyComponent {
+	title: string = 'Todo App';
+}
+```
 
 ```html
-<h2 [style.font-size]="'5rem'">
-	Title
-<h2>
+{{ title }}
 ```
-##  專案實作
-今日目標，依照模板建立 Todo List 的元件結構
-- header
-- add-todo
-- todo-list
-- todo-list/todo-item
-[day 7 分享](https://github.com/johnsonchen3669/angular-demo-todo/commit/7c6d002dc9c9308b49959490055e05f32d36c279)
-[day 7 分享 (模組)](https://github.com/johnsonchen3669/angular-demo-todo/commit/f1caea5c9b3183bf39fe900188be4da75b35038a)
+
+## 專案實作
+今日目標，建立專案樣式。
+- 以 [tailwindcss](https://tailwindcss.com/docs/installation/framework-guides/angular) 建立專案樣式 ( 也可以自由發揮)
+- 已提供模板 `template.html`，可先嘗試依照模板著手建立 Todo List 的元件結構
+	- header
+	- add-todo
+	- todo-list
+	- todo-list/todo-item
+
+[day 6 分享](https://github.com/johnsonchen3669/angular-demo-todo/commit/82e901860858c500e4ae41b25c7aaffb11c32c8e#diff-4753b2e6427841425517139f09f1342c320338443447af46169dc0f43a0f2cf3)
 ## 結論
-今天介紹了 Angular 中的繫結技術，這是讓應用程式能夠動態更新資料和樣式的關鍵技術。下一篇來介紹 event listeners 事件監聽，讓我們能夠處理使用者互動事件。
+目前我們學習了定義資料，以及了解如何在模板中顯示資料，接下來我們會學習如何將資料跟動態資料繫結。

@@ -1,14 +1,14 @@
 ---
 title: Day 8 - 事件監聽
-description: "從 Zone.js 與 Zoneless 出發，介紹 Angular Signals 的基本概念、更新方式與衍生狀態。"
-slug: signals-change-detection
+description: "介紹 Angular 事件監聽的綁定方式，包含按鍵修飾符、$event 物件與防止預設行為。"
+slug: event-listeners
 series: angular-training
 order: 8
 tags:
   - angular
   - angular-training
-  - signals
-  - change-detection
+  - event-binding
+  - template-syntax
 pubDate: 2025-09-08
 lastModDate: ''
 ogImage: true
@@ -17,105 +17,66 @@ share: false
 giscus: true
 search: true
 ---
- 在談到 Angular 中的變數新儲存方式 signal 前，需要介紹一下 Angular 背後的偵測機制。
- 目前有兩種主要的變更偵測機制，當資料改變時，會觸發畫面更新：
-- Zone.js
-- Zoneless 
-## 了解 Angular 中的偵測機制
-### Zone.js
-Zone.js 是 Angular 用來追蹤所有可能改變資料的操作，會在以下各類操作完成後自動觸發變更偵測。
-- 計時器（如 setTimeout、setInterval）
-- HTTP 請求（如 AJAX、fetch、HttpClient）
-- 事件監聽（如 click、keyup 等事件）
-- Promise、async/await
+今天要來介紹事件監聽，讓使用者可以與應用程式互動。
 
-但因為每次操作完成後都會觸發變更偵測，可能會導致不必要的重新渲染，並需要依賴額外的 Zone.js，在打包上也會增加一些體積。
-
-所以在 Angular 16 版本後，提供了另一種選擇 Zoneless 的方式來進行變更偵測。而隨著 Angular 轉向 Zoneless 應用程式開發模式，Zone.js 目前也不再接受新功能的開發，僅維持基本的錯誤修正和安全更新。
-
-### Zoneless
-Zoneless 是指 Angular 支援「不依賴 Zone.js」的運作模式，是基於 signal 為主的變更偵測機制。Angular 不會自動追蹤所有操作，只有當 signal 定義的值改變時，才會觸發畫面更新，減少了不必要的檢查，提升了效能。
-
-## Signals (Angular 16+)
-
-Signals 是 Angular 新推出的響應式狀態管理方式，在定義時需要使用 `signal` 函數來創建一個信號，並設定初始值。
-- Signals 設定了追蹤機制，可以在其值改變時自動通知相關的元件。
-```ts
-import { signal } from '@angular/core';
-
-export class MyComponent {
-  // 基本 signal 定義
-  title = signal('Todo App');
-  count = signal(0);
-  items = signal<string[]>([]);
-}
-```
-
-### 更新方法
-Signals 提供了兩種主要的更新方法： `set` 和 `update`。
-- `set`：純寫入新的值時，使用這方法。
-	- 接受一個新的值作為參數，並將其設置為信號的當前值。
-- `update`：若新的值是基於當前值進行更新，則使用這方法。
-	- 接受一個函數作為參數，該函數接收當前值並返回新的值。
-```ts
-export class MyComponent {
- ... 
-  updateTitle(newTitle: string) {
-		this.title.set(newTitle); // 使用 set 方法更新 title
-	}
-  // 更新 signal
-  addItem(item: string) {
-    this.items.update(current => [...current, item]);
-  }
-  increment() {
-    this.count.update(current => current + 1);
-  }
-}
-```
-### 顯示
-Signal 是「可呼叫的函式」，有別於傳統的變數直接使用變數名稱在模板中顯示，要顯示信號的值時，必須透過呼叫來取值，呼叫時會執行內部的 getter 並回傳 。
-
+在 Angular 要與應用程式互動，會使用 `()` 來綁定事件監聽器，並指定事件觸發時要執行的方法。
 ```html
-<div>
-	<h1>{{ title() }}</h1> <!-- 使用 () 來取值 -->
-	<p>Count: {{ count() }}</p>
-	<p>Items: {{ items().join(', ') }}</p>
-	<p>Item Count: {{ itemCount() }}</p> <!-- computed signal -->
-</div>
+<button type="button" (click)="onClick()">
+	點擊按鈕
+</button>
+```
+ 
+**按鍵修飾符 key modifiers**  
+ 監聽鍵盤觸發的事件，還可以繼續取得鍵盤特定鍵，例如：`(keydown.enter)` 代表當按下 Enter 鍵時觸發事件。
+ 
+```html
+<input type="text" (keyup.enter)="onEnter($event)" />
+```
+也可以偵測**特定鍵組合**
+```html
+<!-- 同時按下 Shift 鍵和 Enter 鍵並放開時，才會觸發 -->
+<input (keyup.shift.enter)="onShiftEnter()" />
 ```
 
-### 唯讀
-Signal 除了可以寫入外，也可以設定為唯讀 。
-透過 `asReadonly()` 方法來創建唯讀版本，這樣可以防止外部修改，只能通過內部的方法來更新。
+**$event**
+在 Angular 模板中，當事件被觸發時，會傳遞一個 `$event` 物件給事件處理器。
 
+`$event` 是 Angular 模板語法中的特殊變數，常使用的用法如下：
+- 代表事件物件本身，透過這個物件，可以取得事件相關的資訊。
+- 代表自訂事件傳遞的資料內容，後續文章中會介紹相關用法。
 ```ts
-private _title: WritableSignal<string> = signal('Todo App');
-readonly title: Signal<string> = this._title.asReadonly();
-```
-
-> 只用 readonly 屬性修飾，只防止重新指派屬性本身，無法移除物件上的寫入方法，仍然會有 `set()` / `update()`等方法可以被呼叫。
-### 衍生狀態
-可以使用 `computed` 函數來創建基於其他信號的衍生值。
-- 同時也是 signals 的一種，同樣透過呼叫 `()` 來取信號的值。
-- 當依賴的信號改變時，computed signals 便會自動更新。
-
-過去要達成類似的功能，通常會使用 getter 來實現。但每次訪問值時都會執行計算，即使目標沒有改變，若計算邏輯複雜，可能會導致效能問題。
-```ts
-get itemCount() {
-    return this.items.length;
+export class App {
+  onItemClick(event: MouseEvent) {
+	  console.log('元件被點擊', event);
+	}
 }
 ```
-目前則可以使用 `computed` 來創建一個新的信號，該信號的值是基於其他信號計算得出的，只有當依賴的信號改變時，才會重新計算。
-```ts
-itemCount = computed(() => this.items().length);
+```html
+<button (click)="onItemClick($event)">點我</button>
 ```
 
->衍生狀態只能讀取，無法透過 `set` 或 `update` 來修改。
+## 防止事件預設行為
+在某些情況下，可能需要防止事件的預設行為，例如點擊連結時不跳轉頁面，可以使用`$event.preventDefault()` 來達成。
+```html
+<a href="javascript:;" (click)="onLinkClick($event)">
+	點擊連結
+</a>
+```
+```ts
+export class App {
+	onLinkClick(event: MouseEvent) {
+	  event.preventDefault();
+	  console.log('連結被點擊，但不跳轉');
+	}
+}
+```
 
 ## 專案製作
-今日目標：練習 Signals 的用法。
-- 將 header 元件的 logo 路徑改為 signal 方式來實作。
-  
-[day 9 分享](https://github.com/johnsonchen3669/angular-demo-todo/commit/d835cf5b0d82a2794dda452a3114979edad62a16)
+今日目標：練習繫結用法，將 header 的 icon ，改成 img 標籤。
+- 建立 logo.svg
+- 定義路徑
+- 使用繫結綁定圖片路徑
+
+[day 8 分享](https://github.com/johnsonchen3669/angular-demo-todo/commit/6ab80dfe199fc77b044027a512f817e8dc0ceb70)
 ## 結論
-今天介紹了 Signals 在 Angular 中的基本使用方式。明天介紹如何使用條件語句 if 來控制顯示的內容。
+今天介紹了 Angular 的事件監聽，現在已經知道如何讓使用者可以與應用程式互動。接下來，下一篇將認識 Angular 的近年來的關鍵更新 Signal，了解它如何改變開發 Angular 應用的方式。

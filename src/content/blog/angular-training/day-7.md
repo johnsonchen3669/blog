@@ -1,14 +1,14 @@
 ---
-title: Day 3 - 專案架構
-description: "介紹 Angular 專案目錄結構、檔案命名慣例，以及 main.ts 的啟動入口。"
-slug: project-structure-and-naming
+title: Day 7 - 資料繫結
+description: "說明 Angular 的 Property Binding、Attribute Binding、Class Binding 與 Style Binding 用法。"
+slug: data-binding
 series: angular-training
 order: 7
 tags:
   - angular
   - angular-training
-  - project-structure
-  - bootstrap
+  - data-binding
+  - template-syntax
 pubDate: 2025-09-07
 lastModDate: ''
 ogImage: true
@@ -17,81 +17,85 @@ share: false
 giscus: true
 search: true
 ---
-上一篇文章了解如何建立的專案後，今天我們就來了解專案的架構
-![專案架構](https://i.meee.com.tw/OE4BNJk.png)
+上一篇文章，我們介紹了動態處理資料的字串插值，這篇會介紹另一個重要技術：Binding
+## 繫結 Binding 
+- 透過在屬性值周圍加上 `[]` 來綁定屬性值，動態更新資料。
+- 繫結的值可以是變數、表達式或函式呼叫。
+## 屬性繫結 Property Binding
+- 直接綁定到 DOM 元素的屬性（property），例如：`[disabled]="isDisabled"`  
+- 會根據變數值動態更新 DOM 屬性，會直接影響 DOM 物件的行為，推薦用於互動性元件。
 
-- `tsconfig.app.json`、`tsconfig.json`、`tsconfig.spec.json`：這三個是 TypeScript 的相關設定檔，設定一些 TypeScript 編譯的選項，除非熟悉 TypeScript 設定，否則不建議更動。
-- `package.json`、`package-lock.json`：這兩個是 npm 的相關設定檔，記錄專案所需的套件和版本資訊，當我們安裝新的套件時，會自動更新這些檔案。
-- `angular.json`：這是 Angular CLI 的主要設定檔，跟 typeScript 設定檔一樣，通常不太需要更動，除非需要自訂一些建置選項。
-- `.editorconfig`：這是用來統一團隊成員在編輯器中的格式設定，例如縮排、換行等。
-- `.gitignore`：這是用來忽略不需要加入版本控制的檔案，例如 node_modules 資料夾。
-- `src` ：這是我們主要開發的資料夾。
-	- `app`：尤其是其中的 app 資料夾，幾乎所有的程式碼都會放在這個資料夾中。
-	- `styles.css`：這是全域的樣式檔案，可以在這裡定義一些全域的 CSS 樣式。
-	- `index.html`：這是應用程式的入口檔案，所有的元件都會被載入到這個檔案中。
-	- `main.ts`：這是應用程式的主要 TypeScript 檔案，負責啟動 Angular 應用程式。
-- `public`：這是用來放置靜態資源的資料夾，例如圖片等，在專案需要進行建置時，這些檔案會被直接複製到建置後的輸出資料夾中。
-
-## 檔案命名
-根據 Angular CLI 的版本，會有不同的命名慣例
-- 在之前 Angular 版本中預設是以添加後綴的方式來命名檔案，例如：`app.component.ts`。
-- 從 Angular 20 開始,預設情況下 Angular CLI 不會為元件、指令、服務和管道產生後綴。例如：`app.ts`。
-
-由於 Angular 維持有後綴命名慣例已經有一段時間了，因此這系列的文章也會以這種方式來命名檔案。讓我們在 `angular.json` 中的 schematics 加上這段設定，這樣可以在使用 Angular CLI 快速生成檔案的相關指令 （如 `ng generate component`、`ng generate service` 等）時，會自動產生有後綴的檔案。
-
-```json
-{  
-"projects": {  
-	"<project-name>": {  
-	...  
-	"schematics": {  
-		"@schematics/angular:component": { "type": "component" },  
-		"@schematics/angular:directive": { "type": "directive" },  
-		"@schematics/angular:service": { "type": "service" },  
-		"@schematics/angular:guard": { "typeSeparator": "." },  
-		"@schematics/angular:interceptor": { "typeSeparator": "." },  
-		"@schematics/angular:module": { "typeSeparator": "." },  
-		"@schematics/angular:pipe": { "typeSeparator": "." },  
-		"@schematics/angular:resolver": { "typeSeparator": "." }  
-	},  
-...  
-}
+```html
+<!-- `isDisabled` 為 `true` 時，按鈕會被禁用 -->
+<button [disabled]="isDisabled"></button>
+<!--
+雖然看起來像是在綁定 `<img>` 標籤本身的 src 屬性 ，但實際上是會將底層 HTMLImageElement DOM 物件的 src 屬性綁定到 `someSrc` 變數中儲存的值。
+-->
+<img [src]="someSrc">
 ```
 
-> schematics 的設定會影響你使用 Angular CLI ，產生檔案的預設選項。例如，你可以設定產生元件時是否自動建立測試檔、是否加上樣式檔案、預設使用哪種樣式（CSS、SCSS）等。
+## 屬性值繫結 Attribute Binding  
+- 只會設定或移除 HTML 屬性，不會動態更新 DOM 屬性。
+- 只影響 HTML 標籤本身，通常用於自訂屬性或特殊情境，像是無障礙屬性（ARIA）。
 
-## 專案進入點
-由於 Angular 預設採用 Single Page Application (SPA) 架構，所有 UI 的渲染都在瀏覽器端進行。因此，index.html 只包含一個 app-root 標籤，內容會由 Angular 框架在執行時動態產生與更新。
-
-> SPA 單頁式應用程式
-> - Single Page Application (SPA) 是一種網頁應用程式架構，允許使用者在單一網頁上進行多次互動，而不需要重新載入整個頁面。
-> - 所有 UI 渲染都在客戶端進行，並且透過 AJAX 或 Fetch API 與後端伺服器進行資料交換。這樣的設計可以提供更流暢的使用者體驗，因為頁面不需要頻繁地重新載入。
-> - 缺點是 SEO 支援較差，因為實際上的內容是由 JavaScript 動態生成的，搜尋引擎可能無法正確索引這些內容。
-
-在 Angular 專案中，應用程式的進入點是 `main.ts` 檔案，負責啟動 Angular 應用程式。啟動時，Angular 會將根元件 App 動態載入到 index.html 中的 app-root 標籤內。
-
-就像圖片看到的一樣，原始碼不會有任何內容，所有的內容都是由 Angular 動態產生的，TypeScript 原始碼會被編譯成 JavaScript，這些檔案會被載入到 index.html 中，然後由瀏覽器執行，動態產生 DOM 結構。
-![原始碼](https://i.meee.com.tw/Cq7SgR0.png)
-![實際網頁](https://i.meee.com.tw/z0Ni88i.png)
-
-根據 Angular 版本不同，啟動方式略有差異，但核心概念一致。
-目前 Angular 推薦的啟動方式：
-```ts
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { App } from './app/app';
-
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
+```html
+<!--
+當綁定 ARIA 屬性時，無法針對底層 DOM 物件屬性進行操作，因為這些屬性沒有對應的物件屬性，
+因此可以透過在想要動態綁定的屬性名稱前面加上 `attr`，來綁定到 HTML 的屬性（attribute）上
+-->
+<div 
+  [attr.aria-valuenow]="currentVal" 
+  [attr.aria-valuemax]="maxVal"
+  aria-valuemin="0">
+  ...
+</div>
 ```
-當然根據的版本不同，你可能會看到不同的寫法，例如傳統的模組化寫法：
-```ts
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app/app.module';
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+## 綁定和字串插值搭配運用
+
+- 若運用情境單純，也可以在屬性中使用字串插值，Angular 會自動處理，將賦值視為 Property Binding。
+```html
+<img src="profile-photo.jpg" alt="Profile photo of {{ firstName }}" >
 ```
- 這兩種寫法主要是獨立元件的寫法以及和傳統的模組化寫法。這在接下來的文章中會有更詳細的介紹。
+- 綁定原生 HTML 屬性時，需要在 屬性名稱前加上 `attr.`，來區別是綁定 HTML 屬性還是 DOM 屬性。
+```html
+<button attr.aria-label="Save changes to {{ objectType }}">
+```
 
+## 類別繫結 Class Binding
+- 單一類別繫結：可以針對單一 class 進行動態綁定樣式
+	- `[class.className]` 語法，將 class 名稱與布林值綁定。
+- 多重類別繫結：可以針對多個 class 進行動態綁定樣式
+	- 使用字串語法，將 class 名稱以空格分隔。 `[class]="className1 className2"`
+	- 使用物件語法，將 class 名稱作為鍵，布林值作為值。 `[class]="{ className1: condition1, className2: condition2 }`
+	- 使用陣列語法，將 class 名稱作為陣列元素。`[class]="['className1', 'className2']`
+```html
+<div [class.active]="isActive" 
+	[class]="{ 'text-large': isLargeText, 'text-bold': isBoldText }">
+	Content>
+</div>
+```
+## 樣式繫結 Style Binding
+- 單一樣式繫結：可以針對單一 CSS 屬性進行動態綁定樣式
+	- `[style.property]` 語法，將 CSS 屬性名稱與值綁定。
+		- `-`：連字符（dash）會被轉換為駝峰式命名（camelCase），例如 `font-size` 會變成 `fontSize`。
+		- 可以加上單位，例如 `px`、`rem` 等。 `[style.fontSize.px]="value"` 或`[style.fontSize.rem]="value"`
+- 多重樣式繫結：可以針對多個 CSS 屬性進行動態綁定樣式
+	- 使用字串語法，將 CSS 屬性名稱與值以分號分隔。 `[style]="property1: value1; property2: value2"`
+	- 使用物件語法，將 CSS 屬性名稱作為鍵，值作為值。 `[style]="{ 'property1': value1, 'property2': value2 }`
+
+```html
+<h2 [style.font-size]="'5rem'">
+	Title
+<h2>
+```
+##  專案實作
+今日目標，依照模板建立 Todo List 的元件結構
+- header
+- add-todo
+- todo-list
+- todo-list/todo-item
+[day 7 分享](https://github.com/johnsonchen3669/angular-demo-todo/commit/7c6d002dc9c9308b49959490055e05f32d36c279)
+[day 7 分享 (模組)](https://github.com/johnsonchen3669/angular-demo-todo/commit/f1caea5c9b3183bf39fe900188be4da75b35038a)
 ## 結論
-這篇文章主要介紹了 Angular 專案的基本架構與應用程式進入點，讓大家對於 Angular 專案的結構有初步的了解。下一篇文章會先介紹 Angular 框架的最小單位 - 元件(Component)。
+今天介紹了 Angular 中的繫結技術，這是讓應用程式能夠動態更新資料和樣式的關鍵技術。下一篇來介紹 event listeners 事件監聽，讓我們能夠處理使用者互動事件。
