@@ -1,0 +1,24 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import TagChips from '~/components/blog/TagChips.astro'
+import { getAllBlogPosts, getTagSummaries } from '~/utils/blog'
+
+const posts = await getAllBlogPosts()
+const items = getTagSummaries(posts)
+---
+
+<BaseLayout
+  title="Tags"
+  description="依主題標籤整理 Blog 文章，快速交叉瀏覽相關內容。"
+  ogImage={true}
+>
+  <StandardLayout
+    class="max-w-220"
+    title="Tags"
+    subtitle="依主題快速找到相關文章"
+    isCentered={true}
+  >
+    <TagChips {items} />
+  </StandardLayout>
+</BaseLayout>
