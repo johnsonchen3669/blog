@@ -8,6 +8,7 @@ import sharp from 'sharp'
 import chalk from 'chalk'
 
 import { getCurrentFormattedTime } from '../src/utils/datetime'
+import { normalizeOgTitle } from '../src/utils/misc'
 import { ogImageMarkup } from './og-template/markup'
 import { FEATURES } from '../src/config'
 
@@ -16,6 +17,7 @@ import type { html } from 'satori-html'
 import type { BgType } from '../src/types'
 
 const Inter = readFileSync('plugins/og-template/Inter-Regular-24pt.ttf')
+const NotoSansTC = readFileSync('plugins/og-template/NotoSansTC-Regular.ttf')
 
 const satoriOptions: SatoriOptions = {
   // debug: true,
@@ -27,6 +29,12 @@ const satoriOptions: SatoriOptions = {
       weight: 400,
       style: 'normal',
       data: Inter,
+    },
+    {
+      name: 'Noto Sans TC',
+      weight: 400,
+      style: 'normal',
+      data: NotoSansTC,
     },
   ],
 }
@@ -100,6 +108,31 @@ async function generateOgImage(
   }
 }
 
+function getOgImageBaseName(file: {
+  basename?: string
+  extname: string
+  dirname: string
+  data: {
+    astro: {
+      frontmatter: {
+        slug?: string
+      }
+    }
+  }
+}) {
+  const slug = file.data.astro.frontmatter.slug
+  if (typeof slug === 'string' && slug.trim().length > 0)
+    return basename(slug.trim())
+
+  const filename = file.basename
+  if (!filename) return undefined
+
+  let nameWithoutExt = basename(filename, file.extname)
+  if (nameWithoutExt === 'index') nameWithoutExt = basename(file.dirname)
+
+  return nameWithoutExt
+}
+
 /**
  * Used to generate {@link https://ogp.me/ Open Graph} images.
  *
@@ -141,14 +174,6 @@ function remarkGenerateOgImage() {
     const ogImage = file.data.astro.frontmatter.ogImage
     if (ogImage === false) return
 
-    // check if it has been generated
-    const extname = file.extname
-    const dirpath = file.dirname
-    let nameWithoutExt = basename(filename, extname)
-    if (nameWithoutExt === 'index') nameWithoutExt = basename(dirpath)
-    if (checkFileExistsInDir('public/og-images', `${nameWithoutExt}.png`))
-      return
-
     // check if it has been assigned & actually exists
     if (
       ogImage &&
@@ -168,6 +193,9 @@ function remarkGenerateOgImage() {
       return
     }
 
+    const nameWithoutExt = getOgImageBaseName(file)
+    if (!nameWithoutExt) return
+
     // get bgType
     const pageBgType = file.data.astro.frontmatter.bgType
     const bgType = pageBgType || fallbackBgType
@@ -175,7 +203,7 @@ function remarkGenerateOgImage() {
     // generate og images
     await generateOgImage(
       authorOrBrand,
-      title.trim(),
+      normalizeOgTitle(title),
       bgType,
       `public/og-images/${nameWithoutExt}.png`
     )
