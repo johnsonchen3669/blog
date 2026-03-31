@@ -2,6 +2,7 @@ import { getCollection } from 'astro:content'
 import rss from '@astrojs/rss'
 
 import { SITE } from '~/config'
+import { getBlogPostPath } from '~/utils/blog'
 import { withBasePath } from '~/utils/path'
 
 export async function GET() {
@@ -27,7 +28,7 @@ export async function GET() {
 
     items: sortedBlogItems.map((item) => ({
       title: `${item.data.title}`,
-      link: withBasePath(`/blog/${item.id}`),
+      link: getBlogPostPath(item),
       pubDate: item.data.pubDate,
       description: item.data.description,
       author: SITE.author,

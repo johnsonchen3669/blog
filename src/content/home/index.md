@@ -1,83 +1,14 @@
-Glad you made it here! This is a flexible and feature-rich :link[Astro 5]{id=withastro/astro} theme for developers and creators, inspired by the minimalist style of :link[antfu.me]{id=https://antfu.me/ img=https://github.com/antfu.png .rounded}. The design has been refined and its functionality expanded for greater flexibility.
+你好，歡迎來到我的網站。
 
-This live demo will guide you through setup and customization, offering helpful insights along the way. Enjoy exploring all the features this theme provides! ✨
+我目前是一名前端工程師，目前主要關注前端開發。這裡會持續整理我在工作與學習過程中的技術筆記、實作心得，以及一些值得留下來的問題解法。
 
-**Optimized Infrastructure**
+我希望把日常開發中碰到的思路、踩過的坑與整理後的方法記錄下來，讓這個空間不只是個人筆記，也是一個分享技術、交流經驗的地方。
 
-- Zero UI Framework
-- [SEO-Friendly](./blog/faqs-and-known-issues/#about-seo-and-accessibility)
-- [Auto-Generated RSS Feed](./blog/faqs-and-known-issues/#rss-subscription-scope)
-- [Dynamic OG Image Generation](./blog/about-open-graph-images/)
-- [Subpath Deployment](./blog/basic-configuration/#configuring-site) Support
-- Optimized and Responsive Images
-- VS Code Snippets for Fast Coding
-- [Well-Structured Project](./blog/project-structure/)
-- High [Lighthouse Performance](./blog/faqs-and-known-issues/#lighthouse-scores)
+**這裡會分享的內容**
 
-**Content Management**
+- 前端開發實作與元件設計
+- JavaScript、TypeScript 與框架相關筆記
+- 開發流程中的除錯經驗與問題排查
+- 關於效能、可維護性與使用者體驗的思考
 
-- Markdown & MDX Support
-- [Math Equations Rendering](./blog/faqs-and-known-issues/#choosing-a-math-rendering-engine)
-- [Callouts (Alerts/Admonitions)](./blog/markdown-mdx-extended-features/#callouts-alerts--admonitions)
-- [Code Syntax Highlighting & Annotations](./blog/markdown-mdx-extended-features/#fully-featured-code-blocks)
-- Ready-To-Use [Remark Directives](./blog/markdown-mdx-extended-features/#image-caption--link-image)
-- Customizable Layouts, Views, and Navigation
-- [Configurable Animated Backgrounds](./blog/faqs-and-known-issues/#page-backgrounds) (Take a look around!)
-- [Showcase Your GitHub Releases and PRs](./blog/customizing-github-activity-pages)
-- [Highlight Your Creative Work or Curated Posts](./blog/recreating-current-pages/#highlights)
-- [Share Your Short Notes or Quick Thoughts](./blog/recreating-current-pages/#shorts)
-- [Create Your Personal Gallery](./blog/recreating-current-pages/#photos)
-
-**User Experience**
-
-- Responsive Layout
-- Full-Platform TOC Support
-- Light & Dark Modes Toggle
-- Smooth View Transitions
-- Loading Progress Indicator
-- [Search Functionality](./blog/faqs-and-known-issues/#search-functionality)
-- [Image Zoom Preview](./blog/faqs-and-known-issues/#image-zoom)
-- Social Media Sharing
-- [Integrated Giscus Comments](./blog/advanced-configuration/#configure-giscus-comments)
-- [Accessibility Enhancements](./blog/faqs-and-known-issues/#about-seo-and-accessibility)
-- Keyboard-Friendly
-
-> [More features](https://github.com/users/lin-stephanie/projects/4) are continuously being added! 🚀
-
----
-
-<p>
-  Visit the theme's
-  <a
-    class="inline-block ml-1.5 op-75"
-    href="https://github.com/lin-stephanie/astro-antfustyle-theme"
-  >
-  <span i-simple-icons-github></span> GitHub repo</a>
-</p>
-
-<p>
-  <span class="inline-block mr-1.5 mb-2">Find me on</span>
-  <span class="inline-flex flex-wrap gap-2 op-75">
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-simple-icons-github></span> GitHub</a>
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-ri-twitter-x-fill></span> Twitter</a>
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-simple-icons-instagram></span> Instagram</a>
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-simple-icons-mastodon></span> Mastodon</a>
-    <a href="https://github.com/lin-stephanie/astro-antfustyle-theme">
-      <span i-simple-icons-youtube></span> YouTube</a>
-  </span>
-</p>
-
----
-
-If you find this theme helpful, consider supporting the project maintainer or the style designer. Your support means more than you know. Thank you! ❤️
-
-<div class="flex flex-wrap gap-4">
-  <a class="btn-rose" href="https://github.com/sponsors/lin-stephanie">
-    <span class="i-ph-heart-duotone"></span> Support Stephanie Lin (Maintainer)</a>
-  <a class="btn-yellow" href="https://github.com/sponsors/antfu">
-    <span class="i-ph-lightning-duotone"></span> Support Anthony Fu (Designer)</a>
-</div>
+如果你也對前端技術、網頁開發有興趣，歡迎一起交流。

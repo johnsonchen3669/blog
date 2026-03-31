@@ -6,10 +6,13 @@
 }
 
 :root.dark {
-  --c-bg: #050505;
-  --c-scrollbar: #222;
-  --c-scrollbar-hover: #444;
-  --c-text: #fff;
+  /* base dark palette using GitHub-like #0d1117 (rgb(13,17,23)) */
+  --c-bg: rgb(13, 17, 23);
+  /* slightly lighter scrollbars for visibility */
+  --c-scrollbar: rgba(255, 255, 255, 0.15);
+  --c-scrollbar-hover: rgba(255, 255, 255, 0.3);
+  /* text color for contrast on dark background */
+  --c-text: #e1e4e8;
 }
 
 html {

@@ -1,7 +1,7 @@
 ---
-title: 'Astro AntfuStyle Theme'
-subtitle: ''
-description: ''
+title: 'Johnson Chen'
+subtitle: 'Frontend Developer'
+description: '這裡記錄我的前端開發筆記、實作心得與技術分享。'
 bgType: plum
 toc: false
 ogImage: false
@@ -10,6 +10,7 @@ ogImage: false
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import StandardLayout from '~/layouts/StandardLayout.astro'
 import RenderPage from '~/components/views/RenderPage.astro'
+import LatestPostsSection from '~/components/blog/LatestPostsSection.astro'
 
 <BaseLayout
   title={frontmatter.title}
@@ -24,5 +25,8 @@ import RenderPage from '~/components/views/RenderPage.astro'
       id="index"
       pageToc={frontmatter.toc}
     />
+
+    <LatestPostsSection slot="article" />
+
   </StandardLayout>
 </BaseLayout>
