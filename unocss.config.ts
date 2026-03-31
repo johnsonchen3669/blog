@@ -9,6 +9,7 @@ import {
 import presetIcons from '@unocss/preset-icons'
 
 import { UI } from './src/config'
+import { BLOG_SERIES } from './src/content/blog/series'
 import projecstData from './src/content/projects/data.json'
 
 import type {
@@ -35,6 +36,7 @@ const socialIcons = socialLinks
   .map((item) => (item as IconSocialItem | ResponsiveSocialItem).icon)
 
 const projectIcons = projecstData.map((item) => item.icon)
+const seriesIcons = BLOG_SERIES.map((item) => item.icon)
 
 const githubVersionColor: Record<string, string> = {
   major: 'bg-rose/15 text-rose-7 dark:text-rose-3',
@@ -127,6 +129,7 @@ export default defineConfig({
     ...navIcons,
     ...socialIcons,
     ...projectIcons,
+    ...seriesIcons,
 
     /* BaseLayout */
     'focus:not-sr-only',
