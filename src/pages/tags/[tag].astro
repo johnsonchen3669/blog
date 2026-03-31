@@ -1,0 +1,33 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import BlogPostList from '~/components/blog/BlogPostList.astro'
+import { getAllBlogPosts, getPostsByTag, getTagSummaries } from '~/utils/blog'
+
+export async function getStaticPaths() {
+  const posts = await getAllBlogPosts()
+  const tags = getTagSummaries(posts)
+
+  return tags.map((item) => ({
+    params: { tag: item.slug },
+    props: { item },
+  }))
+}
+
+const { item } = Astro.props
+const posts = await getPostsByTag(item.slug)
+---
+
+<BaseLayout
+  title={`#${item.name}`}
+  description={`瀏覽與 ${item.name} 相關的 Blog 文章。`}
+  ogImage={true}
+>
+  <StandardLayout
+    class="prose"
+    title={`#${item.name}`}
+    subtitle={`${item.count} 篇文章`}
+  >
+    <BlogPostList {posts} />
+  </StandardLayout>
+</BaseLayout>
