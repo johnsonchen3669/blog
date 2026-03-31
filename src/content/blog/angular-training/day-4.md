@@ -1,6 +1,14 @@
 ---
 title: Day 4 - 元件
 description: "說明 Angular 元件的核心概念、@Component 結構、獨立元件與建立方式。"
+slug: components
+series: angular-training
+order: 4
+tags:
+  - angular
+  - angular-training
+  - components
+  - standalone-components
 pubDate: 2025-09-04
 lastModDate: ''
 ogImage: true

@@ -1,6 +1,14 @@
 ---
 title: Day 15 - 雙向綁定
 description: "介紹 Angular 的雙向綁定語法，涵蓋 ngModel、自訂元件與 model 的實作方式。"
+slug: two-way-binding
+series: angular-training
+order: 15
+tags:
+  - angular
+  - angular-training
+  - two-way-binding
+  - ngmodel
 pubDate: 2025-09-15
 lastModDate: ''
 ogImage: true

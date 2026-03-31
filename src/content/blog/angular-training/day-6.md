@@ -1,6 +1,14 @@
 ---
 title: Day 7 - 資料繫結
 description: "說明 Angular 的 Property Binding、Attribute Binding、Class Binding 與 Style Binding 用法。"
+slug: data-binding
+series: angular-training
+order: 6
+tags:
+  - angular
+  - angular-training
+  - data-binding
+  - template-syntax
 pubDate: 2025-09-06
 lastModDate: ''
 ogImage: true

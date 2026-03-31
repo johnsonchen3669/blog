@@ -1,6 +1,14 @@
 ---
 title: Day 8 - 事件監聽
 description: "從 Zone.js 與 Zoneless 出發，介紹 Angular Signals 的基本概念、更新方式與衍生狀態。"
+slug: signals-change-detection
+series: angular-training
+order: 8
+tags:
+  - angular
+  - angular-training
+  - signals
+  - change-detection
 pubDate: 2025-09-08
 lastModDate: ''
 ogImage: true

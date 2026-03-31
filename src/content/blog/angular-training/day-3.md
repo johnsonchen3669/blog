@@ -1,6 +1,14 @@
 ---
 title: Day 3 - 專案架構
 description: "介紹 Angular 專案目錄結構、檔案命名慣例，以及 main.ts 的啟動入口。"
+slug: project-structure
+series: angular-training
+order: 3
+tags:
+  - angular
+  - angular-training
+  - project-structure
+  - bootstrap
 pubDate: 2025-09-03
 lastModDate: ''
 ogImage: true

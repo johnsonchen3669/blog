@@ -1,6 +1,14 @@
 ---
 title: Day 2 - 環境安裝
 description: "整理 Angular 20 開發所需環境、Angular CLI 安裝步驟與新專案建立流程。"
+slug: environment-setup
+series: angular-training
+order: 2
+tags:
+  - angular
+  - angular-training
+  - setup
+  - angular-cli
 pubDate: 2025-09-02
 lastModDate: ''
 ogImage: true

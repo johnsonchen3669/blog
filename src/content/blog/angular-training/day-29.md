@@ -1,6 +1,14 @@
 ---
 title: Day 29 - Animations
 description: "說明 Angular 新舊動畫 API 的差異，涵蓋 animate.enter、animate.leave 與第三方整合。"
+slug: animations
+series: angular-training
+order: 29
+tags:
+  - angular
+  - angular-training
+  - animations
+  - gsap
 pubDate: 2025-09-29
 lastModDate: ''
 ogImage: true

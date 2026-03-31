@@ -1,6 +1,13 @@
 ---
 title: 前言
 description: "說明 Angular 鐵人賽系列的學習方向、適合讀者與後續將涵蓋的主題。"
+slug: introduction
+series: angular-training
+order: 1
+tags:
+  - angular
+  - angular-training
+  - introduction
 pubDate: 2025-09-01
 lastModDate: ''
 ogImage: true

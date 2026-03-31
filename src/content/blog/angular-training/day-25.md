@@ -1,6 +1,14 @@
 ---
 title: Day 25 - HTTP Client
 description: "介紹 Angular HttpClient 的設定方式、HTTP 請求、型別化回應與攔截器。"
+slug: http-client
+series: angular-training
+order: 25
+tags:
+  - angular
+  - angular-training
+  - http-client
+  - api
 pubDate: 2025-09-25
 lastModDate: ''
 ogImage: true

@@ -1,6 +1,14 @@
 ---
 title: Day 13 - Input
 description: "介紹父元件如何透過 input 函式與 @Input 將資料傳遞給子元件。"
+slug: inputs
+series: angular-training
+order: 13
+tags:
+  - angular
+  - angular-training
+  - input
+  - component-communication
 pubDate: 2025-09-13
 lastModDate: ''
 ogImage: true

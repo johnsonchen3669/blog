@@ -1,6 +1,15 @@
 ---
 title: Day 12 - 控制流程 for
 description: "說明 Angular 模板中 @for 與 *ngFor 的清單渲染、track 與特殊變數用法。"
+slug: control-flow-for
+series: angular-training
+order: 12
+tags:
+  - angular
+  - angular-training
+  - control-flow
+  - for
+  - ngfor
 pubDate: 2025-09-12
 lastModDate: ''
 ogImage: true

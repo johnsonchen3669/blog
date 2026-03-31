@@ -1,6 +1,14 @@
 ---
 title: Day 10 - 控制流程 if
 description: "介紹 Angular 模板中的條件渲染，包含 @if、@else 與舊版 *ngIf 的使用方式。"
+slug: control-flow-if
+series: angular-training
+order: 10
+tags:
+  - angular
+  - angular-training
+  - control-flow
+  - if
 pubDate: 2025-09-10
 lastModDate: ''
 ogImage: true

@@ -1,6 +1,14 @@
 ---
 title: Day 16 - 模板相關用法一
 description: "整理模板參考變數、ng-template 與 viewChild、viewChildren 的常見用法。"
+slug: template-patterns-part-1
+series: angular-training
+order: 16
+tags:
+  - angular
+  - angular-training
+  - template-reference
+  - viewchild
 pubDate: 2025-09-16
 lastModDate: ''
 ogImage: true

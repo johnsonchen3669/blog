@@ -1,6 +1,14 @@
 ---
 title: Day 18 - Service
 description: "說明 Angular Service 的用途、註冊方式，以及 constructor 與 inject 的注入寫法。"
+slug: services
+series: angular-training
+order: 18
+tags:
+  - angular
+  - angular-training
+  - service
+  - dependency-injection
 pubDate: 2025-09-18
 lastModDate: ''
 ogImage: true
