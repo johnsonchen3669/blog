@@ -1,6 +1,14 @@
 ---
 title: Day 24 - RxJs
 description: "說明 RxJS Observable 的建立、訂閱、取消訂閱與常用 pipe 操作符。"
+slug: rxjs
+series: angular-training
+order: 24
+tags:
+  - angular
+  - angular-training
+  - rxjs
+  - observable
 pubDate: 2025-09-24
 lastModDate: ''
 ogImage: true

@@ -1,6 +1,14 @@
 ---
 title: Day 26 - Routing （一）
 description: "整理 Angular Routing 的基礎用法，包含路由設定、導航、動態路由與巢狀路由。"
+slug: routing-basics
+series: angular-training
+order: 26
+tags:
+  - angular
+  - angular-training
+  - routing
+  - router
 pubDate: 2025-09-26
 lastModDate: ''
 ogImage: true

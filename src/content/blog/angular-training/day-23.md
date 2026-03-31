@@ -1,6 +1,14 @@
 ---
 title: Day 23 - 回應式表單
 description: "介紹回應式表單的建立、驗證、FormArray 與巢狀 FormGroup 用法。"
+slug: reactive-forms
+series: angular-training
+order: 23
+tags:
+  - angular
+  - angular-training
+  - forms
+  - reactive-forms
 pubDate: 2025-09-23
 lastModDate: ''
 ogImage: true

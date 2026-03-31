@@ -1,6 +1,14 @@
 ---
 title: Day 9 - Signals
 description: "從變更偵測機制切入，整理 Angular Signals 的建立、更新與唯讀、衍生狀態寫法。"
+slug: signals-basics
+series: angular-training
+order: 9
+tags:
+  - angular
+  - angular-training
+  - signals
+  - computed
 pubDate: 2025-09-09
 lastModDate: ''
 ogImage: true

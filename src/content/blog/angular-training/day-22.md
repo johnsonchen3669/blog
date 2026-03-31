@@ -1,6 +1,14 @@
 ---
 title: Day 22 - 範本驅動型表單
 description: "說明範本驅動型表單的建立方式，包含 ngModel、ngSubmit 與驗證狀態處理。"
+slug: template-driven-forms
+series: angular-training
+order: 22
+tags:
+  - angular
+  - angular-training
+  - forms
+  - template-driven-forms
 pubDate: 2025-09-22
 lastModDate: ''
 ogImage: true

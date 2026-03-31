@@ -1,6 +1,14 @@
 ---
 title: Day 11 - 控制流程 switch
 description: "整理 Angular 模板中的 switch 條件控制，涵蓋 @switch 與舊版 ngSwitch 的寫法。"
+slug: control-flow-switch
+series: angular-training
+order: 11
+tags:
+  - angular
+  - angular-training
+  - control-flow
+  - switch
 pubDate: 2025-09-11
 lastModDate: ''
 ogImage: true

@@ -1,6 +1,14 @@
 ---
 title: Day 21 - Pipes
 description: "介紹 Angular Pipes 的使用方式，包含內建管道、自訂管道與常見格式化範例。"
+slug: pipes
+series: angular-training
+order: 21
+tags:
+  - angular
+  - angular-training
+  - pipes
+  - formatting
 pubDate: 2025-09-21
 lastModDate: ''
 ogImage: true

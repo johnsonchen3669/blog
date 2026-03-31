@@ -1,6 +1,14 @@
 ---
 title: Day 28 - Testing
 description: "介紹 Angular 單元測試的基本觀念，並比較 Jasmine、Karma 與 Vitest 的測試寫法。"
+slug: testing
+series: angular-training
+order: 28
+tags:
+  - angular
+  - angular-training
+  - testing
+  - vitest
 pubDate: 2025-09-28
 lastModDate: ''
 ogImage: true

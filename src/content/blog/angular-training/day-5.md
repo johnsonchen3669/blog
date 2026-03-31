@@ -1,6 +1,14 @@
 ---
 title: Day 5 - 模組
 description: "介紹 Angular Module 的用途、@NgModule 設定，以及模組化應用程式的組織方式。"
+slug: modules
+series: angular-training
+order: 5
+tags:
+  - angular
+  - angular-training
+  - modules
+  - ngmodule
 pubDate: 2025-09-05
 lastModDate: ''
 ogImage: true

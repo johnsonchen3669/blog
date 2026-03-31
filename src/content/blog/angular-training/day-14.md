@@ -1,6 +1,14 @@
 ---
 title: Day 14 - Output
 description: "說明子元件如何透過 output 函式與 @Output 將事件通知父元件。"
+slug: outputs
+series: angular-training
+order: 14
+tags:
+  - angular
+  - angular-training
+  - output
+  - component-communication
 pubDate: 2025-09-14
 lastModDate: ''
 ogImage: true

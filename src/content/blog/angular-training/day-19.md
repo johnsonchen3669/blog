@@ -1,6 +1,14 @@
 ---
 title: Day 19 - 元件生命週期
 description: "介紹 Angular 元件從建立到銷毀的生命週期，包含常見 hooks 與渲染、清理時機。"
+slug: component-lifecycle
+series: angular-training
+order: 19
+tags:
+  - angular
+  - angular-training
+  - lifecycle
+  - effects
 pubDate: 2025-09-19
 lastModDate: ''
 ogImage: true
