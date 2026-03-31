@@ -2,6 +2,7 @@
 import { FEATURES } from '~/config'
 import { withBasePath } from '~/utils/path'
 import { parseTuple } from '~/utils/data'
+import { getAllBlogPosts, getBlogPostPath } from '~/utils/blog'
 
 const { search } = FEATURES
 if (!search || (Array.isArray(search) && !search[0])) return
@@ -15,15 +16,58 @@ if (includes.length === 0)
 const filterEnabled = filter && includes.length > 1
 const batchSize = parseTuple(batchLoadSize, 'batchLoadSize')
 const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
+
+function stripMarkdown(value: string) {
+  return value
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`[^`]*`/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/[>#*_~|-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function truncate(value: string, maxLength = 140) {
+  if (value.length <= maxLength) return value
+  return `${value.slice(0, maxLength).trim()}...`
+}
+
+const devSearchIndex = (await getAllBlogPosts()).map((post) => {
+  const plainBody = stripMarkdown(post.body ?? '')
+  const description = post.data.description ?? ''
+  const subtitle = post.data.subtitle ?? ''
+  const series = post.data.series ?? ''
+  const tags = post.data.tags ?? []
+  const titleLower = post.data.title.toLowerCase()
+  const url = getBlogPostPath(post)
+
+  return {
+    title: post.data.title,
+    titleLower,
+    url,
+    urlLower: url.toLowerCase(),
+    excerpt: truncate(description || plainBody),
+    searchText: [post.data.title, subtitle, description, series, ...tags, plainBody]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase(),
+  }
+})
 ---
+
+<script define:vars={{ devSearchIndex }}>
+  window.__DEV_SEARCH_INDEX__ = devSearchIndex
+</script>
 
 <!-- Search Switch -->
 <button
   type="button"
   id="search-switch"
   class="op-60 hover:op-100 op-transition"
-  title="Search"
-  aria-label="Search"
+  title="搜尋"
+  aria-label="搜尋"
 >
   <div class="i-grommet-icons-search"></div>
 </button>
@@ -38,7 +82,7 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
     text-[var(--c-text)] bg-[var(--c-bg)] shadow-custom_0_0_10_0`}
   aria-modal="true"
   aria-labelledby="search-label"
-  aria-keyshortcuts="ArrowUp,ArrowDown,Enter,Esc"
+  aria-keyshortcuts="ArrowUp,ArrowDown,Esc"
   data-filter={filterEnabled}
   data-batch-size={batchSize}
   data-max-items={maxItems}
@@ -50,7 +94,7 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
         <div
           role="tablist"
           class="search-tabs flex gap-2 justify-start items-center text-xs"
-          aria-label="Search categories"
+          aria-label="搜尋分類"
         >
           {includes.map((item) => (
             <button
@@ -62,7 +106,7 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
                 aria-[selected=false]:hover:op-70 op-transition cursor-pointer"
               data-type={item.toLowerCase()}
             >
-              {item.charAt(0).toUpperCase() + item.slice(1)}
+              {item === 'blog' ? '文章' : item}
             </button>
           ))}
         </div>
@@ -128,7 +172,7 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
     </div>
   </div>
   <!-- Shortcuts Footer -->
-  <footer role="note" aria-label="Keyboard shortcuts">
+  <footer role="note" aria-label="鍵盤快捷鍵">
     <ul
       class="flex flex-wrap items-center gap-4.5 lt-md:hidden
         pt-3 border-t border-[#7d7d7d4d]
@@ -141,17 +185,17 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
         <kbd class="search-kbd-key">
           <div class="i-material-symbols-arrow-downward"></div>
         </kbd>
-        <span>Navigate</span>
+        <span>上下移動</span>
       </li>
       <li class="flex items-center gap-1">
         <kbd class="search-kbd-key">
           <div class="i-grommet-icons-return"></div>
         </kbd>
-        <span>Go to Page</span>
+        <span>選取結果</span>
       </li>
       <li class="flex items-center gap-1">
         <kbd class="search-kbd-key">esc</kbd>
-        <span>Close</span>
+        <span>關閉</span>
       </li>
     </ul>
   </footer>
@@ -179,8 +223,6 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
 </script>
 
 <script>
-  import { toggleFadeEffect } from '~/utils/misc'
-
   interface Anchor {
     element: string
     id: string
@@ -203,21 +245,14 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
     excerpt: string
   }
 
-  const fakeResults = [
-    {
-      meta: {
-        title: 'Simulated Search Result in Dev Env',
-      },
-      excerpt:
-        'Mock data is used to simulate pagefind search <mark>in development</mark>, where files required for indexing exist only in memory.',
-    },
-    {
-      meta: {
-        title: 'Testing Search Functionality in Prod Env',
-      },
-      excerpt: 'Try running <mark>pnpm build && pnpm preview</mark> instead.',
-    },
-  ]
+  interface DevSearchResult {
+    title: string
+    titleLower: string
+    url: string
+    urlLower: string
+    excerpt: string
+    searchText: string
+  }
 
   class SearchPanel extends HTMLElement {
     #input: HTMLInputElement | null = null
@@ -357,30 +392,54 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
           this.#showOnlyError(requestId)
         }
       } else {
-        if (this.#content.innerHTML && value) return
+        const requestId = ++this.#activeRequestId
+        this.#resetView()
         if (!value) {
           this.#content.innerHTML = ''
           return
         }
-        for (const result of fakeResults) {
-          this.#content.innerHTML += `
-            <a href="${this.#results?.dataset.base}" class="search-result-item">
-              <div class="search-result-title">${result.meta.title}</div>
-              <div class="search-result-excerpt">${result.excerpt}</div>
-            </a>`
+
+        const results = this.#searchInDev(value)
+        if (results.length === 0) {
+          this.#showOnlyNoResult(requestId)
+          return
         }
-        this.#selectedItem = this.#content.querySelector('a')
-        this.#selectedItem?.setAttribute('aria-selected', 'true')
+
+        const frag = document.createDocumentFragment()
+        results.forEach((result, index) => {
+          const link = document.createElement('a')
+          link.href = result.url
+          link.className = 'search-result-item'
+          link.setAttribute('role', 'option')
+          link.setAttribute('tabindex', '-1')
+          link.setAttribute('aria-selected', index === 0 ? 'true' : 'false')
+
+          const title = document.createElement('div')
+          title.className = 'search-result-title'
+          title.textContent = result.title
+
+          const excerpt = document.createElement('div')
+          excerpt.className = 'search-result-excerpt'
+          excerpt.innerHTML = this.#highlightText(result.excerpt, value)
+
+          link.append(title, excerpt)
+          frag.appendChild(link)
+
+          if (index === 0) this.#selectedItem = link
+        })
+
+        this.#showFeedback('')
+        this.#content.appendChild(frag)
+        this.#input?.setAttribute('aria-expanded', 'true')
       }
     }
 
     #handleResultClick = (event: MouseEvent) => {
-      if (!this.#getLink(event)) return
+      const link = this.#getLink(event)
+      if (!link) return
 
-      if (!window.matchMedia('(prefers-reduced-motion)').matches)
-        this.classList.remove('fade-in')
-      this.classList.add('hidden')
-      toggleFadeEffect('backdrop', false, 'hidden')
+      event.preventDefault()
+      this.#updateSlectedItem(link)
     }
 
     #handleResultsPointerOver = (event: MouseEvent) => {
@@ -399,7 +458,7 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
       event.preventDefault()
 
       if (key === 'Enter') {
-        this.#selectedItem.click()
+        this.#updateSlectedItem(this.#selectedItem)
         return
       }
 
@@ -423,10 +482,9 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
     }
 
     #updateHint = (type?: string) => {
-      let hint = 'Search'
+      let hint = '搜尋文章'
       if (type) {
-        const cap = type.charAt(0).toUpperCase() + type.slice(1)
-        hint = `Search ${cap}`.trim()
+        hint = type === 'blog' ? '搜尋文章' : `搜尋 ${type}`.trim()
       }
 
       if (this.#input) this.#input.placeholder = hint
@@ -605,7 +663,7 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
         this.#showPagination(false)
         this.#batchLoading = true
       }
-      this.#showFeedback('Loading...')
+      this.#showFeedback('載入中...')
       this.#results?.setAttribute('aria-busy', 'true')
       if (!next) this.#input?.setAttribute('aria-expanded', 'true')
     }
@@ -613,14 +671,14 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
     #showOnlyError = (requestId: number) => {
       if (requestId !== this.#activeRequestId) return
 
-      this.#showFeedback('Oops! Something went wrong. Try again.')
+      this.#showFeedback('發生錯誤，請稍後再試。')
       this.#results?.removeAttribute('aria-busy')
     }
 
     #showOnlyNoResult = (requestId: number) => {
       if (requestId !== this.#activeRequestId) return
 
-      this.#showFeedback('No results found.')
+      this.#showFeedback('找不到相關文章。')
       this.#results?.removeAttribute('aria-busy')
     }
 
@@ -631,11 +689,100 @@ const maxItems = parseTuple(maxItemsPerPage, 'maxItemsPerPage')
       const more = Math.min(this.#batchSize, all - this.#renderedCount)
 
       if (this.#btnMore)
-        this.#btnMore.querySelector('span')!.textContent = `More +${more}`
+        this.#btnMore.querySelector('span')!.textContent = `更多 +${more}`
       if (this.#btnAll)
-        this.#btnAll.querySelector('span')!.textContent = `All ${all}`
+        this.#btnAll.querySelector('span')!.textContent = `全部 ${all}`
 
       this.#pagination.style.display = show ? 'flex' : 'none'
+    }
+
+    #searchInDev = (query: string) => {
+      const normalizedQuery = query.trim().toLowerCase()
+      const results = (
+        (window as Window & { __DEV_SEARCH_INDEX__?: DevSearchResult[] })
+          .__DEV_SEARCH_INDEX__ ?? []
+      )
+        .map((item) => ({
+          item,
+          score: this.#scoreDevResult(item, normalizedQuery),
+        }))
+        .filter((entry) => entry.score > 0)
+        .sort(
+          (left, right) =>
+            right.score - left.score ||
+            left.item.title.localeCompare(right.item.title, 'en')
+        )
+        .map((entry) => entry.item)
+
+      return results.slice(0, Math.max(this.#maxItems ?? 0, 10))
+    }
+
+    #scoreDevResult = (item: DevSearchResult, query: string) => {
+      if (!query) return 0
+
+      let score = 0
+      const title = item.titleLower
+      const content = item.searchText
+      const url = item.urlLower
+      const queryPattern = this.#createLooseBoundaryPattern(query)
+      const queryTokens = query.split(/\s+/).filter(Boolean)
+
+      if (title === query) score += 1000
+      if (title.startsWith(query)) score += 700
+      if (queryPattern.test(title)) score += 600
+      if (queryPattern.test(url)) score += 400
+      if (title.includes(query)) score += 250
+      if (content.includes(query)) score += 120
+
+      for (const token of queryTokens) {
+        const tokenPattern = this.#createLooseBoundaryPattern(token)
+        if (tokenPattern.test(title)) score += 80
+        else if (title.includes(token)) score += 25
+
+        if (tokenPattern.test(url)) score += 40
+        if (tokenPattern.test(content)) score += 20
+      }
+
+      return score
+    }
+
+    #createLooseBoundaryPattern = (value: string) => {
+      const escaped = this.#escapeRegExp(value.trim())
+      return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i')
+    }
+
+    #highlightText = (value: string, query: string) => {
+      const escapedValue = this.#escapeHtml(value)
+      const escapedQuery = this.#escapeRegExp(query.trim())
+      if (!escapedQuery) return escapedValue
+
+      return escapedValue.replace(
+        new RegExp(`(${escapedQuery})`, 'ig'),
+        '<mark>$1</mark>'
+      )
+    }
+
+    #escapeHtml = (value: string) => {
+      return value.replace(/[&<>"']/g, (char) => {
+        switch (char) {
+          case '&':
+            return '&amp;'
+          case '<':
+            return '&lt;'
+          case '>':
+            return '&gt;'
+          case '"':
+            return '&quot;'
+          case "'":
+            return '&#39;'
+          default:
+            return char
+        }
+      })
+    }
+
+    #escapeRegExp = (value: string) => {
+      return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     }
 
     #getLink = (event: Event) => {

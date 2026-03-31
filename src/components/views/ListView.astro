@@ -9,6 +9,7 @@ import Warning from '~/components/base/Warning.astro'
 import { FEATURES } from '~/config'
 import { isSameYear, getYear } from '~/utils/datetime'
 import { getFilteredPosts, getSortedPosts } from '~/utils/data'
+import { getBlogPostPath } from '~/utils/blog'
 
 import type { CollectionEntry, CollectionKey } from 'astro:content'
 import type { StreamSchema } from '~/content/schema'
@@ -37,9 +38,24 @@ let years: string[] = []
 
 /* Posts */
 let sortedBlogItems: CollectionEntry<'blog' | 'changelog'>[] = []
-if (collectionType === 'blog' || collectionType === 'changelog') {
-  const blogItems = await getFilteredPosts(collectionType)
+if (collectionType === 'blog') {
+  const blogItems = await getFilteredPosts('blog')
   sortedBlogItems = getSortedPosts(blogItems)
+
+  if (tocEnabled) {
+    const yearsSet = new Set<number>()
+    sortedBlogItems.forEach((item) => {
+      const year = getYear(item.data.pubDate)
+      yearsSet.add(year)
+    })
+
+    years = Array.from(yearsSet)
+      .sort((a, b) => b - a)
+      .map((year) => year.toString())
+  }
+} else if (collectionType === 'changelog') {
+  const changelogItems = await getFilteredPosts('changelog')
+  sortedBlogItems = getSortedPosts(changelogItems)
 
   if (tocEnabled) {
     const yearsSet = new Set<number>()
@@ -157,6 +173,11 @@ if (collectionType === 'feeds') {
               <ListItem
                 {idx}
                 {collectionType}
+                href={
+                  item.collection === 'blog'
+                    ? getBlogPostPath(item as CollectionEntry<'blog'>)
+                    : undefined
+                }
                 redirect={data.redirect}
                 postSlug={id}
                 title={data.title}
