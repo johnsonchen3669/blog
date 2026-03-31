@@ -12,7 +12,7 @@ export interface BlogSeriesMeta {
 export const BLOG_SERIES: BlogSeriesMeta[] = [
   {
     slug: 'angular-training',
-    title: 'Angular 鐵人賽',
+    title: 'Angular 新手練功日誌：從零到職場冒險',
     description: '30 篇整理 Angular 從基礎語法到實作觀念的系列文章。',
     icon: 'i-vscode-icons-file-type-angular',
     featured: true,

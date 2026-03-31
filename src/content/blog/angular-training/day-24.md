@@ -1,5 +1,5 @@
 ---
-title: Day 24 - RxJs
+title: RxJs | Angular 新手練功日誌
 description: "說明 RxJS Observable 的建立、訂閱、取消訂閱與常用 pipe 操作符。"
 slug: rxjs
 series: angular-training

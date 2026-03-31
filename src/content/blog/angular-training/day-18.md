@@ -1,5 +1,5 @@
 ---
-title: Day 18 - Service
+title: Service | Angular 新手練功日誌
 description: "說明 Angular Service 的用途、註冊方式，以及 constructor 與 inject 的注入寫法。"
 slug: services
 series: angular-training

@@ -1,5 +1,5 @@
 ---
-title: Day 14 - Output
+title: Output | Angular 新手練功日誌
 description: "說明子元件如何透過 output 函式與 @Output 將事件通知父元件。"
 slug: outputs
 series: angular-training

@@ -1,5 +1,5 @@
 ---
-title: Day 19 - 元件生命週期
+title: 元件生命週期 | Angular 新手練功日誌
 description: "介紹 Angular 元件從建立到銷毀的生命週期，包含常見 hooks 與渲染、清理時機。"
 slug: component-lifecycle
 series: angular-training

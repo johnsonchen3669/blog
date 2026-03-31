@@ -1,6 +1,6 @@
 ---
-title: 前言
-description: "說明 Angular 鐵人賽系列的學習方向、適合讀者與後續將涵蓋的主題。"
+title: 前言 | Angular 新手練功日誌
+description: "說明 Angular 新手練功日誌系列的學習方向、適合讀者與後續將涵蓋的主題。"
 slug: introduction
 series: angular-training
 order: 1

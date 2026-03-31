@@ -1,5 +1,5 @@
 ---
-title: Day 23 - 回應式表單
+title: 回應式表單 | Angular 新手練功日誌
 description: "介紹回應式表單的建立、驗證、FormArray 與巢狀 FormGroup 用法。"
 slug: reactive-forms
 series: angular-training

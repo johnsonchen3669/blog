@@ -1,5 +1,5 @@
 ---
-title: Day 28 - Testing
+title: Testing | Angular 新手練功日誌
 description: "介紹 Angular 單元測試的基本觀念，並比較 Jasmine、Karma 與 Vitest 的測試寫法。"
 slug: testing
 series: angular-training

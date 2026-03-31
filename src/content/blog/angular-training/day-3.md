@@ -1,5 +1,5 @@
 ---
-title: Day 3 - 專案架構
+title: 專案架構 | Angular 新手練功日誌
 description: "介紹 Angular 專案目錄結構、檔案命名慣例，以及 main.ts 的啟動入口。"
 slug: project-structure
 series: angular-training

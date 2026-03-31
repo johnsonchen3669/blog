@@ -1,5 +1,5 @@
 ---
-title: Day 16 - 模板相關用法一
+title: 模板相關用法一 | Angular 新手練功日誌
 description: "整理模板參考變數、ng-template 與 viewChild、viewChildren 的常見用法。"
 slug: template-patterns-part-1
 series: angular-training

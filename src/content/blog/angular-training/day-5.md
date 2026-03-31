@@ -1,5 +1,5 @@
 ---
-title: Day 5 - 模組
+title: 模組 | Angular 新手練功日誌
 description: "介紹 Angular Module 的用途、@NgModule 設定，以及模組化應用程式的組織方式。"
 slug: modules
 series: angular-training

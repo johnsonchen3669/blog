@@ -1,5 +1,5 @@
 ---
-title: Day 12 - 控制流程 for
+title: 控制流程 for | Angular 新手練功日誌
 description: "說明 Angular 模板中 @for 與 *ngFor 的清單渲染、track 與特殊變數用法。"
 slug: control-flow-for
 series: angular-training

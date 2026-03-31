@@ -1,5 +1,5 @@
 ---
-title: Day 17 - 模板相關用法二
+title: 模板相關用法二 | Angular 新手練功日誌
 description: "接續介紹 ng-container、ng-content 與 contentChild、contentChildren 的模板技巧。"
 slug: template-patterns-part-2
 series: angular-training

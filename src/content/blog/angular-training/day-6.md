@@ -1,5 +1,5 @@
 ---
-title: Day 6 - 元件資料定義
+title: 元件資料定義 | Angular 新手練功日誌
 description: "介紹 Angular 元件中的變數定義方式、型別系統（Interface、Type、Class），以及字串插值的使用。"
 slug: component-data-definition
 series: angular-training
