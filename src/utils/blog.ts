@@ -41,6 +41,15 @@ export function normalizeTaxonomyValue(value: string) {
     .replace(/^-|-$/g, '')
 }
 
+function normalizeRouteParam(value: string) {
+  return value
+    .replace(/\\/g, '/')
+    .split('/')
+    .map((segment) => normalizeTaxonomyValue(segment))
+    .filter(Boolean)
+    .join('/')
+}
+
 export function getSeriesPath(slug: string) {
   return withBasePath(`/series/${slug}/`)
 }
@@ -60,14 +69,27 @@ export function getBlogPostLegacyRouteParam(post: BlogPost) {
     .replace(/\.(md|mdx)$/, '')
 }
 
-export function getBlogPostRouteParam(post: BlogPost) {
-  if (post.data.slug) {
-    const normalizedSlug = normalizeTaxonomyValue(post.data.slug)
-    const seriesSlug = getPostSeriesSlug(post)
-    return seriesSlug ? `${seriesSlug}/${normalizedSlug}` : normalizedSlug
-  }
+export function getBlogPostSlug(post: BlogPost) {
+  const legacyParam = getBlogPostLegacyRouteParam(post)
+  const normalizedId = normalizeRouteParam(post.id)
 
-  return getBlogPostLegacyRouteParam(post)
+  if (!normalizedId || normalizedId === legacyParam)
+    return legacyParam.split('/').filter(Boolean).pop() ?? legacyParam
+
+  return normalizedId.split('/').filter(Boolean).pop() ?? normalizedId
+}
+
+export function getBlogPostRouteParam(post: BlogPost) {
+  const legacyParam = getBlogPostLegacyRouteParam(post)
+  const normalizedId = normalizeRouteParam(post.id)
+
+  if (!normalizedId || normalizedId === legacyParam) return legacyParam
+
+  const seriesSlug = getPostSeriesSlug(post)
+  if (seriesSlug && !normalizedId.startsWith(`${seriesSlug}/`))
+    return `${seriesSlug}/${normalizedId}`
+
+  return normalizedId
 }
 
 export function getBlogPostPath(post: BlogPost) {
