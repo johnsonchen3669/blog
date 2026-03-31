@@ -1,5 +1,5 @@
 ---
-title: Day 7 - 資料繫結
+title: 資料繫結 | Angular 新手練功日誌
 description: "說明 Angular 的 Property Binding、Attribute Binding、Class Binding 與 Style Binding 用法。"
 slug: data-binding
 series: angular-training

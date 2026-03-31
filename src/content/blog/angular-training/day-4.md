@@ -1,5 +1,5 @@
 ---
-title: Day 4 - 元件
+title: 元件 | Angular 新手練功日誌
 description: "說明 Angular 元件的核心概念、@Component 結構、獨立元件與建立方式。"
 slug: components
 series: angular-training

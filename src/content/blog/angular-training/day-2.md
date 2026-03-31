@@ -1,5 +1,5 @@
 ---
-title: Day 2 - 環境安裝
+title: 環境安裝 | Angular 新手練功日誌
 description: "整理 Angular 20 開發所需環境、Angular CLI 安裝步驟與新專案建立流程。"
 slug: environment-setup
 series: angular-training

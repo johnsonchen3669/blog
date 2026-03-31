@@ -1,5 +1,5 @@
 ---
-title: Day 21 - Pipes
+title: Pipes | Angular 新手練功日誌
 description: "介紹 Angular Pipes 的使用方式，包含內建管道、自訂管道與常見格式化範例。"
 slug: pipes
 series: angular-training

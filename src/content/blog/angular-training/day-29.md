@@ -1,5 +1,5 @@
 ---
-title: Day 29 - Animations
+title: Animations | Angular 新手練功日誌
 description: "說明 Angular 新舊動畫 API 的差異，涵蓋 animate.enter、animate.leave 與第三方整合。"
 slug: animations
 series: angular-training

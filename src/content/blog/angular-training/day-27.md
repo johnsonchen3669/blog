@@ -1,5 +1,5 @@
 ---
-title: Day 27 - Routing （二）
+title: Routing （二） | Angular 新手練功日誌
 description: "接續介紹 Angular 路由的進階功能，包含 redirect、resolve、route guards 與 lazy loading。"
 slug: routing-advanced
 series: angular-training

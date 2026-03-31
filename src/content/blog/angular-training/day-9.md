@@ -1,5 +1,5 @@
 ---
-title: Day 9 - Signals
+title: Signals | Angular 新手練功日誌
 description: "從變更偵測機制切入，整理 Angular Signals 的建立、更新與唯讀、衍生狀態寫法。"
 slug: signals-basics
 series: angular-training

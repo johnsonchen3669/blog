@@ -1,5 +1,5 @@
 ---
-title: Day 20 - 指令
+title: 指令 | Angular 新手練功日誌
 description: "整理 Angular 指令的基本概念，包含屬性指令、結構指令與自訂指令寫法。"
 slug: directives
 series: angular-training

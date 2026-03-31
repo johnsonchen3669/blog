@@ -1,5 +1,5 @@
 ---
-title: Day 30 - 建置專案
+title: 建置專案 | Angular 新手練功日誌
 description: "整理 Angular 專案的 build 流程，以及 CSR、SSR、SSG 與部署時的注意事項。"
 slug: build-and-deployment
 series: angular-training

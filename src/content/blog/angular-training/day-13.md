@@ -1,5 +1,5 @@
 ---
-title: Day 13 - Input
+title: Input | Angular 新手練功日誌
 description: "介紹父元件如何透過 input 函式與 @Input 將資料傳遞給子元件。"
 slug: inputs
 series: angular-training

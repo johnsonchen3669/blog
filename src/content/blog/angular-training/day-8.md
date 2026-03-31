@@ -1,5 +1,5 @@
 ---
-title: Day 8 - 事件監聽
+title: 事件監聽 | Angular 新手練功日誌
 description: "介紹 Angular 事件監聽的綁定方式，包含按鍵修飾符、$event 物件與防止預設行為。"
 slug: event-listeners
 series: angular-training

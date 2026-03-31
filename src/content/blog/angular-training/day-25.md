@@ -1,5 +1,5 @@
 ---
-title: Day 25 - HTTP Client
+title: HTTP Client | Angular 新手練功日誌
 description: "介紹 Angular HttpClient 的設定方式、HTTP 請求、型別化回應與攔截器。"
 slug: http-client
 series: angular-training
