@@ -14,9 +14,10 @@ const { items } = Astro.props
   class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3 py-4 mx-auto"
 >
   {
-    items.map((item) => (
+    items.map((item, idx) => (
       <Link
-        class="group relative flex items-center px-3.5 pt-2 pb-3.5 rounded-md bg-transparent hover:bg-[#88888811] text-4.4 transition-all duration-300"
+        class="slide-enter group relative flex items-center px-3.5 pt-2 pb-3.5 rounded-md bg-transparent hover:bg-[#88888811] text-4.4 transition-all duration-300"
+        style={{ '--enter-stage': idx }}
         href={item.path}
         title={item.title}
       >
