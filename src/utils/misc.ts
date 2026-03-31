@@ -62,3 +62,17 @@ export function toggleFadeEffect(
     )
   }
 }
+
+/**
+ * Normalizes a content title for social cards.
+ *
+ * Example: `Day 3 - 專案架構` -> `專案架構`
+ */
+export function normalizeOgTitle(title: string) {
+  const trimmedTitle = title.trim()
+  const normalizedTitle = trimmedTitle
+    .replace(/^day\s+\d+\s*[-:：]\s*/i, '')
+    .trim()
+
+  return normalizedTitle || trimmedTitle
+}

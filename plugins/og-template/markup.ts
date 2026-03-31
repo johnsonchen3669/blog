@@ -15,14 +15,13 @@ export const ogImageMarkup = (
 
   return html`<div
     tw="relative flex justify-center items-center w-full h-full"
-    style="font-family: 'Inter'"
+    style="font-family: 'Inter', 'Noto Sans TC'"
   >
     <img
       tw="absolute inset-0 w-full h-full"
       src="${backgroundBase64[bgType]}"
       alt="open graph"
     />
-
     <div tw="flex items-center justify-start w-full px-18" style="gap: 20px">
       <div tw="self-start flex justify-center items-center">
         <svg
@@ -55,7 +54,6 @@ export const ogImageMarkup = (
           </defs>
         </svg>
       </div>
-
       <div tw="flex flex-col" style="gap: 10px">
         <div tw="text-[#858585] text-2.1rem">${authorOrBrand}</div>
         <div tw="text-white text-3.1rem leading-relaxed mr-18">${title}</div>
