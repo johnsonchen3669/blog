@@ -8,7 +8,7 @@ import {
 } from '@atproto/api'
 import { atUriToPostUri } from 'astro-loader-bluesky-posts'
 
-import { resolvePath } from './path'
+import { getBlogPostPath } from './blog'
 
 import type { CollectionEntry, CollectionKey } from 'astro:content'
 import type { CardItemData } from '~/components/views/CardItem.astro'
@@ -42,7 +42,9 @@ export function parseTuple(
  * Retrieves filtered posts from the specified content collection.
  * In production, it filters out draft posts.
  */
-export async function getFilteredPosts(collection: 'blog' | 'changelog') {
+export async function getFilteredPosts<K extends 'blog' | 'changelog'>(
+  collection: K
+): Promise<CollectionEntry<K>[]> {
   return await getCollection(collection, ({ data }) => {
     return import.meta.env.PROD ? !data.draft : true
   })
@@ -51,8 +53,8 @@ export async function getFilteredPosts(collection: 'blog' | 'changelog') {
 /**
  * Sorts an array of posts by their publication date in descending order.
  */
-export function getSortedPosts(
-  posts: CollectionEntryList<'blog' | 'changelog'>
+export function getSortedPosts<K extends 'blog' | 'changelog'>(
+  posts: CollectionEntryList<K>
 ) {
   return posts.sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -200,11 +202,8 @@ export function processBlueskyPosts(data: CollectionEntryList<'highlights'>) {
 
           if (AppBskyEmbedVideo.isView(media))
             card.video = {
-              // @ts-expect-error (ignore)
               src: `https://bsky.social/xrpc/com.atproto.sync.getBlob?did=${author.did}&cid=${media.cid}`,
-              // @ts-expect-error (ignore)
-              alt: media.alt,
-              // @ts-expect-error (ignore)
+              alt: media.alt ?? '',
               poster: media.thumbnail ?? '',
             }
 
@@ -251,19 +250,19 @@ export function processBlueskyPosts(data: CollectionEntryList<'highlights'>) {
  */
 export async function getShortsFromBlog(data: CollectionEntryList<'blog'>) {
   const cards: CardItemData[] = []
-  const basePath = resolvePath('/blog')
   const sortedData = data.sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   )
 
   for (const item of sortedData) {
-    const slug = item.id
+    const postPath = getBlogPostPath(item)
+    const slug = item.data.slug ?? item.id
     const title = item.data.title
     const date = item.data.pubDate
 
     if (slug === 'markdown-syntax-guide') {
       cards.push({
-        link: `${basePath}/${slug}`,
+        link: postPath,
         text: title,
         date: date,
       })
@@ -300,7 +299,7 @@ export async function getShortsFromBlog(data: CollectionEntryList<'blog'>) {
           (h) => h.depth === neededHeadingLevel && h.text !== 'Wrapping Up'
         )
         .map((h) => ({
-          link: `${basePath}${slug}/#${h.slug}`,
+          link: `${postPath}#${h.slug}`,
           text: `${processedTitle}: ${h.text}`,
           date: date,
         }))
