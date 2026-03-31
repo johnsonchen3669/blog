@@ -62,6 +62,32 @@ export const postSchema = z.object({
     .describe(
       'Provides a brief description, used in meta tags for SEO and sharing purposes. If not needed, leave the field as an empty string or delete it, and the `SITE.description` will be used directly.'
     ),
+  slug: z
+    .string()
+    .optional()
+    .describe(
+      'Overrides the default URL segment used for this post. Recommended for new posts that need descriptive, SEO-friendly URLs.'
+    ),
+  series: z
+    .string()
+    .optional()
+    .describe(
+      'Groups the post into a series. Recommended for grouped tutorials or multi-part posts. If omitted, the post is treated as a standalone article unless inferred by folder structure.'
+    ),
+  order: z
+    .number()
+    .int()
+    .positive()
+    .optional()
+    .describe(
+      'Controls the order of posts within a series. If omitted, the publication date is used as the fallback sort order.'
+    ),
+  tags: z
+    .array(z.string().min(1))
+    .default([])
+    .describe(
+      'Defines the post tags used for filtering, navigation and topic grouping. Use short, stable names to keep tag URLs manageable.'
+    ),
   pubDate: z.coerce
     .date()
     .describe(

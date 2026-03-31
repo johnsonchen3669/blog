@@ -1,12 +1,102 @@
 ---
 import Link from '~/components/base/Link.astro'
-import { ensureTrailingSlash } from '~/utils/path'
+import { ensureTrailingSlash, resolvePath } from '~/utils/path'
 
-const pathSegments = ensureTrailingSlash(Astro.url.pathname)
-  .split('/')
-  .slice(0, -2)
-const href = pathSegments.length > 1 ? pathSegments.join('/') + '/' : '/'
+const pathname = ensureTrailingSlash(Astro.url.pathname)
+const segments = pathname.split('/').filter(Boolean)
+
+const href =
+  segments[0] === 'blog'
+    ? segments.length === 1
+      ? resolvePath('/')
+      : resolvePath('/blog')
+    : (() => {
+        const pathSegments = pathname.split('/').slice(0, -2)
+        return pathSegments.length > 1 ? pathSegments.join('/') + '/' : '/'
+      })()
 ---
 
 <span class="font-mono op-50">&gt; </span>
-<Link class="font-mono op-50!" {href}>cd ..</Link>
+<Link id="back-link" class="font-mono op-50!" {href}>cd ..</Link>
+
+<script is:inline>
+  const BACKLINK_NAV_KEY = 'backlink-nav'
+
+  const normalizePath = (value) => {
+    if (!value) return undefined
+    return value.endsWith('/') ? value : `${value}/`
+  }
+
+  const isNavigableListPage = (pathname) => {
+    return (
+      pathname === '/blog/' ||
+      /^\/series\/[^/]+\/$/.test(pathname) ||
+      /^\/tags\/[^/]+\/$/.test(pathname)
+    )
+  }
+
+  const isBlogDetailPage = (pathname) => {
+    return (
+      /^\/blog\/[^/]+\/$/.test(pathname) ||
+      /^\/blog\/[^/]+\/[^/]+\/$/.test(pathname)
+    )
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const backLink = document.getElementById('back-link')
+    if (!(backLink instanceof HTMLAnchorElement)) return
+
+    const currentPath = normalizePath(window.location.pathname)
+    if (!currentPath) return
+    const shouldUseSourceOverride = isBlogDetailPage(currentPath)
+
+    const navStateRaw = shouldUseSourceOverride
+      ? sessionStorage.getItem(BACKLINK_NAV_KEY)
+      : null
+    if (navStateRaw) {
+      try {
+        const navState = JSON.parse(navStateRaw)
+        const targetPath = typeof navState?.to === 'string' ? navState.to : ''
+        const sourcePath =
+          typeof navState?.from === 'string' ? navState.from : ''
+
+        if (
+          targetPath === `${currentPath}${window.location.search}` &&
+          sourcePath
+        ) {
+          const sourceUrl = new URL(sourcePath, window.location.origin)
+          const sourceNormalizedPath = normalizePath(sourceUrl.pathname)
+
+          if (
+            sourceNormalizedPath &&
+            isNavigableListPage(sourceNormalizedPath)
+          ) {
+            backLink.href = `${sourceNormalizedPath}${sourceUrl.search}`
+            return
+          }
+        }
+      } catch {
+        // ignore malformed session state and fall back to the default href
+      }
+    }
+
+    const referrer = document.referrer
+    if (!shouldUseSourceOverride) return
+    if (!referrer) return
+
+    try {
+      const referrerUrl = new URL(referrer)
+      if (referrerUrl.origin !== window.location.origin) return
+
+      const referrerPath = normalizePath(referrerUrl.pathname)
+
+      if (!currentPath || !referrerPath || currentPath === referrerPath) return
+      if (!isNavigableListPage(referrerPath)) return
+
+      const hasSearch = referrerUrl.search && referrerUrl.search.length > 0
+      backLink.href = `${referrerPath}${hasSearch ? referrerUrl.search : ''}`
+    } catch {
+      return
+    }
+  })
+</script>

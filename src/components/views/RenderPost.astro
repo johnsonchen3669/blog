@@ -4,6 +4,7 @@ import { render } from 'astro:content'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import StandardLayout from '~/layouts/StandardLayout.astro'
 import PostMeta from '~/components/base/PostMeta.astro'
+import PostTaxonomy from '~/components/blog/PostTaxonomy.astro'
 import Warning from '~/components/base/Warning.astro'
 import Toc from '~/components/toc/Toc.astro'
 import ShareLink from '~/components/widgets/ShareLink.astro'
@@ -58,6 +59,7 @@ frontmatter to <code>false</code> or remove it to publish the post.`
   <StandardLayout {title} {subtitle} {isSearchable} {searchFilter}>
     <Fragment slot="head">
       <PostMeta {pubDate} {lastModDate} {minutesRead} />
+      {post.collection === 'blog' && <PostTaxonomy post={post} />}
     </Fragment>
     <Fragment slot="article">
       {isDraft && <Warning html={WARNING} />}
