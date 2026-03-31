@@ -155,7 +155,7 @@ export function processBlueskyPosts(data: CollectionEntryList<'highlights'>) {
 
     if (embed) {
       if (AppBskyEmbedImages.isView(embed))
-        card.images = embed.images.map((img) => ({
+        card.images = embed.images.map((img: AppBskyEmbedImages.ViewImage) => ({
           src: img.thumb,
           alt: img.alt ?? '',
         }))
@@ -195,10 +195,12 @@ export function processBlueskyPosts(data: CollectionEntryList<'highlights'>) {
 
         if (media) {
           if (AppBskyEmbedImages.isView(media))
-            card.images = media.images.map((img) => ({
-              src: img.thumb ?? '',
-              alt: img.alt ?? '',
-            }))
+            card.images = media.images.map(
+              (img: AppBskyEmbedImages.ViewImage) => ({
+                src: img.thumb ?? '',
+                alt: img.alt ?? '',
+              })
+            )
 
           if (AppBskyEmbedVideo.isView(media))
             card.video = {
@@ -216,9 +218,7 @@ export function processBlueskyPosts(data: CollectionEntryList<'highlights'>) {
             }
         }
 
-        // @ts-expect-error (ignore)
         if (AppBskyEmbedRecord.isViewRecord(record.record)) {
-          // @ts-expect-error (ignore)
           const { uri, value, author } = record.record
 
           card.quote = {
@@ -236,7 +236,7 @@ export function processBlueskyPosts(data: CollectionEntryList<'highlights'>) {
     }
 
     if (replies && replies.length > 0) {
-      card.details = replies.map((reply) => reply.html)
+      card.details = replies.map((reply: { html: string }) => reply.html)
     }
 
     cards.push(card)
