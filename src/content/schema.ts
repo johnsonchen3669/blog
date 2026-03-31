@@ -1,4 +1,4 @@
-import { z } from 'astro:content'
+import { z } from 'astro/zod'
 
 /* Pages*/
 export const pageSchema = z.object({
@@ -151,7 +151,7 @@ export const postSchema = z.object({
     ),
   redirect: z
     .string()
-    .url('Invalid url.')
+    .url({ error: 'Invalid url.' })
     .optional()
     .describe('Defines a URL to redirect the post.'),
   draft: z
@@ -169,7 +169,7 @@ export const projectSchema = z.object({
   id: z.string().describe('**Required**. Name of the project to be displayed.'),
   link: z
     .string()
-    .url('Invalid url.')
+    .url({ error: 'Invalid url.' })
     .describe('**Required**. URL linking to the project page or repository.'),
   desc: z
     .string()
@@ -210,7 +210,7 @@ export const streamSchema = z.object({
     ),
   link: z
     .string()
-    .url('Invalid url.')
+    .url({ error: 'Invalid url.' })
     .describe('**Required**. Specifies the URL link to the stream.'),
   radio: z
     .boolean()
