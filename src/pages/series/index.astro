@@ -1,0 +1,24 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import SeriesGrid from '~/components/blog/SeriesGrid.astro'
+import { getAllBlogPosts, getSeriesSummaries } from '~/utils/blog'
+
+const posts = await getAllBlogPosts()
+const items = getSeriesSummaries(posts)
+---
+
+<BaseLayout
+  title="Series"
+  description="依系列整理 Blog 文章，快速進入完整主題學習路線。"
+  ogImage={true}
+>
+  <StandardLayout
+    class="max-w-300"
+    title="Series"
+    subtitle="依系列整理完整主題內容"
+    isCentered={true}
+  >
+    <SeriesGrid {items} />
+  </StandardLayout>
+</BaseLayout>

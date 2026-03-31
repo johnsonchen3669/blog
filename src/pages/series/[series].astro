@@ -1,0 +1,28 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import StandardLayout from '~/layouts/StandardLayout.astro'
+import BlogPostList from '~/components/blog/BlogPostList.astro'
+import { getAllBlogPosts, getSeriesSummaries } from '~/utils/blog'
+
+export async function getStaticPaths() {
+  const posts = await getAllBlogPosts()
+  const series = getSeriesSummaries(posts)
+
+  return series.map((item) => ({
+    params: { series: item.slug },
+    props: { item },
+  }))
+}
+
+const { item } = Astro.props
+---
+
+<BaseLayout title={item.title} description={item.description} ogImage={true}>
+  <StandardLayout
+    class="prose"
+    title={item.title}
+    subtitle={`${item.count} 篇文章`}
+  >
+    <BlogPostList posts={item.posts} />
+  </StandardLayout>
+</BaseLayout>
