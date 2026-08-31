@@ -18,6 +18,15 @@ export const BLOG_SERIES: BlogSeriesMeta[] = [
     featured: true,
     defaultTags: ['angular', 'angular-training'],
   },
+  {
+    slug: 'typescript',
+    title: '從 JavaScript 到 TypeScript：30 天建立 AI 時代的型別思維',
+    description:
+      '用 30 天從 JavaScript 走進 TypeScript，建立能與 AI 協作、也能自行驗證的型別思維。',
+    icon: 'i-vscode-icons-file-type-typescript-official',
+    featured: true,
+    defaultTags: ['typescript', 'javascript', 'ai'],
+  },
 ]
 
 export const BLOG_SERIES_MAP = new Map(

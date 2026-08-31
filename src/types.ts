@@ -69,6 +69,9 @@ export interface Site {
    */
   ogLocale: string
 
+  /** IANA timezone used for publication scheduling and date boundaries. */
+  timezone: string
+
   /**
    * Specifies the allowed domains for optimizing remote images,
    * including those used with `![]()` and the `<Image />` or `<Picture />` components.
