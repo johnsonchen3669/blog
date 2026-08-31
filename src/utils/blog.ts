@@ -97,7 +97,7 @@ export function getBlogPostPath(post: BlogPost) {
 }
 
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
-  const posts = await getFilteredPosts('blog')
+  const posts = await getFilteredPosts()
   return getSortedPosts(posts) as BlogPost[]
 }
 

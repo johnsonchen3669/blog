@@ -1,8 +1,8 @@
 ---
 import { ClientRouter } from 'astro:transitions'
-import { basename } from 'node:path'
+import { existsSync } from 'node:fs'
+import { basename, join } from 'node:path'
 
-import { checkFileExistsInDir } from '../../../plugins/remark-generate-og-image'
 import { withBasePath } from '~/utils/path'
 import { normalizeOgTitle } from '~/utils/misc'
 import { SITE } from '~/config'
@@ -27,17 +27,17 @@ const pageDescription = description || SITE.description
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
-const generatedOgImage = checkFileExistsInDir(
-  'public/og-images',
-  `${basename(Astro.url.pathname)}.png`
-)
+const ogImageExists = (filename: string) =>
+  existsSync(join(process.cwd(), 'public', 'og-images', filename))
+
+const generatedOgImage = ogImageExists(`${basename(Astro.url.pathname)}.png`)
   ? withBasePath('og-images', `${basename(Astro.url.pathname)}.png`)
   : undefined
 
 const assignedOgImage =
   ogImage &&
   ogImage !== true &&
-  checkFileExistsInDir('public/og-images', ogImage)
+  ogImageExists(ogImage)
     ? withBasePath('og-images', ogImage)
     : undefined
 
