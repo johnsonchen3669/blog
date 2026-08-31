@@ -1,39 +1,20 @@
 ---
 import Link from '~/components/base/Link.astro'
-
 import type { BlogSeriesSummary } from '~/utils/blog'
 
-interface Props {
-  items: BlogSeriesSummary[]
-}
-
-const { items } = Astro.props
+const { items } = Astro.props as { items: BlogSeriesSummary[] }
 ---
 
-<div
-  class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3 py-4 mx-auto"
->
+<div class="field-series-grid">
   {
-    items.map((item, idx) => (
-      <Link
-        class="slide-enter group relative flex items-center px-3.5 pt-2 pb-3.5 rounded-md bg-transparent hover:bg-[#88888811] text-4.4 transition-all duration-300"
-        style={{ '--enter-stage': idx }}
-        href={item.path}
-        title={item.title}
-      >
-        <div class="pt-2 pr-5">
-          <div
-            class={`op-50 leading-9 text-7.5 ${item.icon}`}
-            aria-hidden="true"
-          />
-        </div>
-        <div class="flex-auto min-w-0">
-          <div class="font-600 leading-1.3em">{item.title}</div>
-          <div class="op-60 text-sm font-normal leading-1.5em mt-1">
-            {item.description}
-          </div>
-          <div class="op-40 text-xs font-normal mt-2">{item.count} 篇文章</div>
-        </div>
+    items.map((item) => (
+      <Link class="field-series-card" href={item.path}>
+        <span class="field-series-card__count">
+          {String(item.count).padStart(2, '0')} notes
+        </span>
+        <h3>{item.title}</h3>
+        <p>{item.description}</p>
+        <span class="field-series-card__action">進入系列 →</span>
       </Link>
     ))
   }

@@ -1,27 +1,23 @@
 ---
 import Link from '~/components/base/Link.astro'
-
 import type { BlogTagSummary } from '~/utils/blog'
 
 interface Props {
   items: BlogTagSummary[]
   limit?: number
 }
-
 const { items, limit } = Astro.props
 const visibleItems = typeof limit === 'number' ? items.slice(0, limit) : items
 ---
 
-<div class="flex flex-wrap gap-2 py-2">
+<div class="field-tags">
   {
     visibleItems.map((item) => (
-      <Link
-        class="inline-flex items-center gap-2 rounded-full border border-[#8884] px-3 py-1 text-sm op-75 hover:op-100 transition-all duration-200"
-        href={item.path}
-        title={item.name}
-      >
-        <span>#{item.name}</span>
-        <span class="op-50 text-xs">{item.count}</span>
+      <Link class="field-tag" href={item.path} title={item.name}>
+        <>
+          <span>#{item.name}</span>
+          <small>{item.count}</small>
+        </>
       </Link>
     ))
   }

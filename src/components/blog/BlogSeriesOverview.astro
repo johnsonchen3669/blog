@@ -8,9 +8,10 @@ const items = getSeriesSummaries(posts)
 
 {
   items.length > 0 && (
-    <section class="mb-12">
-      <h2 class="mb-2">Series</h2>
-      <p class="mt-0! mb-4! op-60">從系列入口快速瀏覽完整學習路線。</p>
+    <section class="blog-series-overview">
+      <span class="utility-label">Learning routes</span>
+      <h2>系列文章</h2>
+      <p>從系列入口快速瀏覽完整學習路線。</p>
       <SeriesGrid {items} />
     </section>
   )

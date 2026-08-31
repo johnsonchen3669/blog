@@ -18,33 +18,37 @@ const {
 } = Astro.props
 ---
 
-<header
-  class:list={{
-    'prose mx-auto mb-8': true,
-    'text-center': isCentered,
-  }}
+<div
+  class:list={[
+    'content-frame',
+    { 'content-frame--centered': isCentered },
+    className,
+  ]}
 >
-  {title && <h1>{title}</h1>}
-  {subtitle && <p class="mt--4! op-50 italic">{subtitle}</p>}
-  <slot name="head" />
-</header>
-{
-  Astro.slots.has('article') && (
-    <article
-      class="slide-enter-content prose mx-auto"
-      data-pagefind-body={isSearchable ? '' : undefined}
-      data-pagefind-filter={
-        isSearchable && searchFilter ? searchFilter : undefined
-      }
-    >
-      <slot name="article" />
-    </article>
-  )
-}
-{
-  Astro.slots.has('default') && (
-    <div class:list={['mx-auto', className]}>
-      <slot />
-    </div>
-  )
-}
+  <header class="page-heading">
+    <span class="utility-label">Field note</span>
+    {title && <h1>{title}</h1>}
+    {subtitle && <p>{subtitle}</p>}
+    <slot name="head" />
+  </header>
+  {
+    Astro.slots.has('article') && (
+      <article
+        class="prose reading-column"
+        data-pagefind-body={isSearchable ? '' : undefined}
+        data-pagefind-filter={
+          isSearchable && searchFilter ? searchFilter : undefined
+        }
+      >
+        <slot name="article" />
+      </article>
+    )
+  }
+  {
+    Astro.slots.has('default') && (
+      <div class="content-body">
+        <slot />
+      </div>
+    )
+  }
+</div>

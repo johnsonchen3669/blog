@@ -23,7 +23,6 @@ import type { CreateProperties } from 'rehype-external-links'
 export const remarkPlugins: RemarkPlugins = [
   // https://github.com/remarkjs/remark-directive
   remarkDirective,
-  // https://github.com/lin-stephanie/remark-directive-sugar
   [
     remarkDirectiveSugar,
     {
@@ -63,7 +62,6 @@ export const rehypePlugins: RehypePlugins = [
   [rehypeHeadingIds, { headingIdCompat: true }],
   // https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex
   [rehypeKatex, { strict: false }],
-  // https://github.com/lin-stephanie/rehype-callouts
   [
     rehypeCallouts,
     {

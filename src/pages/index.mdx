@@ -1,32 +1,16 @@
 ---
 title: 'Johnson Chen'
-subtitle: 'Frontend Developer'
-description: '這裡記錄我的前端開發筆記、實作心得與技術分享。'
-bgType: plum
-toc: false
+description: '前端開發實作、TypeScript 型別思維與 Angular 學習筆記。'
 ogImage: false
 ---
 
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import StandardLayout from '~/layouts/StandardLayout.astro'
-import RenderPage from '~/components/views/RenderPage.astro'
-import LatestPostsSection from '~/components/blog/LatestPostsSection.astro'
+import HomePage from '~/components/home/HomePage.astro'
 
 <BaseLayout
   title={frontmatter.title}
   description={frontmatter.description}
-  bgType={frontmatter.bgType}
   ogImage={frontmatter.ogImage}
 >
-  <StandardLayout title={frontmatter.title} subtitle={frontmatter.subtitle}>
-    <RenderPage
-      slot="article"
-      collectionType="home"
-      id="index"
-      pageToc={frontmatter.toc}
-    />
-
-    <LatestPostsSection slot="article" />
-
-  </StandardLayout>
+  <HomePage />
 </BaseLayout>

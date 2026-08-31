@@ -4,10 +4,9 @@ export async function GET() {
   // https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest
   const manifest = {
     id: withBasePath('/'),
-    name: 'Astro AntfuStyle Theme',
-    short_name: 'AntfuStyle',
-    description:
-      'A customizable, feature-rich Astro theme for blog and portfolio',
+    name: 'Johnson Chen — Field Notes',
+    short_name: 'JC Notes',
+    description: '前端開發實作、TypeScript 型別思維與 Angular 學習筆記。',
     icons: [
       {
         src: withBasePath('icon-192.png'),
@@ -29,8 +28,8 @@ export async function GET() {
     scope: withBasePath('/'),
     start_url: withBasePath('/'),
     display: 'standalone',
-    theme_color: '#fff',
-    background_color: '#fff',
+    theme_color: '#eef3f6',
+    background_color: '#eef3f6',
   }
 
   return new Response(JSON.stringify(manifest), {

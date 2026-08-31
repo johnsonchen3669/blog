@@ -2,7 +2,6 @@
 title: Blog
 description: 個人技術文章列表。
 subtitle: ''
-bgType: dot
 toc: false
 ogImage: true
 ---
@@ -15,11 +14,10 @@ import ListView from '~/components/views/ListView.astro'
 <BaseLayout
   title={frontmatter.title}
   description={frontmatter.description}
-  bgType={frontmatter.bgType}
   ogImage={frontmatter.ogImage}
 >
   <StandardLayout
-    class="prose"
+    class="blog-index"
     title={frontmatter.title}
     subtitle={frontmatter.subtitle}
   >
