@@ -9,6 +9,7 @@ import {
 import { atUriToPostUri } from 'astro-loader-bluesky-posts'
 
 import { getBlogPostPath, getBlogPostSlug } from './blog'
+import { SITE } from '~/config'
 
 import type { CollectionEntry, CollectionKey } from 'astro:content'
 import type { CardItemData } from '~/components/views/CardItem.astro'
@@ -46,8 +47,29 @@ export async function getFilteredPosts<K extends 'blog' | 'changelog'>(
   collection: K
 ): Promise<CollectionEntry<K>[]> {
   return await getCollection(collection, ({ data }) => {
-    return import.meta.env.PROD ? !data.draft : true
+    return import.meta.env.PROD
+      ? !data.draft && isPublished(data.pubDate)
+      : true
   })
+}
+
+function getDateKey(date: Date, timezone: string) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date)
+  const values = Object.fromEntries(
+    parts.map(({ type, value }) => [type, value])
+  )
+
+  return `${values.year}-${values.month}-${values.day}`
+}
+
+export function isPublished(pubDate: Date, now = new Date()) {
+  const publicationDate = pubDate.toISOString().slice(0, 10)
+  return publicationDate <= getDateKey(now, SITE.timezone)
 }
 
 /**

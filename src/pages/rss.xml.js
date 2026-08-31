@@ -1,16 +1,13 @@
-import { getCollection } from 'astro:content'
 import rss from '@astrojs/rss'
 
 import { SITE } from '~/config'
 import { getBlogPostPath } from '~/utils/blog'
+import { getFilteredPosts } from '~/utils/data'
 import { withBasePath } from '~/utils/path'
 
 export async function GET() {
-  const blog = await getCollection('blog')
-
-  const filteredBlogitems = blog.filter((item) => !item.data.draft)
-
-  const sortedBlogItems = filteredBlogitems.sort(
+  const blog = await getFilteredPosts('blog')
+  const sortedBlogItems = blog.sort(
     (a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate)
   )
 

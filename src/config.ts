@@ -8,6 +8,7 @@ export const SITE: Site = {
   author: 'Johnson Chen',
   lang: 'zh-TW',
   ogLocale: 'zh_TW',
+  timezone: 'Asia/Taipei',
   imageDomains: ['cdn.bsky.app', 'images.unsplash.com'],
 }
 
