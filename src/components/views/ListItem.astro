@@ -1,7 +1,5 @@
 ---
 import Link from '~/components/base/Link.astro'
-
-import { withBasePath } from '~/utils/path'
 import { formatDate } from '~/utils/datetime'
 
 interface Props {
@@ -18,61 +16,21 @@ interface Props {
   platform?: string
 }
 
-const {
-  idx,
-  redirect,
-  collectionType,
-  href,
-  postSlug,
-  title,
-  video,
-  radio,
-  date,
-  minutesRead,
-  platform,
-} = Astro.props
+const { href, redirect, title, date, minutesRead } = Astro.props
 ---
 
-<div class="slide-enter" style={{ '--enter-stage': idx }}>
-  <Link
-    u-flex="~ items-center lt-md:(col items-start) gap-2"
-    class="border-b-none! mb-6 mt-2 op-transition!"
-    href={redirect ?? href ?? withBasePath(`/${collectionType}/${postSlug}/`)}
-    external={redirect ? true : false}
-    enableNewTabWarning={redirect ? true : false}
+<Link
+  class="field-post-row"
+  href={redirect ?? href}
+  external={Boolean(redirect)}
+>
+  <time datetime={new Date(date).toISOString()}>{formatDate(date)}</time>
+  <strong>{title}</strong>
+  <span
+    >{
+      typeof minutesRead === 'number' && minutesRead > 0
+        ? `${minutesRead} min read`
+        : 'Field note'
+    }</span
   >
-    <Fragment slot="title">{title}</Fragment>
-    <span slot="end" u-flex="~ gap-2 items-center">
-      {
-        video && (
-          <span
-            class="i-ri-film-line flex-none op-50 align-middle"
-            title="Provided in video"
-            aria-label="Provided in video"
-          />
-        )
-      }
-      {
-        radio && (
-          <span
-            class="i-ri-radio-line flex-none op-50 align-middle"
-            title="Provided in radio"
-            aria-label="Provided in radio"
-          />
-        )
-      }
-      <time
-        class="op-50 text-sm ws-nowrap"
-        datetime={new Date(date).toISOString()}
-      >
-        {formatDate(date, false)}
-      </time>
-      {
-        typeof minutesRead === 'number' && minutesRead > 0 && (
-          <span class="op-40 text-sm ws-nowrap">· {minutesRead} min</span>
-        )
-      }
-      {platform && <span class="op-40 text-sm ws-nowrap">· {platform}</span>}
-    </span>
-  </Link>
-</div>
+</Link>

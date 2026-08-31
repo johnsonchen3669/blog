@@ -1,149 +1,59 @@
-import {
-  defineConfig,
-  presetWind3,
-  presetAttributify,
-  presetWebFonts,
-  transformerDirectives,
-  transformerVariantGroup,
-} from 'unocss'
+import { defineConfig, presetAttributify, presetWind3 } from 'unocss'
 import presetIcons from '@unocss/preset-icons'
+import { transformerDirectives, transformerVariantGroup } from 'unocss'
 
-import { UI } from './src/config'
 import { BLOG_SERIES } from './src/content/blog/series'
-import projecstData from './src/content/projects/data.json'
+import { UI } from './src/config'
 
-import type {
-  IconNavItem,
-  ResponsiveNavItem,
-  IconSocialItem,
-  ResponsiveSocialItem,
-} from './src/types'
-
-const { internalNavs, socialLinks, githubView } = UI
-const navIcons = internalNavs
-  .filter(
-    (item) =>
-      item.displayMode !== 'alwaysText' &&
-      item.displayMode !== 'textHiddenOnMobile'
-  )
-  .map((item) => (item as IconNavItem | ResponsiveNavItem).icon)
-const socialIcons = socialLinks
-  .filter(
-    (item) =>
-      item.displayMode !== 'alwaysText' &&
-      item.displayMode !== 'textHiddenOnMobile'
-  )
-  .map((item) => (item as IconSocialItem | ResponsiveSocialItem).icon)
-
-const projectIcons = projecstData.map((item) => item.icon)
-const seriesIcons = BLOG_SERIES.map((item) => item.icon)
-
-const githubVersionColor: Record<string, string> = {
-  major: 'bg-rose/15 text-rose-7 dark:text-rose-3',
-  minor: 'bg-purple/15 text-purple-7 dark:text-purple-3',
-  patch: 'bg-green/15 text-green-7 dark:text-green-3',
-  pre: 'bg-teal/15 text-teal-7 dark:text-teal-3',
-}
-const githubVersionClass = Object.keys(githubVersionColor).map(
-  (k) => `github-${k}`
-)
-const githubSubLogos = githubView.subLogoMatches.map((item) => item[1])
+const configuredIcons = [
+  ...UI.internalNavs.flatMap((item) => ('icon' in item ? [item.icon] : [])),
+  ...UI.socialLinks.flatMap((item) => ('icon' in item ? [item.icon] : [])),
+  ...BLOG_SERIES.map((series) => series.icon),
+]
 
 export default defineConfig({
-  // Ensure utilities used in Astro components/layouts/scripts are extracted
   content: {
     filesystem: ['./src/**/*.{astro,html,js,ts,md,mdx}'],
   },
-
-  // will be deep-merged to the default theme
-  extendTheme: (theme) => {
-    return {
-      ...theme,
-      breakpoints: {
-        ...theme.breakpoints,
-        lgp: '1128px',
-      },
-    }
+  theme: {
+    breakpoints: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      lgp: '1128px',
+      xl: '1280px',
+    },
   },
-
-  // define utility classes and the resulting CSS
-  rules: [],
-
-  // combine multiple rules as utility classes
   shortcuts: [
     [
-      /^(\w+)-transition(?:-(\d+))?$/,
-      (match) =>
-        `transition-${match[1] === 'op' ? 'opacity' : match[1]} duration-${match[2] ? match[2] : '300'} ease-in-out`,
+      /^(\w+)-transition$/,
+      ([, property]) =>
+        `transition-${property === 'op' ? 'opacity' : property} duration-200 ease-out`,
     ],
     [
-      /^shadow-custom_(-?\d+)_(-?\d+)_(-?\d+)_(-?\d+)$/,
-      ([_, x, y, blur, spread]) =>
-        `shadow-[${x}px_${y}px_${blur}px_${spread}px_rgba(0,0,0,0.2)] dark:shadow-[${x}px_${y}px_${blur}px_${spread}px_rgba(255,255,255,0.25)]`,
-    ],
-    [
-      /^btn-(\w+)$/,
-      ([_, color]) =>
-        `px-2.5 py-1 border border-[#8884]! rounded op-50 transition-all duration-200 ease-out no-underline! hover:(op-100 text-${color} bg-${color}/10)`,
-    ],
-    [
-      /^github-(major|minor|patch|pre)$/,
-      ([, version]) => `rounded ${githubVersionColor[version]}`,
+      'focus-ring',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
     ],
   ],
-
-  // presets are partial configurations
   presets: [
     presetWind3(),
-    presetAttributify({
-      strict: false,
-      prefix: 'u-',
-      prefixedOnly: false,
-    }),
+    presetAttributify(),
     presetIcons({
-      cdn: 'https://esm.sh/',
       collectionsNodeResolvePath: process.cwd(),
-      warn: true,
       extraProperties: {
         'display': 'inline-block',
-        'height': '1.2em',
-        'width': '1.2em',
-        'vertical-align': 'text-bottom',
-      },
-    }),
-    presetWebFonts({
-      fonts: {
-        sans: 'Inter:400,600,800',
-        mono: 'DM Mono:400,600',
-        condensed: 'Roboto Condensed',
+        'vertical-align': 'middle',
       },
     }),
   ],
-
-  // provides a unified interface to transform source code in order to support conventions
   transformers: [transformerDirectives(), transformerVariantGroup()],
-
-  // work around the limitation of dynamically constructed utilities
-  // https://unocss.dev/guide/extracting#limitations
   safelist: [
-    ...navIcons,
-    ...socialIcons,
-    ...projectIcons,
-    ...seriesIcons,
-
-    /* BaseLayout */
-    'focus:not-sr-only',
-    'focus:fixed',
-    'focus:start-1',
-    'focus:top-1.5',
-    'focus:op-20',
-
-    /* GithubItem */
-    ...githubVersionClass,
-    ...githubSubLogos,
-
-    /* Toc */
+    ...configuredIcons,
     'i-ri-menu-2-fill',
-    'i-ri-menu-3-fill',
+    'i-ri-arrow-up-line',
+    'i-ri-search-line',
+    'i-ri-rss-line',
+    'i-ri-sun-line',
+    'i-ri-moon-line',
   ],
 })

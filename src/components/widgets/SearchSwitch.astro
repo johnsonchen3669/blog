@@ -57,7 +57,7 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
 })
 ---
 
-<script define:vars={{ devSearchIndex }}>
+<script is:inline define:vars={{ devSearchIndex }}>
   window.__DEV_SEARCH_INDEX__ = devSearchIndex
 </script>
 

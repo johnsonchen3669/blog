@@ -1,0 +1,100 @@
+---
+import Link from '~/components/base/Link.astro'
+import {
+  getAllBlogPosts,
+  getBlogPostPath,
+  getSeriesSummaries,
+} from '~/utils/blog'
+import { formatDate } from '~/utils/datetime'
+
+const posts = await getAllBlogPosts()
+const latestPosts = posts.slice(0, 5)
+const series = getSeriesSummaries(posts)
+---
+
+<div class="field-home">
+  <section class="field-hero" aria-labelledby="hero-title">
+    <div class="field-hero__statement">
+      <span class="utility-label">Johnson Chen / Frontend developer</span>
+      <h1 id="hero-title">
+        把前端問題，<br /><em>整理成可重複使用的方法。</em>
+      </h1>
+      <p>
+        這裡記錄我在前端開發中的推理過程、實作選擇與踩坑修正。重點不是收集答案，而是留下下一次仍能使用的判斷方式。
+      </p>
+      <div class="field-actions">
+        <Link class="field-button field-button--primary" href="/blog/"
+          >閱讀文章</Link
+        >
+        <Link
+          class="field-button"
+          href="https://github.com/johnsonchen3669"
+          external={true}
+          newTab={true}>GitHub</Link
+        >
+      </div>
+    </div>
+    <aside class="field-hero__ledger" aria-label="目前關注主題">
+      <span class="utility-label">Current focus</span>
+      <dl>
+        <div><dt>01</dt><dd>TypeScript 型別思維</dd></div>
+        <div><dt>02</dt><dd>Angular 元件與架構</dd></div>
+        <div><dt>03</dt><dd>可維護性與使用體驗</dd></div>
+      </dl>
+      <p>Notes from Taipei · {posts.length} 篇文章</p>
+    </aside>
+  </section>
+
+  <section class="trace-section" aria-labelledby="series-title">
+    <header class="trace-section__heading">
+      <span class="trace-node" aria-hidden="true"></span>
+      <div>
+        <span class="utility-label">Learning routes</span><h2 id="series-title">
+          代表系列
+        </h2>
+      </div>
+      <Link href="/series/">查看全部系列</Link>
+    </header>
+    <div class="field-series-grid">
+      {
+        series.map((item) => (
+          <Link class="field-series-card" href={item.path}>
+            <span class="field-series-card__count">
+              {String(item.count).padStart(2, '0')}
+            </span>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+            <span class="field-series-card__action">進入系列 →</span>
+          </Link>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="trace-section" aria-labelledby="latest-title">
+    <header class="trace-section__heading">
+      <span class="trace-node" aria-hidden="true"></span>
+      <div>
+        <span class="utility-label">Recent observations</span><h2
+          id="latest-title"
+        >
+          最新文章
+        </h2>
+      </div>
+      <Link href="/blog/">瀏覽文章索引</Link>
+    </header>
+    <div class="field-post-index">
+      {
+        latestPosts.map((post) => (
+          <Link class="field-post-row" href={getBlogPostPath(post)}>
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            <strong>{post.data.title}</strong>
+            <span>{post.data.tags.slice(0, 2).join(' / ') || 'note'}</span>
+          </Link>
+        ))
+      }
+    </div>
+  </section>
+</div>

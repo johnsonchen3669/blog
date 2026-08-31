@@ -13,10 +13,10 @@ interface Props {
 const { posts } = Astro.props
 ---
 
-<div aria-label="Blog post list">
+<div class="blog-post-list" aria-label="Blog post list">
   {
     posts.length === 0 ? (
-      <div class="py-2 op-50">nothing here yet</div>
+      <div class="empty-note">目前還沒有公開文章。</div>
     ) : (
       posts.map(async (post, idx) => {
         const { remarkPluginFrontmatter } = await render(post)

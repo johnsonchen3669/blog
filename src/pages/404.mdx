@@ -2,7 +2,6 @@
 title: '404'
 subtitle: ''
 description: Page not found
-bgType: false
 toc: false
 ogImage: false
 ---
@@ -13,10 +12,12 @@ import StandardLayout from '~/layouts/StandardLayout.astro'
 <BaseLayout
   title={frontmatter.title}
   description={frontmatter.description}
-  bgType={frontmatter.bgType}
   ogImage={frontmatter.ogImage}
 >
   <StandardLayout title={frontmatter.title} subtitle={frontmatter.subtitle}>
-    <p slot="article">Nice to meet you tho!</p>
+    <div slot="article" class="not-found">
+      <p>這一頁沒有留下紀錄。</p>
+      <a href="/">回到首頁</a>
+    </div>
   </StandardLayout>
 </BaseLayout>

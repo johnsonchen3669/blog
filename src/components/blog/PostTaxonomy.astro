@@ -22,28 +22,21 @@ const tags = getPostTags(post)
 
 {
   (seriesMeta || tags.length > 0) && (
-    <div
-      class="mt-4 flex flex-wrap items-center gap-2 text-sm"
-      data-pagefind-ignore
-    >
+    <div class="field-taxonomy" data-pagefind-ignore>
       {seriesMeta && seriesSlug && (
         <Link
-          class="inline-flex items-center gap-2 rounded-full border border-[#8884] px-3 py-1 op-75 hover:op-100 transition-all duration-200"
+          class="field-taxonomy__series"
           href={getSeriesPath(seriesSlug)}
           title={seriesMeta.title}
         >
-          <span class="inline-flex items-center gap-2">
+          <span>
             <span class={seriesMeta.icon} aria-hidden="true" />
             <span>{seriesMeta.title}</span>
           </span>
         </Link>
       )}
       {tags.map((tag) => (
-        <Link
-          class="inline-flex items-center rounded-full border border-[#8884] px-3 py-1 op-70 hover:op-100 transition-all duration-200"
-          href={tag.path}
-          title={tag.name}
-        >
+        <Link class="field-taxonomy__tag" href={tag.path} title={tag.name}>
           <span>{`#${tag.name}`}</span>
         </Link>
       ))}

@@ -2,7 +2,6 @@
 import { render } from 'astro:content'
 
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import StandardLayout from '~/layouts/StandardLayout.astro'
 import PostMeta from '~/components/base/PostMeta.astro'
 import PostTaxonomy from '~/components/blog/PostTaxonomy.astro'
 import Warning from '~/components/base/Warning.astro'
@@ -11,72 +10,95 @@ import ShareLink from '~/components/widgets/ShareLink.astro'
 import Giscus from '~/components/widgets/Giscus.astro'
 import ImageViewer from '~/components/widgets/ImageViewer.astro'
 import { FEATURES } from '~/config'
+import { getPostSeriesMeta } from '~/utils/blog'
 
 import type { CollectionEntry } from 'astro:content'
 
 interface Props {
-  post: CollectionEntry<'blog' | 'changelog'>
+  post: CollectionEntry<'blog'>
   isCommentable?: boolean
 }
 
 const { post, isCommentable = false } = Astro.props
 const { toc, share, giscus, search } = FEATURES
-
 const { data: frontmatter } = post
 const { Content, headings, remarkPluginFrontmatter } = await render(post)
 
-const title = frontmatter.title
-const description = frontmatter.description
-const ogImage = frontmatter.ogImage
 const pubDate = frontmatter.pubDate.toISOString()
-const lastModDate =
-  frontmatter.lastModDate && frontmatter.lastModDate.toISOString()
-const subtitle = frontmatter.subtitle
+const lastModDate = frontmatter.lastModDate
+  ? frontmatter.lastModDate.toISOString()
+  : undefined
 const minutesRead =
-  frontmatter.minutesRead || (remarkPluginFrontmatter.minutesRead as number)
-const isDraft = frontmatter.draft
-
+  frontmatter.minutesRead ?? (remarkPluginFrontmatter.minutesRead as number)
+const series = getPostSeriesMeta(post)
 const tocEnabled = Array.isArray(toc) && toc[0] && frontmatter.toc
 const shareEnabled = Array.isArray(share) && share[0] && frontmatter.share
 const giscusEnabled =
   isCommentable && Array.isArray(giscus) && giscus[0] && frontmatter.giscus
-
-const collectionType = post.collection
 const isSearchable =
   Array.isArray(search) &&
   search[0] &&
-  search[1].includes.includes(collectionType) &&
+  search[1].includes.includes('blog') &&
   frontmatter.search
 const searchFilter =
-  isSearchable && search[1].filter ? `collection:${collectionType}` : undefined
+  isSearchable && search[1].filter ? 'collection:blog' : undefined
 
-const WARNING = `This is a draft post that will not be published
-in production. Set the post's <code>draft</code> property in
-frontmatter to <code>false</code> or remove it to publish the post.`
+const draftWarning = `這篇文章仍是草稿，只會出現在開發環境。`
 ---
 
-<BaseLayout {title} {description} {ogImage} {pubDate} {lastModDate}>
-  <StandardLayout {title} {subtitle} {isSearchable} {searchFilter}>
-    <Fragment slot="head">
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  ogImage={frontmatter.ogImage}
+  {pubDate}
+  {lastModDate}
+>
+  <article
+    class="post-document"
+    data-pagefind-body={isSearchable ? '' : undefined}
+    data-pagefind-filter={searchFilter}
+  >
+    <header class="post-header">
+      <p class="field-kicker">FIELD NOTE / {series?.title ?? 'DEVELOPMENT'}</p>
+      <h1>{frontmatter.title}</h1>
+      {
+        frontmatter.subtitle && (
+          <p class="post-subtitle">{frontmatter.subtitle}</p>
+        )
+      }
       <PostMeta {pubDate} {lastModDate} {minutesRead} />
-      {post.collection === 'blog' && <PostTaxonomy post={post} />}
-    </Fragment>
-    <Fragment slot="article">
-      {isDraft && <Warning html={WARNING} />}
-      {tocEnabled && <Toc {headings} />}
-      <Content />
-    </Fragment>
-  </StandardLayout>
+      <PostTaxonomy {post} />
+    </header>
+
+    <div class="post-layout">
+      <aside class="post-margin" aria-hidden="true">
+        <span>OBSERVATION</span>
+        <span class="trace-line"></span>
+        <span>{pubDate.slice(0, 10)}</span>
+      </aside>
+      <div class="prose post-content">
+        {frontmatter.draft && <Warning html={draftWarning} />}
+        <Content />
+      </div>
+      {
+        tocEnabled && (
+          <div class="post-toc">
+            <Toc {headings} />
+          </div>
+        )
+      }
+    </div>
+  </article>
+
   <Fragment slot="share">
     {shareEnabled && <ShareLink config={share[1]} />}
   </Fragment>
   {
     giscusEnabled && (
-      <div slot="giscus" class="prose mx-auto mt-8">
-        <hr />
+      <div slot="giscus" class="prose giscus-frame">
         <Giscus />
       </div>
     )
   }
-  <ImageViewer selector="article" options={{ title: 0, navbar: 0 }} />
+  <ImageViewer selector=".post-content" options={{ title: 0, navbar: 0 }} />
 </BaseLayout>

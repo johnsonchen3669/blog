@@ -35,9 +35,7 @@ const generatedOgImage = ogImageExists(`${basename(Astro.url.pathname)}.png`)
   : undefined
 
 const assignedOgImage =
-  ogImage &&
-  ogImage !== true &&
-  ogImageExists(ogImage)
+  ogImage && ogImage !== true && ogImageExists(ogImage)
     ? withBasePath('og-images', ogImage)
     : undefined
 

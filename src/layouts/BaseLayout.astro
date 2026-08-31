@@ -1,12 +1,17 @@
 ---
 import '@unocss/reset/tailwind.css'
-import '~/styles/main.css'
+import '@fontsource-variable/recursive'
+import '@fontsource/noto-sans-tc/400.css'
+import '@fontsource/noto-sans-tc/600.css'
+import '@fontsource/noto-sans-tc/700.css'
+import '@fontsource/ibm-plex-mono/400.css'
+import '@fontsource/ibm-plex-mono/600.css'
 import '~/styles/prose.css'
 import '~/styles/markdown.css'
 import '~/styles/page.css'
+import '~/styles/main.css'
 
 import Head from '~/components/base/Head.astro'
-import Background from '~/components/backgrounds/Background.astro'
 import Link from '~/components/base/Link.astro'
 import NavBar from '~/components/nav/NavBar.astro'
 import BackLink from '~/components/widgets/BackLink.astro'
@@ -14,36 +19,23 @@ import Footer from '~/components/base/Footer.astro'
 import ToTopButton from '~/components/widgets/ToTopButton.astro'
 import Backdrop from '~/components/base/Backdrop.astro'
 
-import { SITE, UI, FEATURES } from '~/config'
+import { SITE, FEATURES } from '~/config'
 import { withBasePath } from '~/utils/path'
-
-import type { BgType } from '~/types'
 
 interface Props {
   title?: string
   description?: string
   ogImage?: string | boolean
-  bgType?: BgType | false
   pubDate?: string
   lastModDate?: string
 }
 
-const { title, description, ogImage, bgType, pubDate, lastModDate } =
-  Astro.props
-
-let style: Record<string, string> = {}
-
+const { title, description, ogImage, pubDate, lastModDate } = Astro.props
 const { slideEnterAnim } = FEATURES
 const enableSlideEnterAnim = Array.isArray(slideEnterAnim) && slideEnterAnim[0]
-if (enableSlideEnterAnim)
-  style['--enter-step'] = `${slideEnterAnim[1].enterStep}ms`
-
-const {
-  externalLink: { newTab, cursorType },
-} = UI
-const hasCustomCursor =
-  newTab && cursorType.length > 0 && cursorType !== 'pointer'
-if (hasCustomCursor) style['--external-link-cursor'] = cursorType
+const style = enableSlideEnterAnim
+  ? { '--enter-step': `${slideEnterAnim[1].enterStep}ms` }
+  : undefined
 ---
 
 <!doctype html>
@@ -51,53 +43,28 @@ if (hasCustomCursor) style['--external-link-cursor'] = cursorType
   <head>
     <Head {title} {description} {ogImage} {pubDate} {lastModDate} />
   </head>
-
   <body
-    class="relative flex flex-col min-h-screen
-      font-sans text-gray-700 dark:text-gray-200"
-    style={Object.keys(style).length !== 0 ? style : undefined}
+    class="site-body"
+    {style}
     data-no-sliding={enableSlideEnterAnim ? undefined : ''}
   >
-    <!-- Background -->
-    {bgType && <Background type={bgType} />}
-
-    <!-- Skip Link -->
-    <Link
-      href="#main"
-      class="sr-only focus:(not-sr-only fixed start-1 top-1.5 op-20)"
-    >
-      Skip to content
-    </Link>
-
-    <!-- Nav Bar -->
+    <Link href="#main" class="skip-link">跳到主要內容</Link>
     <NavBar />
-
-    <!-- Main -->
-    <main id="main" class="px-7 py-10">
-      <!-- Content -->
+    <main id="main" class="site-main">
       <slot />
-      <!-- Share -->
       {
         Astro.url.pathname !== withBasePath('/') && (
-          <footer class="slide-enter animate-delay-1000! prose mx-auto mt-8 print:hidden">
+          <footer class="article-backlink print:hidden">
             <slot name="share" />
-            <br />
             <BackLink />
           </footer>
         )
       }
-      <!-- Comments -->
       <slot name="giscus" />
     </main>
-
-    <!-- Footer -->
     <Footer />
     <ToTopButton />
-
-    <!-- Panel Backdrop (on mobile) -->
     <Backdrop />
-
-    <!-- Progress Bar -->
     <script>
       import '~/scripts/base-layout-client'
     </script>
