@@ -6,7 +6,7 @@ import { getFilteredPosts } from '~/utils/data'
 import { withBasePath } from '~/utils/path'
 
 export async function GET() {
-  const blog = await getFilteredPosts('blog')
+  const blog = await getFilteredPosts()
   const sortedBlogItems = blog.sort(
     (a, b) => new Date(b.data.pubDate) - new Date(a.data.pubDate)
   )
