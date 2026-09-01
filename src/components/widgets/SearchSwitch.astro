@@ -76,7 +76,7 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
 <search-panel
   role="dialog"
   id="search-panel"
-  class={`hidden z-200 fixed top-15% lt-lgp:(top-10%) left-50% translate-x--50%
+  class={`field-search-panel hidden z-200 fixed top-15% lt-lgp:(top-10%) left-50% translate-x--50%
     grid grid-rows-[auto_1fr_auto]
     w-42rem lt-lgp:(w-90%) max-h-70vh lt-lgp:(max-h-80vh) p-3 lt-lgp:(pb-1) rounded-lg
     text-(--c-text) bg-(--c-bg) shadow-custom_0_0_10_0`}
@@ -88,6 +88,10 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
   data-max-items={maxItems}
 >
   <div class="flex flex-col gap-2">
+    <header class="field-search-heading">
+      <span class="utility-label">Search index</span>
+      <small>文章、標籤與系列</small>
+    </header>
     <!-- Tab list -->
     {
       filterEnabled && (
@@ -114,12 +118,14 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
     }
     <!-- Search Bar -->
     <div
-      class="grid grid-cols-[auto_1fr] items-center
+      class="field-search-input grid grid-cols-[auto_1fr] items-center
         h-10 px-3 rounded-md
         bg-[#88888811] dark:bg-[#88888818]"
     >
       <div class="i-grommet-icons-search"></div>
-      <label for="search-input" id="search-label" class="sr-only"></label>
+      <label for="search-input" id="search-label" class="sr-only"
+        >搜尋文章</label
+      >
       <input
         type="search"
         role="combobox"
@@ -128,6 +134,7 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
         autocomplete="off"
         autocorrect="off"
         spellcheck="false"
+        placeholder="輸入關鍵字"
         aria-labelledby="search-label"
         aria-autocomplete="list"
         aria-controls="search-results"
