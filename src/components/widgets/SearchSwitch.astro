@@ -213,6 +213,11 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
 
   /* Handle click on search switch to open or close */
   document.addEventListener('astro:page-load', () => {
+    const searchPanel = document.getElementById('search-panel')
+    if (searchPanel && searchPanel.parentElement !== document.body) {
+      document.body.append(searchPanel)
+    }
+
     const handleToggle = () => {
       toggleFadeEffect('backdrop', true, 'hidden')
       toggleFadeEffect('search-panel', true, 'hidden')
