@@ -551,9 +551,7 @@ interface OgImageConfig {
   /**
    * Sets the fallback background for OG images.
    *
-   * By default, the background used for auto-generated OG images is based on the `bgType` set in frontmatter.
    * This value is only used for the fallback OG image (stored at `/public/og-images/og-image.png`)
-   * and as the background when `bgType` is not specified.
    *
    * A fallback OG image is the default image used when the specified or auto-generated OG image is missing.
    * You can delete the existing file to regenerate a new one.
