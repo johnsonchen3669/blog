@@ -71,22 +71,19 @@ const draftWarning = `這篇文章仍是草稿，只會出現在開發環境。`
     </header>
 
     <div class="post-layout">
-      <aside class="post-margin" aria-hidden="true">
-        <span>OBSERVATION</span>
-        <span class="trace-line"></span>
-        <span>{pubDate.slice(0, 10)}</span>
-      </aside>
+      {
+        tocEnabled && (
+          <div class="post-toc">
+            <div class="post-toc__inner">
+              <Toc {headings} />
+            </div>
+          </div>
+        )
+      }
       <div class="prose post-content">
         {frontmatter.draft && <Warning html={draftWarning} />}
         <Content />
       </div>
-      {
-        tocEnabled && (
-          <div class="post-toc">
-            <Toc {headings} />
-          </div>
-        )
-      }
     </div>
   </article>
 
