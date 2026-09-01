@@ -160,13 +160,32 @@ const specHeadings = generateToc(headings, minHeadingLevel, maxHeadingLevel)
       }
       for (const tocLinkEl of newLinks) {
         tocLinkEl.setAttribute('aria-current', 'true')
-
-        // when toc is too long, scroll active toc link into viewport
-        tocLinkEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        this.#keepDesktopLinkVisible(tocLinkEl)
       }
 
       this.#currentActiveHeading = targetHeading
       this.#previousActiveLinks = newLinks
+    }
+
+    #keepDesktopLinkVisible = (link: HTMLAnchorElement) => {
+      const desktopNav = link.closest('.toc-desktop')
+      const scroller = desktopNav?.querySelector(':scope > ul')
+      if (!(scroller instanceof HTMLElement) || scroller.clientHeight === 0)
+        return
+
+      const scrollerRect = scroller.getBoundingClientRect()
+      const linkRect = link.getBoundingClientRect()
+      const edgePadding = 16
+
+      if (linkRect.top < scrollerRect.top + edgePadding) {
+        scroller.scrollBy({
+          top: linkRect.top - scrollerRect.top - edgePadding,
+        })
+      } else if (linkRect.bottom > scrollerRect.bottom - edgePadding) {
+        scroller.scrollBy({
+          top: linkRect.bottom - scrollerRect.bottom + edgePadding,
+        })
+      }
     }
 
     #getHeadingLevel = (level: string | undefined) => {
