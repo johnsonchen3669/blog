@@ -1,11 +1,9 @@
 import nprogress from 'nprogress'
 
 const BACKLINK_NAV_KEY = 'backlink-nav'
-const SCROLL_REVEAL_SELECTOR = [
-  '.post-document .post-content > *',
-  '.post-document .post-navigation',
-  '.field-post-row',
-].join(', ')
+const SCROLL_REVEAL_SELECTOR = '.field-post-row'
+const REVEAL_SEEN_KEY = 'field-reveal-seen'
+const ENTRANCE_CLASSES = ['scroll-reveal-enabled', 'enter-anim']
 
 let scrollRevealObserver: IntersectionObserver | undefined
 
@@ -18,25 +16,52 @@ function getCurrentPathWithSearch() {
   return `${normalizePath(window.location.pathname)}${window.location.search}`
 }
 
+function revealAlreadyShown() {
+  try {
+    return sessionStorage.getItem(REVEAL_SEEN_KEY) === '1'
+  } catch {
+    return true
+  }
+}
+
+function markRevealShown() {
+  try {
+    sessionStorage.setItem(REVEAL_SEEN_KEY, '1')
+  } catch {
+    /* ignore */
+  }
+}
+
+function stripEntranceClasses() {
+  document.documentElement.classList.remove(...ENTRANCE_CLASSES)
+}
+
 function setupScrollReveal() {
   scrollRevealObserver?.disconnect()
   scrollRevealObserver = undefined
 
+  // The entrance plays once per tab session; afterwards lists must never be
+  // hidden again by re-initialisation.
+  if (revealAlreadyShown()) {
+    stripEntranceClasses()
+    return
+  }
+
   const items = Array.from(
     document.querySelectorAll<HTMLElement>(SCROLL_REVEAL_SELECTOR)
   )
-
-  items.forEach((item) => item.classList.remove('is-scroll-revealed'))
 
   if (
     items.length === 0 ||
     !('IntersectionObserver' in window) ||
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   ) {
-    document.documentElement.classList.remove('scroll-reveal-enabled')
+    stripEntranceClasses()
+    markRevealShown()
     return
   }
 
+  markRevealShown()
   document.documentElement.classList.add('scroll-reveal-enabled')
 
   scrollRevealObserver = new IntersectionObserver(
@@ -54,7 +79,16 @@ function setupScrollReveal() {
     }
   )
 
-  items.forEach((item) => scrollRevealObserver?.observe(item))
+  items.forEach((item) => {
+    // Rows already on screen (restored scroll included) show up at once, so
+    // the reveal pass can never hide something the visitor is looking at.
+    const rect = item.getBoundingClientRect()
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      item.classList.add('is-scroll-revealed')
+    } else {
+      scrollRevealObserver?.observe(item)
+    }
+  })
 }
 
 document.addEventListener('click', (event) => {
@@ -100,6 +134,12 @@ document.addEventListener('click', (event) => {
 
 document.addEventListener('astro:before-preparation', () => {
   nprogress.start()
+})
+
+document.addEventListener('astro:after-swap', () => {
+  // Strip the entrance classes before the swapped-in page can paint, so
+  // revisited pages render fully visible instead of re-animating.
+  if (revealAlreadyShown()) stripEntranceClasses()
 })
 
 document.addEventListener('astro:page-load', () => {

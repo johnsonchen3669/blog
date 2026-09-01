@@ -695,16 +695,12 @@ input:focus-visible {
 .post-toc .toc-desktop > ul {
   pointer-events: none;
   opacity: 0;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  transition: opacity 0.72s ease-out;
 }
 .post-toc__inner:hover .toc-desktop > ul,
 .post-toc__inner:focus-within .toc-desktop > ul {
   pointer-events: auto;
   opacity: 1;
-  transform: none;
 }
 .post-toc .toc-desktop ul ul {
   padding-left: 12px;
@@ -858,38 +854,41 @@ mark.pagefind-highlight {
     transform: none;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .scroll-reveal-enabled .post-document .post-content > *,
-  .scroll-reveal-enabled .post-document .post-navigation,
-  .scroll-reveal-enabled .field-post-row {
+@keyframes article-load-in {
+  from {
     opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-reveal-enabled .field-post-row {
+    opacity: 0 !important;
     transition: opacity 0.72s ease-out;
     will-change: opacity;
   }
-  .scroll-reveal-enabled .field-post-row {
-    opacity: 0 !important;
-  }
-  .scroll-reveal-enabled .post-document .post-content > .is-scroll-revealed,
-  .scroll-reveal-enabled .post-document .post-navigation.is-scroll-revealed,
-  .scroll-reveal-enabled .field-post-row.is-scroll-revealed {
-    opacity: 1;
-    will-change: auto;
-  }
   .scroll-reveal-enabled .field-post-row.is-scroll-revealed {
     opacity: 1 !important;
+    will-change: auto;
   }
-  .field-hero__statement,
-  .field-hero__ledger,
-  .trace-section {
+  .post-content {
+    animation: article-load-in 0.72s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  html.enter-anim .field-hero__statement,
+  html.enter-anim .field-hero__ledger,
+  html.enter-anim .trace-section {
     animation: trace-in 0.55s both;
   }
-  .field-hero__ledger {
+  html.enter-anim .field-hero__ledger {
     animation-delay: 0.08s;
   }
-  .trace-section:nth-of-type(2) {
+  html.enter-anim .trace-section:nth-of-type(2) {
     animation-delay: 0.14s;
   }
-  .trace-section:nth-of-type(3) {
+  html.enter-anim .trace-section:nth-of-type(3) {
     animation-delay: 0.2s;
   }
 }

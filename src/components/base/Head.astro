@@ -82,7 +82,16 @@ const webPageData = {
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="generator" content={Astro.generator} />
 <script is:inline>
-  document.documentElement.classList.add('scroll-reveal-enabled')
+  try {
+    if (sessionStorage.getItem('field-reveal-seen') !== '1') {
+      document.documentElement.classList.add(
+        'scroll-reveal-enabled',
+        'enter-anim'
+      )
+    }
+  } catch {
+    /* storage unavailable: keep all content visible */
+  }
 </script>
 
 <!-- Primary Metadata -->
