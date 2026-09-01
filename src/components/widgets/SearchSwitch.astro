@@ -261,6 +261,19 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
     searchText: string
   }
 
+  interface PagefindApi {
+    debouncedSearch: (
+      query: string,
+      options: { filters?: Record<string, string | string[]> },
+      debounce: number
+    ) => Promise<{ results: unknown[] } | null>
+  }
+
+  interface SearchWindow extends Window {
+    pagefind?: PagefindApi
+    pagefindReady?: Promise<PagefindApi>
+  }
+
   class SearchPanel extends HTMLElement {
     #input: HTMLInputElement | null = null
     #label: HTMLLabelElement | null = null
@@ -380,8 +393,12 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
 
           this.#showLoading(requestId)
 
-          // @ts-expect-error (for Cannot find name 'pagefind'.ts(2304))
-          const res = await pagefind.debouncedSearch(value, options, 300)
+          const searchWindow = window as SearchWindow
+          const pagefindApi =
+            searchWindow.pagefind ?? (await searchWindow.pagefindReady)
+          if (!pagefindApi) throw new Error('Pagefind failed to initialize')
+
+          const res = await pagefindApi.debouncedSearch(value, options, 300)
           // a more recent search call has been made, nothing to do
           if (res === null) return
           if (requestId !== this.#activeRequestId) return
@@ -445,7 +462,6 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
       const link = this.#getLink(event)
       if (!link) return
 
-      event.preventDefault()
       this.#updateSlectedItem(link)
     }
 
@@ -465,7 +481,7 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
       event.preventDefault()
 
       if (key === 'Enter') {
-        this.#updateSlectedItem(this.#selectedItem)
+        this.#selectedItem.click()
         return
       }
 
@@ -853,11 +869,12 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
         }
       })
 
-      pagefind.init()
+      await pagefind.init()
       window.pagefind = pagefind
+      return pagefind
     }
 
-    if (!window.pagefind) loadPagefind()
+    if (!window.pagefindReady) window.pagefindReady = loadPagefind()
   </script>}
 
 {import.meta.env.PROD && navHighlight &&
