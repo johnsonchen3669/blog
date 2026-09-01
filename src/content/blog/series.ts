@@ -13,7 +13,8 @@ export const BLOG_SERIES: BlogSeriesMeta[] = [
   {
     slug: 'angular-training',
     title: 'Angular 新手練功日誌：從零到職場冒險',
-    description: '30 篇整理 Angular 從基礎語法到實作觀念的系列文章。',
+    description:
+      '從 Angular 基礎語法一路走到實作觀念，建立可帶進職場的開發脈絡。',
     icon: 'i-vscode-icons-file-type-angular',
     featured: true,
     defaultTags: ['angular', 'angular-training'],
