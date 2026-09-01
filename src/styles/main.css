@@ -369,6 +369,12 @@ input:focus-visible {
   width: min(1080px, 100%);
   margin: 0 auto;
 }
+.content-frame.collection-index {
+  width: min(1120px, 100%);
+}
+.collection-index .page-heading {
+  max-width: 760px;
+}
 .content-frame--centered .page-heading {
   text-align: center;
 }
