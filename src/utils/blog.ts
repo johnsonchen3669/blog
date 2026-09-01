@@ -26,6 +26,11 @@ export interface BlogTagSummary {
   path: string
 }
 
+export interface AdjacentBlogPosts {
+  previous?: BlogPost
+  next?: BlogPost
+}
+
 function toTitleCase(value: string) {
   return value
     .split('-')
@@ -146,6 +151,27 @@ export function getPostTags(post: BlogPost) {
 
 export function getSortedSeriesPosts(posts: BlogPost[]) {
   return [...posts].sort(comparePostsByPublishedDate)
+}
+
+export function getAdjacentBlogPosts(
+  currentPost: BlogPost,
+  posts: BlogPost[]
+): AdjacentBlogPosts {
+  const currentSeriesSlug = getPostSeriesSlug(currentPost)
+  const candidates = currentSeriesSlug
+    ? posts.filter((post) => getPostSeriesSlug(post) === currentSeriesSlug)
+    : posts
+  const sortedPosts = [...candidates].sort(comparePostsByPublishedDate)
+  const currentIndex = sortedPosts.findIndex(
+    (post) => post.id === currentPost.id
+  )
+
+  if (currentIndex === -1) return {}
+
+  return {
+    previous: sortedPosts[currentIndex + 1],
+    next: sortedPosts[currentIndex - 1],
+  }
 }
 
 export function getSeriesSummaries(posts: BlogPost[]) {

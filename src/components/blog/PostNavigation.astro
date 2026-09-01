@@ -1,0 +1,61 @@
+---
+import Link from '~/components/base/Link.astro'
+import { getBlogPostPath } from '~/utils/blog'
+import { formatDate } from '~/utils/datetime'
+
+import type { BlogPost } from '~/utils/blog'
+
+interface Props {
+  previousPost?: BlogPost
+  nextPost?: BlogPost
+}
+
+const { previousPost, nextPost } = Astro.props
+
+function getPostHref(post: BlogPost) {
+  return post.data.redirect ?? getBlogPostPath(post)
+}
+---
+
+{
+  (previousPost || nextPost) && (
+    <nav
+      class="post-navigation print:hidden"
+      aria-label="文章導覽"
+      data-pagefind-ignore
+    >
+      {previousPost && (
+        <Link
+          class="post-navigation__link post-navigation__link--previous"
+          href={getPostHref(previousPost)}
+          external={Boolean(previousPost.data.redirect)}
+        >
+          <span class="post-navigation__direction">
+            <span aria-hidden="true">←</span>
+            上一篇
+          </span>
+          <strong>{previousPost.data.title}</strong>
+          <time datetime={previousPost.data.pubDate.toISOString()}>
+            {formatDate(previousPost.data.pubDate)}
+          </time>
+        </Link>
+      )}
+      {nextPost && (
+        <Link
+          class="post-navigation__link post-navigation__link--next"
+          href={getPostHref(nextPost)}
+          external={Boolean(nextPost.data.redirect)}
+        >
+          <span class="post-navigation__direction">
+            下一篇
+            <span aria-hidden="true">→</span>
+          </span>
+          <strong>{nextPost.data.title}</strong>
+          <time datetime={nextPost.data.pubDate.toISOString()}>
+            {formatDate(nextPost.data.pubDate)}
+          </time>
+        </Link>
+      )}
+    </nav>
+  )
+}

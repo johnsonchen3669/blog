@@ -1,36 +1,49 @@
 ---
 import RenderPost from '~/components/views/RenderPost.astro'
 import {
+  getAdjacentBlogPosts,
   getAllBlogPosts,
   getBlogPostLegacyRouteParam,
   getBlogPostRouteParam,
 } from '~/utils/blog'
 
-import type { CollectionEntry } from 'astro:content'
+import type { BlogPost } from '~/utils/blog'
 
 interface Props {
-  post: CollectionEntry<'blog'>
+  post: BlogPost
+  previousPost?: BlogPost
+  nextPost?: BlogPost
   canonicalSlug: string
   isLegacyPath?: boolean
 }
 
 export async function getStaticPaths() {
-  const posts: CollectionEntry<'blog'>[] = await getAllBlogPosts()
+  const posts = await getAllBlogPosts()
 
   return posts.flatMap((post) => {
     const canonicalSlug = getBlogPostRouteParam(post)
     const legacySlug = getBlogPostLegacyRouteParam(post)
+    const { previous: previousPost, next: nextPost } = getAdjacentBlogPosts(
+      post,
+      posts
+    )
     const paths: { params: { slug: string }; props: Props }[] = [
       {
         params: { slug: canonicalSlug },
-        props: { post, canonicalSlug },
+        props: { post, previousPost, nextPost, canonicalSlug },
       },
     ]
 
     if (canonicalSlug !== legacySlug) {
       paths.push({
         params: { slug: legacySlug },
-        props: { post, canonicalSlug, isLegacyPath: true },
+        props: {
+          post,
+          previousPost,
+          nextPost,
+          canonicalSlug,
+          isLegacyPath: true,
+        },
       })
     }
 
@@ -38,11 +51,17 @@ export async function getStaticPaths() {
   })
 }
 
-const { post, canonicalSlug, isLegacyPath = false } = Astro.props
+const {
+  post,
+  previousPost,
+  nextPost,
+  canonicalSlug,
+  isLegacyPath = false,
+} = Astro.props
 
 if (isLegacyPath && Astro.params.slug !== canonicalSlug) {
   return Astro.redirect(`/blog/${canonicalSlug}/`, 301)
 }
 ---
 
-<RenderPost {post} isCommentable={true} />
+<RenderPost {post} {previousPost} {nextPost} isCommentable={true} />

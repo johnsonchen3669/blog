@@ -4,6 +4,7 @@ import { render } from 'astro:content'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import PostMeta from '~/components/base/PostMeta.astro'
 import PostTaxonomy from '~/components/blog/PostTaxonomy.astro'
+import PostNavigation from '~/components/blog/PostNavigation.astro'
 import Warning from '~/components/base/Warning.astro'
 import Toc from '~/components/toc/Toc.astro'
 import ShareLink from '~/components/widgets/ShareLink.astro'
@@ -12,14 +13,16 @@ import ImageViewer from '~/components/widgets/ImageViewer.astro'
 import { FEATURES } from '~/config'
 import { getPostSeriesMeta } from '~/utils/blog'
 
-import type { CollectionEntry } from 'astro:content'
+import type { BlogPost } from '~/utils/blog'
 
 interface Props {
-  post: CollectionEntry<'blog'>
+  post: BlogPost
+  previousPost?: BlogPost
+  nextPost?: BlogPost
   isCommentable?: boolean
 }
 
-const { post, isCommentable = false } = Astro.props
+const { post, previousPost, nextPost, isCommentable = false } = Astro.props
 const { toc, share, giscus, search } = FEATURES
 const { data: frontmatter } = post
 const { Content, headings, remarkPluginFrontmatter } = await render(post)
@@ -85,6 +88,8 @@ const draftWarning = `這篇文章仍是草稿，只會出現在開發環境。`
         <Content />
       </div>
     </div>
+
+    <PostNavigation {previousPost} {nextPost} />
   </article>
 
   <Fragment slot="share">
