@@ -74,7 +74,7 @@ export const postSchema = z.object({
     .positive()
     .optional()
     .describe(
-      'Controls the order of posts within a series. If omitted, the publication date is used as the fallback sort order.'
+      'Records the intended lesson number for a series. Article lists are sorted by publication date.'
     ),
   tags: z
     .array(z.string().min(1))
