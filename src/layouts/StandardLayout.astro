@@ -2,6 +2,7 @@
 interface Props {
   title?: string
   subtitle?: string
+  label?: string
   isCentered?: boolean
   isSearchable?: boolean
   searchFilter?: string
@@ -11,6 +12,7 @@ interface Props {
 const {
   title,
   subtitle,
+  label = 'Field note',
   isCentered = false,
   isSearchable,
   searchFilter,
@@ -26,7 +28,7 @@ const {
   ]}
 >
   <header class="page-heading">
-    <span class="utility-label">Field note</span>
+    <span class="utility-label">{label}</span>
     {title && <h1>{title}</h1>}
     {subtitle && <p>{subtitle}</p>}
     <slot name="head" />

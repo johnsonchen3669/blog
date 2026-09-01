@@ -19,10 +19,12 @@ const { item } = Astro.props
 
 <BaseLayout title={item.title} description={item.description} ogImage={true}>
   <StandardLayout
-    class="collection-index"
+    class="series-index"
+    label="Learning route"
     title={item.title}
     subtitle={`${item.count} 篇文章`}
   >
+    <p slot="head" class="series-index__description">{item.description}</p>
     <BlogPostList posts={item.posts} />
   </StandardLayout>
 </BaseLayout>
