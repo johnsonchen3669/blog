@@ -37,8 +37,16 @@ export async function getFilteredPosts(): Promise<CollectionEntry<'blog'>[]> {
   )
 }
 
-export function getSortedPosts(posts: CollectionEntry<'blog'>[]) {
-  return posts.sort(
-    (left, right) => right.data.pubDate.valueOf() - left.data.pubDate.valueOf()
+export function comparePostsByPublishedDate(
+  left: CollectionEntry<'blog'>,
+  right: CollectionEntry<'blog'>
+) {
+  return (
+    right.data.pubDate.valueOf() - left.data.pubDate.valueOf() ||
+    left.id.localeCompare(right.id, 'en')
   )
+}
+
+export function getSortedPosts(posts: CollectionEntry<'blog'>[]) {
+  return [...posts].sort(comparePostsByPublishedDate)
 }

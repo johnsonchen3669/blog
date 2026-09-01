@@ -1,5 +1,9 @@
 import { withBasePath } from './path'
-import { getFilteredPosts, getSortedPosts } from './data'
+import {
+  comparePostsByPublishedDate,
+  getFilteredPosts,
+  getSortedPosts,
+} from './data'
 
 import { BLOG_SERIES_MAP } from '~/content/blog/series'
 
@@ -12,6 +16,7 @@ export interface BlogSeriesSummary extends BlogSeriesMeta {
   count: number
   path: string
   posts: BlogPost[]
+  latestPubDate: Date
 }
 
 export interface BlogTagSummary {
@@ -140,18 +145,7 @@ export function getPostTags(post: BlogPost) {
 }
 
 export function getSortedSeriesPosts(posts: BlogPost[]) {
-  return [...posts].sort((left, right) => {
-    const leftOrder = left.data.order
-    const rightOrder = right.data.order
-
-    if (typeof leftOrder === 'number' && typeof rightOrder === 'number')
-      return leftOrder - rightOrder
-
-    if (typeof leftOrder === 'number') return -1
-    if (typeof rightOrder === 'number') return 1
-
-    return left.data.pubDate.valueOf() - right.data.pubDate.valueOf()
-  })
+  return [...posts].sort(comparePostsByPublishedDate)
 }
 
 export function getSeriesSummaries(posts: BlogPost[]) {
@@ -175,17 +169,19 @@ export function getSeriesSummaries(posts: BlogPost[]) {
         icon: 'i-ri-article-line',
       }
 
+      const sortedPosts = getSortedSeriesPosts(items)
+
       return {
         ...meta,
         count: items.length,
         path: getSeriesPath(slug),
-        posts: getSortedSeriesPosts(items),
+        posts: sortedPosts,
+        latestPubDate: sortedPosts[0].data.pubDate,
       } satisfies BlogSeriesSummary
     })
     .sort(
       (left, right) =>
-        Number(right.featured ?? false) - Number(left.featured ?? false) ||
-        right.count - left.count ||
+        right.latestPubDate.valueOf() - left.latestPubDate.valueOf() ||
         left.title.localeCompare(right.title, 'zh-Hant')
     )
 }
