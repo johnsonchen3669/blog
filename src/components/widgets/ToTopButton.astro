@@ -3,25 +3,27 @@
 ---
 
 <button
+  type="button"
   id="to-top-button"
   class="z-50 fixed right-5 bottom-6
     w-10 h-10 rounded-full
     op-0 pointer-events-none op-transition
     lt-lgp:(op-50! bg-#8883 dark:bg-#8886 pointer-events-auto!)
     hover:(op-100! bg-#8883) print:hidden"
-  title="Scroll to top"
+  title="回到頁首"
+  aria-label="回到頁首"
 >
   <div class="i-ri-arrow-up-line"></div>
 </button>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    const handleClick = () => {
-      window.scrollTo({ top: 0 })
-    }
-    const toTopButton = document.getElementById('to-top-button')
-    toTopButton?.addEventListener('click', handleClick)
-  })
+  const handleClick = (event: MouseEvent) => {
+    const target = event.target
+    if (!(target instanceof Element) || !target.closest('#to-top-button'))
+      return
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  }
 
   const handleScroll = () => {
     const scrollThreshold = 300
@@ -38,5 +40,7 @@
       }
     }
   }
+  document.addEventListener('click', handleClick)
   window.addEventListener('scroll', handleScroll)
+  document.addEventListener('astro:page-load', handleScroll)
 </script>

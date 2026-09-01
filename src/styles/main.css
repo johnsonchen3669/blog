@@ -706,6 +706,12 @@ mark.pagefind-highlight {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @media (max-width: 800px) {
   .site-header__inner {
     grid-template-columns: 1fr auto;
