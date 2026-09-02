@@ -1,7 +1,7 @@
 ---
 title: 'Johnson Chen'
-description: '前端開發實作、TypeScript 型別思維與 Angular 學習筆記。'
-ogImage: false
+description: '前端開發實作、TypeScript 型別設計與 Angular 學習路線，整理可直接應用於專案的範例、除錯紀錄與架構思考。'
+ogImage: true
 ---
 
 import BaseLayout from '~/layouts/BaseLayout.astro'
@@ -11,6 +11,7 @@ import HomePage from '~/components/home/HomePage.astro'
   title={frontmatter.title}
   description={frontmatter.description}
   ogImage={frontmatter.ogImage}
+  pageKind="profile"
 >
   <HomePage />
 </BaseLayout>

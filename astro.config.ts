@@ -1,6 +1,4 @@
 import { defineConfig } from 'astro/config'
-import sitemap from '@astrojs/sitemap'
-import robotsTxt from 'astro-robots-txt'
 import unocss from 'unocss/astro'
 import astroExpressiveCode from 'astro-expressive-code'
 import mdx from '@astrojs/mdx'
@@ -13,13 +11,7 @@ import { SITE } from './src/config'
 export default defineConfig({
   site: SITE.website,
   base: SITE.base,
-  integrations: [
-    sitemap(),
-    robotsTxt(),
-    unocss({ injectReset: true }),
-    astroExpressiveCode(),
-    mdx(),
-  ],
+  integrations: [unocss({ injectReset: true }), astroExpressiveCode(), mdx()],
   markdown: {
     syntaxHighlight: false,
     processor: unified({ remarkPlugins, rehypePlugins }),

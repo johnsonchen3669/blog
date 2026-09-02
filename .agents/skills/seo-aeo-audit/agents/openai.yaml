@@ -1,0 +1,4 @@
+interface:
+  display_name: 'SEO / AEO Audit'
+  short_description: '稽核並修正網站技術 SEO、索引與 AEO 可讀性'
+  default_prompt: "Use $seo-aeo-audit to audit this site's production build and prioritize actionable SEO and AEO fixes."

@@ -31,7 +31,7 @@ npm run build // ng build
 這些靜態檔案通常會放在專案的 `dist/` 的專案名稱資料夾中。
 - 預設會包含一個 browser 資料夾
 
-![](https://i.meee.com.tw/K0dE5fh.png)
+![Angular 專案建置後的 dist 目錄](../../../assets/blog/angular-training/build-dist-directory.webp)
 
 將檔案建置後，就可以考慮部署到伺服器或靜態主機上。
 ## Rendering modes 
@@ -85,7 +85,7 @@ ng add @angular/ssr
  - browser：包含用於瀏覽器的靜態檔案
  - server：包含用於伺服器的程式碼
 
-![](https://i.meee.com.tw/I4zWzQI.png)
+![Angular SSR 建置後的 browser 與 server 目錄](../../../assets/blog/angular-training/ssr-build-directories.webp)
 
 需要注意的是，開發 SSR 時，會有一些限制，例如 
  - 無法使用瀏覽器專屬的 API，例如`localStorage`、`sessionStorage`、`document`、`window` 等這些在伺服器端不存在的物件。

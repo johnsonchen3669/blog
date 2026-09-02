@@ -21,7 +21,7 @@ search: true
 ## Angular Module
 Angular 模組是過去 Angular 應用程式的基本組織，用於將相關的組件、指令、管道和服務等功能集合在一起。而基於模組的元件需要在模組中註冊，並且只能在該模組中使用。
 
-![](https://i.meee.com.tw/c0GpfCz.png)
+![Angular 模組與元件的組織關係](../../../assets/blog/angular-training/module-component-organization.webp)
 
 目前版本若要建立基於模組的元件，需要在 `@Component` 裝飾器中將 `standalone` 屬性設為 `false`。
 ```ts

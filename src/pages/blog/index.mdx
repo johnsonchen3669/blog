@@ -1,6 +1,6 @@
 ---
 title: Blog
-description: 個人技術文章列表。
+description: 收錄前端開發、TypeScript 與 Angular 的實作筆記與系列文章。
 subtitle: ''
 toc: false
 ogImage: true
@@ -15,6 +15,7 @@ import ListView from '~/components/views/ListView.astro'
   title={frontmatter.title}
   description={frontmatter.description}
   ogImage={frontmatter.ogImage}
+  pageKind="collection"
 >
   <StandardLayout
     class="blog-index"

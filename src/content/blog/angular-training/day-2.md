@@ -63,7 +63,7 @@ ng n <project-name>	// 簡寫
 選擇 CSS：最常用、最簡單的樣式。
 不啟用 SSR/SSG：只建立純前端 SPA。
 ```
-![](https://i.meee.com.tw/6JXdN80.png)
+![Angular CLI 建立專案時的互動式選項](../../../assets/blog/angular-training/ng-new-options.webp)
 
 進入專案資料夾中，安裝所需套件後，並執行測試，使用 `npm run start` 會使用 `ng serve` 指令來啟動開發本地伺服器，預設會在 `http://localhost:4200/` 
 ```bash

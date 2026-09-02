@@ -22,6 +22,8 @@ const posts = await getPostsByTag(item.slug)
   title={`#${item.name}`}
   description={`瀏覽與 ${item.name} 相關的 Blog 文章。`}
   ogImage={true}
+  pageKind="collection"
+  noindex={item.count === 1}
 >
   <StandardLayout
     class="collection-index"

@@ -2,6 +2,8 @@
 export type Url = `http://${string}` | `https://${string}`
 type Path = `/${string}`
 
+export type SeoPageKind = 'webpage' | 'profile' | 'collection' | 'article'
+
 export interface Site {
   /**
    * Specifies the final deployed URL, which must start with `http://` or `https://`.
@@ -71,6 +73,24 @@ export interface Site {
 
   /** IANA timezone used for publication scheduling and date boundaries. */
   timezone: string
+
+  /**
+   * Specifies public profiles that represent the same person or organization,
+   * found in `src/components/base/Head.astro` as the Person `sameAs` field.
+   */
+  profiles: Url[]
+
+  /**
+   * Specifies the publishing location of the site's author for Person
+   * structured data, found in `src/components/base/Head.astro`.
+   *
+   * Only city-level information is used; do not add street addresses,
+   * phone numbers, or emails here.
+   */
+  location: {
+    locality: string
+    countryCode: string
+  }
 
   /**
    * Specifies the allowed domains for optimizing remote images,

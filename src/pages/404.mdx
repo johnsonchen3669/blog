@@ -1,7 +1,7 @@
 ---
 title: '404'
 subtitle: ''
-description: Page not found
+description: 找不到指定頁面，請返回首頁或瀏覽其他前端開發筆記。
 toc: false
 ogImage: false
 ---
@@ -13,6 +13,8 @@ import StandardLayout from '~/layouts/StandardLayout.astro'
   title={frontmatter.title}
   description={frontmatter.description}
   ogImage={frontmatter.ogImage}
+  noindex={true}
+  canonical={false}
 >
   <StandardLayout title={frontmatter.title} subtitle={frontmatter.subtitle}>
     <div slot="article" class="not-found">

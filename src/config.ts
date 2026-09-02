@@ -4,11 +4,17 @@ export const SITE: Site = {
   website: 'https://johnsonchen.dev/',
   base: '/',
   title: 'Johnson Chen',
-  description: '前端開發實作、TypeScript 型別思維與 Angular 學習筆記。',
+  description:
+    '前端開發實作、TypeScript 型別設計與 Angular 學習路線，整理可直接應用於專案的範例、除錯紀錄與架構思考。',
   author: 'Johnson Chen',
   lang: 'zh-TW',
   ogLocale: 'zh_TW',
   timezone: 'Asia/Taipei',
+  profiles: ['https://github.com/johnsonchen3669'],
+  location: {
+    locality: 'Taoyuan City',
+    countryCode: 'TW',
+  },
   imageDomains: ['cdn.bsky.app', 'images.unsplash.com'],
 }
 

@@ -17,7 +17,12 @@ export async function getStaticPaths() {
 const { item } = Astro.props
 ---
 
-<BaseLayout title={item.title} description={item.description} ogImage={true}>
+<BaseLayout
+  title={item.title}
+  description={item.description}
+  ogImage={true}
+  pageKind="collection"
+>
   <StandardLayout
     class="series-index"
     label="Learning route"

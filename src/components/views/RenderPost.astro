@@ -11,7 +11,7 @@ import ShareLink from '~/components/widgets/ShareLink.astro'
 import Giscus from '~/components/widgets/Giscus.astro'
 import ImageViewer from '~/components/widgets/ImageViewer.astro'
 import { FEATURES } from '~/config'
-import { getPostSeriesMeta } from '~/utils/blog'
+import { getPostSeriesMeta, getPostTags } from '~/utils/blog'
 
 import type { BlogPost } from '~/utils/blog'
 
@@ -34,6 +34,7 @@ const lastModDate = frontmatter.lastModDate
 const minutesRead =
   frontmatter.minutesRead ?? (remarkPluginFrontmatter.minutesRead as number)
 const series = getPostSeriesMeta(post)
+const seoTags = getPostTags(post).map((tag) => tag.name)
 const tocEnabled = Array.isArray(toc) && toc[0] && frontmatter.toc
 const shareEnabled = Array.isArray(share) && share[0] && frontmatter.share
 const giscusEnabled =
@@ -55,6 +56,9 @@ const draftWarning = `這篇文章仍是草稿，只會出現在開發環境。`
   ogImage={frontmatter.ogImage}
   {pubDate}
   {lastModDate}
+  pageKind="article"
+  tags={seoTags}
+  section={series?.title}
 >
   <article
     class="post-document"
