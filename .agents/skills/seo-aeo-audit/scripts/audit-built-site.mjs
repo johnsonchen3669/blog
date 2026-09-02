@@ -512,6 +512,20 @@ function inspectLlmsUrls(llmsFile, content, sitemap) {
   const urls = Array.from(content.matchAll(/https?:\/\/[^\s)\]>"']+/g)).map(
     (match) => match[0]
   )
+  const llmsUrls = new Set()
+  const addLlmsUrl = (url) => {
+    llmsUrls.add(url)
+    if (url.endsWith('/')) llmsUrls.add(url.replace(/\/$/, ''))
+    else llmsUrls.add(`${url}/`)
+  }
+  for (const url of urls) {
+    try {
+      const parsed = new URL(url)
+      addLlmsUrl(`${parsed.origin}${parsed.pathname}`)
+    } catch {
+      // Malformed URLs are reported by the siteUrls validation below.
+    }
+  }
   const siteUrls = urls
     .map((url) => {
       try {
@@ -542,8 +556,7 @@ function inspectLlmsUrls(llmsFile, content, sitemap) {
       !document.noindex &&
       !document.redirect &&
       document.canonical &&
-      !validUrls.has(document.canonical) &&
-      !urls.includes(document.canonical)
+      !llmsUrls.has(document.canonical)
   )
   for (const document of missingArticles)
     addError(
