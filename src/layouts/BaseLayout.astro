@@ -22,15 +22,33 @@ import Backdrop from '~/components/base/Backdrop.astro'
 import { SITE, FEATURES } from '~/config'
 import { withBasePath } from '~/utils/path'
 
+import type { SeoPageKind } from '~/types'
+
 interface Props {
   title?: string
   description?: string
   ogImage?: string | boolean
   pubDate?: string
   lastModDate?: string
+  pageKind?: SeoPageKind
+  noindex?: boolean
+  canonical?: string | false
+  tags?: string[]
+  section?: string
 }
 
-const { title, description, ogImage, pubDate, lastModDate } = Astro.props
+const {
+  title,
+  description,
+  ogImage,
+  pubDate,
+  lastModDate,
+  pageKind,
+  noindex,
+  canonical,
+  tags,
+  section,
+} = Astro.props
 const { slideEnterAnim } = FEATURES
 const enableSlideEnterAnim = Array.isArray(slideEnterAnim) && slideEnterAnim[0]
 const style = enableSlideEnterAnim
@@ -41,7 +59,18 @@ const style = enableSlideEnterAnim
 <!doctype html>
 <html lang={SITE.lang}>
   <head>
-    <Head {title} {description} {ogImage} {pubDate} {lastModDate} />
+    <Head
+      {title}
+      {description}
+      {ogImage}
+      {pubDate}
+      {lastModDate}
+      {pageKind}
+      {noindex}
+      {canonical}
+      {tags}
+      {section}
+    />
   </head>
   <body
     class="site-body"

@@ -4,8 +4,9 @@ import { existsSync } from 'node:fs'
 import { basename, join } from 'node:path'
 
 import { withBasePath } from '~/utils/path'
-import { normalizeOgTitle } from '~/utils/misc'
 import { SITE } from '~/config'
+
+import type { SeoPageKind } from '~/types'
 
 interface Props {
   title?: string
@@ -13,19 +14,35 @@ interface Props {
   ogImage?: string | boolean
   pubDate?: string
   lastModDate?: string
+  pageKind?: SeoPageKind
+  noindex?: boolean
+  canonical?: string | false
+  tags?: string[]
+  section?: string
 }
 
-const { title, description, ogImage, pubDate, lastModDate } = Astro.props
-
-const siteName = new URL(SITE.website).hostname
+const {
+  title,
+  description,
+  ogImage,
+  pubDate,
+  lastModDate,
+  pageKind = pubDate ? 'article' : 'webpage',
+  noindex = false,
+  canonical,
+  tags = [],
+  section,
+} = Astro.props
 
 const pageTitle =
   title && title !== SITE.title ? `${title} - ${SITE.title}` : SITE.title
-const socialTitle = title ? normalizeOgTitle(title) : SITE.title
-
+const socialTitle = title || SITE.title
 const pageDescription = description || SITE.description
-
-const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const canonicalURL =
+  canonical === false
+    ? undefined
+    : new URL(canonical || Astro.url.pathname, Astro.site)
+const pageURL = canonicalURL?.href || Astro.url.href
 
 const ogImageExists = (filename: string) =>
   existsSync(join(process.cwd(), 'public', 'og-images', filename))
@@ -39,40 +56,90 @@ const assignedOgImage =
     ? withBasePath('og-images', ogImage)
     : undefined
 
-const ogImageURL = new URL(
-  assignedOgImage ||
-    generatedOgImage ||
-    withBasePath('og-images', 'og-image.png'),
-  Astro.url
-).href
+const ogImageURL =
+  ogImage === false
+    ? undefined
+    : new URL(
+        assignedOgImage ||
+          generatedOgImage ||
+          withBasePath('og-images', 'og-image.png'),
+        Astro.url
+      ).href
 
-// https://jsonld.com/blog-post/
-const blogPostingData = {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  'headline': socialTitle,
-  'image': ogImageURL,
-  'url': canonicalURL,
-  'datePublished': pubDate,
-  ...(lastModDate && { dateModified: lastModDate }),
-  ...(description && { description: description }),
-  'author': {
-    '@type': 'Person',
-    'name': SITE.author,
-    'url': SITE.website,
-  },
+const personId = new URL('/#person', SITE.website).href
+const websiteId = new URL('/#website', SITE.website).href
+const webPageId = `${pageURL}#webpage`
+const articleId = `${pageURL}#article`
+
+const personData = {
+  '@type': 'Person',
+  '@id': personId,
+  'name': SITE.author,
+  'url': SITE.website,
+  ...(SITE.profiles.length > 0 && { sameAs: SITE.profiles }),
+  ...(SITE.location && {
+    homeLocation: {
+      '@type': 'PostalAddress',
+      'addressLocality': SITE.location.locality,
+      'addressCountry': SITE.location.countryCode,
+    },
+  }),
 }
 
-// https://jsonld.com/web-page/
+const websiteData = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  'url': SITE.website,
+  'name': SITE.title,
+  'description': SITE.description,
+  'inLanguage': SITE.lang,
+  'publisher': { '@id': personId },
+}
+
+const webPageType =
+  pageKind === 'profile'
+    ? 'ProfilePage'
+    : pageKind === 'collection'
+      ? 'CollectionPage'
+      : 'WebPage'
+
 const webPageData = {
+  '@type': webPageType,
+  '@id': webPageId,
+  'url': pageURL,
+  'name': pageTitle,
+  'description': pageDescription,
+  'inLanguage': SITE.lang,
+  'isPartOf': { '@id': websiteId },
+  ...(pageKind === 'profile' && { mainEntity: { '@id': personId } }),
+  ...(pageKind === 'article' && { mainEntity: { '@id': articleId } }),
+}
+
+const blogPostingData = {
+  '@type': 'BlogPosting',
+  '@id': articleId,
+  'headline': socialTitle,
+  'description': pageDescription,
+  'url': pageURL,
+  'mainEntityOfPage': { '@id': webPageId },
+  'inLanguage': SITE.lang,
+  ...(ogImageURL && { image: ogImageURL }),
+  ...(pubDate && { datePublished: pubDate }),
+  ...(lastModDate && { dateModified: lastModDate }),
+  ...(section && { articleSection: section }),
+  ...(tags.length > 0 && { keywords: tags }),
+  'author': { '@id': personId },
+  'publisher': { '@id': personId },
+}
+
+const structuredData = {
   '@context': 'https://schema.org',
-  '@type': 'webPage',
-  'name': socialTitle,
-  ...(description && { description: description }),
-  'publisher': {
-    '@type': 'ProfilePage',
-    'name': `${SITE.author}'s Personal Website`,
-  },
+  '@graph': [
+    personData,
+    websiteData,
+    webPageData,
+    ...(pageKind === 'article' ? [blogPostingData] : []),
+  ],
 }
 ---
 
@@ -81,6 +148,7 @@ const webPageData = {
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="generator" content={Astro.generator} />
+{noindex && <meta name="robots" content="noindex,follow" />}
 <script is:inline>
   try {
     if (sessionStorage.getItem('field-reveal-seen') !== '1') {
@@ -114,32 +182,73 @@ const webPageData = {
 <meta name="color-scheme" content="light dark" />
 
 <!-- Open Graph & Facebook -->
-<meta property="og:type" content={pubDate ? 'article' : 'website'} />
-<meta property="og:url" content={canonicalURL} />
+<meta
+  property="og:type"
+  content={pageKind === 'article' ? 'article' : 'website'}
+/>
+<meta property="og:url" content={pageURL} />
 <meta property="og:title" content={socialTitle} />
 <meta property="og:description" content={pageDescription} />
-<meta property="og:image" content={ogImageURL} />
-<meta property="og:site_name" content={siteName} />
+{
+  ogImageURL && (
+    <>
+      <meta property="og:image" content={ogImageURL} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:alt" content={`${socialTitle} 分享圖片`} />
+    </>
+  )
+}
+<meta property="og:site_name" content={SITE.title} />
 <meta property="og:locale" content={SITE.ogLocale} />
 {
-  pubDate && (
+  pageKind === 'article' && pubDate && (
     <>
       <meta property="article:author" content={SITE.author} />
       <meta property="article:published_time" content={pubDate} />
-      <meta property="article:modified_time" content={lastModDate} />
+      {lastModDate && (
+        <meta property="article:modified_time" content={lastModDate} />
+      )}
+      {section && <meta property="article:section" content={section} />}
+      {tags.map((tag) => (
+        <meta property="article:tag" content={tag} />
+      ))}
     </>
   )
 }
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={canonicalURL} />
-<meta property="twitter:title" content={socialTitle} />
-<meta property="twitter:description" content={pageDescription} />
-<meta property="twitter:image" content={ogImageURL} />
+<meta
+  name="twitter:card"
+  content={ogImageURL ? 'summary_large_image' : 'summary'}
+/>
+<meta name="twitter:title" content={socialTitle} />
+<meta name="twitter:description" content={pageDescription} />
+{
+  ogImageURL && (
+    <>
+      <meta name="twitter:image" content={ogImageURL} />
+      <meta name="twitter:image:alt" content={`${socialTitle} 分享圖片`} />
+    </>
+  )
+}
 
 <!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
+{canonicalURL && <link rel="canonical" href={canonicalURL} />}
+
+<!-- Language alternatives -->
+{
+  canonicalURL && !noindex && (
+    <>
+      <link rel="alternate" hreflang={SITE.lang} href={canonicalURL} />
+      <link rel="alternate" hreflang="x-default" href={canonicalURL} />
+    </>
+  )
+}
+
+<!-- LLM-friendly site summary -->
+<link rel="describedby" type="text/plain" href={withBasePath('/llms.txt')} />
 
 <!-- Icon -->
 <link rel="icon" type="image/svg+xml" href={withBasePath('/favicon.svg')} />
@@ -150,31 +259,25 @@ const webPageData = {
 <link rel="manifest" href={withBasePath('/app.webmanifest')} />
 
 <!-- Sitemap -->
-<link rel="sitemap" href={withBasePath('/sitemap-index.xml')} />
+<link
+  rel="sitemap"
+  type="application/xml"
+  href={withBasePath('/sitemap.xml')}
+/>
 
 <!-- RSS -->
 <link
   rel="alternate"
   type="application/rss+xml"
-  title={withBasePath('/rss.xml')}
-  href="/rss.xml"
+  title={`${SITE.title} RSS`}
+  href={withBasePath('/rss.xml')}
 />
 
-<!-- Google JSON-LD Structured Data -->
-{
-  pubDate ? (
-    <script
-      is:inline
-      type="application/ld+json"
-      set:html={JSON.stringify(blogPostingData)}
-    />
-  ) : (
-    <script
-      is:inline
-      type="application/ld+json"
-      set:html={JSON.stringify(webPageData)}
-    />
-  )
-}
+<!-- Schema.org structured data -->
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(structuredData)}
+/>
 
 <ClientRouter />

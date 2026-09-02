@@ -18,7 +18,7 @@ giscus: true
 search: true
 ---
 上一篇文章了解如何建立的專案後，今天我們就來了解專案的架構
-![專案架構](https://i.meee.com.tw/OE4BNJk.png)
+![專案架構](../../../assets/blog/angular-training/project-structure.webp)
 
 - `tsconfig.app.json`、`tsconfig.json`、`tsconfig.spec.json`：這三個是 TypeScript 的相關設定檔，設定一些 TypeScript 編譯的選項，除非熟悉 TypeScript 設定，否則不建議更動。
 - `package.json`、`package-lock.json`：這兩個是 npm 的相關設定檔，記錄專案所需的套件和版本資訊，當我們安裝新的套件時，會自動更新這些檔案。
@@ -71,8 +71,9 @@ search: true
 在 Angular 專案中，應用程式的進入點是 `main.ts` 檔案，負責啟動 Angular 應用程式。啟動時，Angular 會將根元件 App 動態載入到 index.html 中的 app-root 標籤內。
 
 就像圖片看到的一樣，原始碼不會有任何內容，所有的內容都是由 Angular 動態產生的，TypeScript 原始碼會被編譯成 JavaScript，這些檔案會被載入到 index.html 中，然後由瀏覽器執行，動態產生 DOM 結構。
-![原始碼](https://i.meee.com.tw/Cq7SgR0.png)
-![實際網頁](https://i.meee.com.tw/z0Ni88i.png)
+![原始碼](../../../assets/blog/angular-training/app-root-source.webp)
+
+![實際網頁](../../../assets/blog/angular-training/app-root-rendered.webp)
 
 根據 Angular 版本不同，啟動方式略有差異，但核心概念一致。
 目前 Angular 推薦的啟動方式：

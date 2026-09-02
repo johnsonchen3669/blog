@@ -24,7 +24,7 @@ search: true
 
 透過元件化，將 UI 切割成多個元件，讓每個元件只關注一個特定的功能或任務，可以提高元件的可重用性和可維護性。此外，Angular 會將所有元件組成一棵「元件樹」，每個元件都是樹上的一個節點，彼此之間可以清楚地分工與協作。
 
-![元件樹](https://i.meee.com.tw/zShUGRa.png)
+![元件樹](../../../assets/blog/angular-training/component-tree.webp)
 ## Angular 元件介紹
 
 - 有別於其他框架是 SFC (Single File Component) 單一檔案元件，像是 vue 會有 .vue 檔案，React 會有 .jsx 或 .tsx 檔案，Angular 採用的是多檔案元件的方式來組成一個元件 (Component)。

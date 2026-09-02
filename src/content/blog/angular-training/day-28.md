@@ -65,7 +65,7 @@ describe('App', () => {
 ng test // npm run test
 ```
 
-![](https://i.meee.com.tw/RPymVbk.png)
+![Angular 預設測試執行結果](../../../assets/blog/angular-training/default-test-result.webp)
 ## 其他測試工具
 雖然 Angular 預設使用 Jasmine 與 Karma 來進行測試，但是由於 Karma 目前已經在 Repo 中說明已經棄用，因此也可以嘗試用 [Jest](https://jestjs.io/) 、[vitest](https://vitest.dev/guide/) 來進行測試。
 
@@ -117,6 +117,6 @@ describe('App', () => {
 ng test // npm run test
 ```
 
-![](https://i.meee.com.tw/KfmxvRC.png)
+![Angular 使用 Vitest 的測試執行結果](../../../assets/blog/angular-training/vitest-test-result.webp)
 ## 結論
 今天介紹了 Angular 的單元測試基本概念與寫法，目前在 karma 已經宣布棄用的情況下，期待 Angular 官方文件能對於其他測試工具有更多的支援。
