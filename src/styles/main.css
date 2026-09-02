@@ -316,7 +316,8 @@ input:focus-visible {
     transform 0.22s ease,
     border-color 0.22s ease;
 }
-.field-series-card:hover {
+.field-series-card:hover,
+.field-series-card:focus-visible {
   transform: translateY(-4px);
   border-color: var(--cobalt);
 }
@@ -353,7 +354,8 @@ input:focus-visible {
   color: var(--ink) !important;
   opacity: 1 !important;
 }
-.field-post-row:hover strong {
+.field-post-row:hover strong,
+.field-post-row:focus-visible strong {
   color: var(--cobalt);
 }
 .field-post-row time,
@@ -874,11 +876,11 @@ mark.pagefind-highlight {
     opacity: 1 !important;
     will-change: auto;
   }
-  .post-content {
+  html.content-enter-anim .post-content {
     animation: article-load-in 0.72s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
-  .series-overview .content-body,
-  .series-index .content-body {
+  html.content-enter-anim .series-overview .content-body,
+  html.content-enter-anim .series-index .content-body {
     animation: article-load-in 0.72s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
   html.enter-anim .field-hero__statement,
@@ -900,6 +902,13 @@ mark.pagefind-highlight {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .field-series-card {
+    transition: border-color 0.22s ease;
+  }
+  .field-series-card:hover,
+  .field-series-card:focus-visible {
+    transform: none;
   }
 }
 

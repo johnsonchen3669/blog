@@ -89,6 +89,15 @@ const webPageData = {
         'enter-anim'
       )
     }
+
+    const contentEntranceKey = `field-content-entered:${location.pathname}`
+    const contentEntranceSeen =
+      sessionStorage.getItem(contentEntranceKey) === '1'
+    document.documentElement.classList.toggle(
+      'content-enter-anim',
+      !contentEntranceSeen
+    )
+    if (!contentEntranceSeen) sessionStorage.setItem(contentEntranceKey, '1')
   } catch {
     /* storage unavailable: keep all content visible */
   }
