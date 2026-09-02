@@ -18,44 +18,79 @@
     { id: 'search-panel', button: 'search-switch', hiddenClass: 'hidden' },
   ]
 
+  const closePanel = (
+    panel: HTMLElement,
+    button: string,
+    hiddenClass: string
+  ) => {
+    toggleFadeEffect(panel.id, false, hiddenClass)
+    toggleFadeEffect('backdrop', false, 'hidden')
+
+    const trigger = document.getElementById(button)
+    trigger?.setAttribute('aria-expanded', 'false')
+    trigger?.focus()
+  }
+
   /* Close panel when user click on backdrop */
   document.addEventListener('astro:page-load', () => {
     const handleClick = () => {
-      for (const { id, hiddenClass } of PANELS) {
+      for (const { id, button, hiddenClass } of PANELS) {
         const panel = document.getElementById(id)
         if (panel && !panel.classList.contains(hiddenClass)) {
-          toggleFadeEffect(id, false, hiddenClass)
+          closePanel(panel, button, hiddenClass)
           break
         }
       }
-      toggleFadeEffect('backdrop', false, 'hidden')
     }
     const backdrop = document.getElementById('backdrop')
     backdrop?.addEventListener('click', handleClick)
   })
 
-  /* Close panel and backdrop when 'Tab' shifts focus outside the panel
-    or 'Escape' is pressed, if backdrop is present */
-  const handleKeyUp = (event: KeyboardEvent) => {
+  /* Keep keyboard focus inside modal panels and return it to the trigger
+    after the panel closes. */
+  const FOCUSABLE_SELECTOR = [
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+  ].join(',')
+
+  const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key !== 'Tab' && event.key !== 'Escape') return
 
-    const focusEl = document.activeElement
-    PANELS.forEach(({ id, button, hiddenClass }) => {
+    for (const { id, button, hiddenClass } of PANELS) {
       const panel = document.getElementById(id)
-      const isFocusOutside = !panel?.contains(focusEl) && focusEl?.id !== button
+      if (!panel || panel.classList.contains(hiddenClass)) continue
 
-      if (
-        panel &&
-        !panel.classList.contains(hiddenClass) &&
-        (isFocusOutside || event.key === 'Escape')
-      ) {
-        toggleFadeEffect(id, false, hiddenClass)
-        toggleFadeEffect('backdrop', false, 'hidden')
-        if (panel.contains(focusEl)) {
-          document.getElementById(button)?.focus()
-        }
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closePanel(panel, button, hiddenClass)
+        return
       }
-    })
+
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      ).filter((element) => element.getClientRects().length > 0)
+      const first = focusable[0]
+      const last = focusable.at(-1)
+      const active = document.activeElement
+
+      if (!first || !last) {
+        event.preventDefault()
+        return
+      }
+      if (event.shiftKey && (active === first || !panel.contains(active))) {
+        event.preventDefault()
+        last.focus()
+      } else if (
+        !event.shiftKey &&
+        (active === last || !panel.contains(active))
+      ) {
+        event.preventDefault()
+        first.focus()
+      }
+      return
+    }
   }
-  document.addEventListener('keyup', handleKeyUp)
+  document.addEventListener('keydown', handleKeyDown)
 </script>

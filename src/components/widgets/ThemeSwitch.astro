@@ -3,10 +3,11 @@
 ---
 
 <button
+  type="button"
   id="theme-switch"
   class="op-60 hover:op-100 op-transition"
-  title="Toggles light & dark"
-  aria-label="Toggles light & dark"
+  title="切換深淺色模式"
+  aria-label="切換深淺色模式"
 >
   <div class="i-ri-sun-line dark:hidden"></div>
   <div class="hidden dark:block i-ri-moon-line"></div>
@@ -30,11 +31,9 @@
 
     if (theme === 'light') {
       document.documentElement.classList.remove('dark')
-      toggleThemeButton.setAttribute('aria-label', 'light')
       toggleThemeButton.setAttribute('aria-checked', 'false')
     } else {
       document.documentElement.classList.add('dark')
-      toggleThemeButton.setAttribute('aria-label', 'dark')
       toggleThemeButton.setAttribute('aria-checked', 'true')
     }
 
@@ -89,7 +88,6 @@
     }
 
     const updateAria = (buttonElement: HTMLElement) => {
-      buttonElement.setAttribute('aria-label', isDark ? 'dark' : 'light')
       buttonElement.setAttribute('aria-checked', isDark ? 'true' : 'false')
     }
 

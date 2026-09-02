@@ -3,13 +3,17 @@
 ---
 
 <button
+  type="button"
   id="toc-open-button"
   class="z-50 fixed right-5 bottom-18
     w-10 h-10 rounded-full
     op-0 bg-#8883 dark:bg-#8886 pointer-events-none op-transition
     lt-lgp:(op-50 pointer-events-auto)
     hover:op-100 print:hidden"
-  title="Open table of contents"
+  title="開啟文章目錄"
+  aria-label="開啟文章目錄"
+  aria-controls="toc-panel"
+  aria-expanded="false"
 >
   <div class="i-lucide-table-of-contents text-gray-700 dark:text-gray-200">
   </div>
@@ -17,12 +21,15 @@
 
 <nav
   id="toc-panel"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="toc-panel-title"
   class="hidden! z-200 fixed top-10% left-50% translate-x--50%
     overflow-y-auto flex flex-col
     w-90% max-h-80vh py-4 px-6 rounded-lg
     bg-[var(--c-bg)] shadow-custom_0_0_10_0 text-[var(--c-text)]"
 >
-  <div class="pb-1 b-b b-[var(--c-text)]">Table of Contents</div>
+  <div id="toc-panel-title" class="pb-1 b-b b-[var(--c-text)]">文章目錄</div>
   <ul class="text-sm">
     <slot />
   </ul>
@@ -36,6 +43,7 @@
     const handleBtnClickToOpen = () => {
       toggleFadeEffect('backdrop', true, 'hidden')
       toggleFadeEffect('toc-panel', true, 'hidden!')
+      tocOpenButton?.setAttribute('aria-expanded', 'true')
     }
 
     const tocOpenButton = document.getElementById('toc-open-button')

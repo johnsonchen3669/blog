@@ -68,6 +68,8 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
   class="op-60 hover:op-100 op-transition"
   title="搜尋"
   aria-label="搜尋"
+  aria-controls="search-panel"
+  aria-expanded="false"
 >
   <div class="i-grommet-icons-search"></div>
 </button>
@@ -82,7 +84,7 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
     text-(--c-text) bg-(--c-bg) shadow-custom_0_0_10_0`}
   aria-modal="true"
   aria-labelledby="search-label"
-  aria-keyshortcuts="ArrowUp,ArrowDown,Esc"
+  aria-keyshortcuts="ArrowUp ArrowDown Escape"
   data-filter={filterEnabled}
   data-batch-size={batchSize}
   data-max-items={maxItems}
@@ -221,6 +223,7 @@ const devSearchIndex = (await getAllBlogPosts()).map((post) => {
     const handleToggle = () => {
       toggleFadeEffect('backdrop', true, 'hidden')
       toggleFadeEffect('search-panel', true, 'hidden')
+      searchSwitch?.setAttribute('aria-expanded', 'true')
 
       // auto-focus the search input after panel becomes visible
       requestAnimationFrame(() => {
