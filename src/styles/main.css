@@ -877,6 +877,10 @@ mark.pagefind-highlight {
   .post-content {
     animation: article-load-in 0.72s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
+  .series-overview .content-body,
+  .series-index .content-body {
+    animation: article-load-in 0.72s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
   html.enter-anim .field-hero__statement,
   html.enter-anim .field-hero__ledger,
   html.enter-anim .trace-section {
