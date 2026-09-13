@@ -1,16 +1,26 @@
-name: CI
+name: CI and Deploy
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    # 00:10 Asia/Taipei (UTC+8)
+    - cron: '10 16 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -39,3 +49,26 @@ jobs:
 
       - name: Verify build output
         run: test -d dist
+
+      - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
