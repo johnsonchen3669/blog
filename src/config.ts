@@ -48,7 +48,7 @@ export const UI: Ui = {
     mainLogoOverrides: [],
     subLogoMatches: [],
   },
-  externalLink: { newTab: false, cursorType: '', showNewTabIcon: false },
+  externalLink: { newTab: true, cursorType: '', showNewTabIcon: false },
   postMetaStyle: 'minimal',
 }
 
