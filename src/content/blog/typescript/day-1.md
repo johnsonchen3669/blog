@@ -18,7 +18,7 @@ share: false
 giscus: true
 search: true
 ---
-![ILLUSTRATION TODO — 系列首圖](../../../assets/blog/typescript/day-01-ai-code-review-cover.png)
+![系列首圖](../../../assets/blog/typescript/day-01-ai-code-review-cover.png)
 
 ## 這次想分享什麼？
 
@@ -96,7 +96,7 @@ function createQuestion(): Question {
 
 這段程式可以讓我們分清楚三件事：語法正確、型別正確，以及執行正確。
 
-![ILLUSTRATION TODO — 三種不同的正確](../../../assets/blog/typescript/day-01-three-levels-of-correctness.png)
+![三種不同的正確](../../../assets/blog/typescript/day-01-three-levels-of-correctness.png)
 
 ### 語法正確
 
