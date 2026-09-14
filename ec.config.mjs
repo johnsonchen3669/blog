@@ -19,13 +19,13 @@ export default defineEcConfig({
 
   /* Styles */
   styleOverrides: {
-    uiFontFamily: "'DM Mono', 'Input Mono', 'Fira Code', 'monospace'",
+    uiFontFamily: "'DM Mono', monospace",
     uiFontSize: '1em',
     codeBackground: (context) =>
       context.theme.name === 'vitesse-dark' ? '#0e0e0e' : '#fafafa',
-    codeFontFamily: "'DM Mono', 'Input Mono', 'Fira Code', 'monospace'",
-    codeFontSize: '14.72px',
-    codeLineHeight: '1.4',
+    codeFontFamily: "'DM Mono', monospace",
+    codeFontSize: '0.95rem',
+    codeLineHeight: '1.55',
     codePaddingBlock: '0.8571429em',
     codePaddingInline: '1.1428571em',
 
