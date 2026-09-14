@@ -29,3 +29,7 @@ pnpm-debug.log*
 # local archive
 .local
 **/.*-backup/
+
+# local dev environment
+.fdev.env
+.fdev/
