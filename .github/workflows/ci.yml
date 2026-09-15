@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    # 00:10 Asia/Taipei (UTC+8)
-    - cron: '10 16 * * *'
+    # 12:00 Asia/Taipei (UTC+8)
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 permissions:
