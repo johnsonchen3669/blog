@@ -75,7 +75,10 @@ normalizeAnswer(1);
 
 ## JavaScript 有時報錯，有時幫忙轉型
 
-如果型別不相容的操作都立刻報錯，問題反而比較容易發現。JavaScript 的另一個特性是，它常會先嘗試把值轉成操作需要的型別。這稱為隱式型別轉換（implicit coercion）。
+如果型別不相容的操作都立刻報錯，問題反而比較容易發現。但即使型別不相容，JavaScript 也可能透過隱式型別轉換讓操作繼續執行。
+
+> [!TIP] 隱式型別轉換 / Implicit coercion
+> JavaScript 會在操作需要時，按照規則嘗試把值轉成另一種型別。想深入了解可以閱讀 MDN 的 [Type coercion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Data_structures#type_coercion)。
 
 開頭的 `+` 已經展示字串串接；再看減號如何處理同樣類型的輸入：
 
@@ -91,9 +94,13 @@ console.log(typeof numberResult); // number
 
 ![運算子如何要求不同的型別轉換](../../../assets/blog/typescript/day-02-implicit-coercion-checkpoints.png)
 
-隱式轉換不一定是錯誤，但當轉換藏在運算裡時，讀者必須同時記住資料來源與運算子的規則。
 
-如果轉換是程式真正的意圖，直接寫出來通常更清楚：
+隱式轉換不一定是錯誤，但當轉換藏在運算裡時，我們必須同時記住資料來源與運算子的規則。
+
+如果希望輸入以數字參與運算，可以明確寫出轉換。
+
+> [!TIP] 顯式轉換 / Explicit conversion
+> 使用 `Number()`、`String()` 或 `Boolean()`，可以明確表達希望的型別；但轉換結果仍要依輸入內容驗證。
 
 ```js
 const rawScore = "5";
@@ -107,7 +114,7 @@ console.log(Number("five")); // NaN
 
 ## 真值與假值不是「大概算 true 或 false」
 
-條件判斷也會進行型別轉換。`if` 不要求條件原本就是 Boolean，而是會按照規則判斷該值屬於真值（Truthy）或假值（Falsy）。
+在條件判斷中，`if` 會按照 JavaScript 的規則，先將括號內的值判斷為真值（Truthy）或假值（Falsy）。因此，條件不一定要原本就是布林值（Boolean）；Truthy 會執行區塊，Falsy 則不會。
 
 常見的假值包括：
 
@@ -213,7 +220,7 @@ function readAnswer(): string {
 
 ## 結論
 
-- JavaScript 的值有型別，但變數可以在程式執行期間指向不同型別的值；隱式轉換可能讓程式繼續執行，卻產生型別正確、需求錯誤的結果。
+- JavaScript 的變數可以先後指向不同型別的值；隱式轉換可能產生符合語言運算規則、卻不符合需求的結果。
 - 真值與假值是語言規則，不等於「有資料」與「沒資料」的業務定義；動態型別的錯誤也通常要等不相容的操作真正執行後才出現。
 - TypeScript 可以把已知的型別衝突提早到執行前，但不會驗證外部資料，也不會替我們判斷商業邏輯。
 
