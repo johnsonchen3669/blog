@@ -73,7 +73,8 @@
     "viewerjs": "^1.11.7"
   },
   "simple-git-hooks": {
-    "pre-commit": "bunx lint-staged"
+    "pre-commit": "bunx lint-staged",
+    "commit-msg": "sh .githooks/commit-msg"
   },
   "lint-staged": {
     "*": [

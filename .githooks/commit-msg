@@ -1,0 +1,13 @@
+#!/bin/sh
+
+commit_message_file=$1
+subject=$(sed -n '1p' "$commit_message_file")
+
+if printf '%s\n' "$subject" | grep -Eq '^[a-z][a-z0-9-]*(\([A-Za-z0-9._/-]+\))?!?: .+'; then
+  exit 0
+fi
+
+printf '%s\n' 'Commit message must start with an English Conventional Commits prefix:' >&2
+printf '%s\n' '  <type>[optional scope][!]: <description>' >&2
+printf '%s\n' 'Example: feat(blog): add article navigation' >&2
+exit 1
