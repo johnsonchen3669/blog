@@ -113,30 +113,7 @@ showQuiz(); // TypeTrail Day 3
 > [!NOTE]
 > 詞法作用域（lexical scope）：名稱的可見範圍由宣告位置與巢狀結構決定，不會隨函式的呼叫位置改變。
 
-<!--
-ILLUSTRATION TODO — 詞法作用域的兩條名稱查找路徑
-建議檔名：day-03-lexical-scope-chain.webp
-建議比例：16:9
-替代文字：一般 script 中，printTitle 分別向外查找 day 與 siteName；day 在 showQuiz 作用域找到，siteName 則繼續往外到全域作用域找到。
-
-生圖 Prompt：
-Create a precise editorial vector infographic explaining two independent JavaScript lexical-scope lookups for a Traditional Chinese programming article. The example runs as a classic script, not a module; its outermost region is global scope.
-
-Show three clearly nested rectangular regions. Label the innermost region exactly “printTitle 作用域”, the middle region exactly “showQuiz 作用域”, and the outer region exactly “全域作用域”. Place a variable token labeled exactly “day” inside “showQuiz 作用域”. Place a separate variable token labeled exactly “siteName” inside “全域作用域”.
-
-Draw two visually distinct one-way lookup paths that both start independently inside “printTitle 作用域”:
-
-1. A short mint-green path labeled exactly “查找 day”. It checks “printTitle 作用域”, moves outward into “showQuiz 作用域”, and stops at the “day” token.
-2. A longer electric-blue path labeled exactly “查找 siteName”. It checks “printTitle 作用域”, passes through “showQuiz 作用域” without stopping, moves outward into “全域作用域”, and stops at the “siteName” token.
-
-The two paths must remain separate. Do not draw an arrow from “day” to “siteName”, and do not imply that one lookup continues after finding a variable. Do not add sibling functions, calling scopes, code snippets, or unrelated variables.
-
-Include only these exact text labels: “printTitle 作用域”, “showQuiz 作用域”, “全域作用域”, “day”, “siteName”, “查找 day”, “查找 siteName”.
-
-Visual style: precise flat vector infographic, TypeTrail technical field-guide aesthetic, thick deep-ink outlines, geometric variable tokens, subtle grid-paper background, generous spacing. Palette: deep ink navy #071C2C, electric blue #2457FF, mint green #C9F55A, coral orange #FF6542, pale paper #EEF6F6. Wide 16:9 composition, highly legible at article width.
-
-No people, no robots, no photorealism, no 3D, no gradients, no cyberpunk effects, no decorative code, no extra labels, no watermark. Ensure all requested labels are rendered exactly.
--->
+![詞法作用域的兩條名稱查找路徑](../../../assets/blog/typescript/day-03-lexical-scope-chain.png)
 
 接著看這個例子：printLabel 在 run 裡被呼叫，會讀到哪個 label？
 
