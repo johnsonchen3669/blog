@@ -9,7 +9,7 @@ tags:
   - javascript
   - scope
   - closure
-pubDate: 2026-09-15
+pubDate: 2026-09-16
 lastModDate: ''
 draft: false
 ogImage: true
