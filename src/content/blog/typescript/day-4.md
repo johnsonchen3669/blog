@@ -26,9 +26,9 @@ search: true
 
 不過，把資料和方法放進 class 之後，還有兩件事需要弄清楚：JavaScript 從哪裡找到方法，以及方法裡的 `this` 指向誰。這篇會從建立 `Question` 物件開始，再看方法變成回呼函式時，為什麼可能失去原本的 `this`。
 
-## Class 把建構與共用方法寫在一起
+## Class 把資料與操作放在一起
 
-先把題目需要的資料與方法寫成 `Question` class，再透過 `new` 建立個別物件。透過 `new` 建立的物件稱為實體（instance）。
+Class 可以描述同一類物件建立時要保存哪些資料，以及能執行哪些操作。先定義 `Question` class，再透過 `new` 建立個別題目。由 class 建立的物件稱為實體（instance）。
 
 ```js
 class Question {
@@ -42,34 +42,33 @@ class Question {
 }
 
 const firstQuestion = new Question("Prototype 是什麼？");
+const secondQuestion = new Question("this 是在哪個時機決定的？");
+
 firstQuestion.showPrompt(); // Prototype 是什麼？
+secondQuestion.showPrompt(); // this 是在哪個時機決定的？
 ```
 
-`Question` 是 class，`firstQuestion` 是它建立的實體。執行 `new Question(...)` 時，`constructor` 會收到題目文字，並把它存進實體的 `prompt`。`showPrompt` 則是所有 `Question` 實體都能使用的方法。
+執行 `new Question(...)` 時，JavaScript 會先建立一個新物件，讓 `this` 指向它，再執行 `constructor`。這個範例的 `constructor` 收到題目文字後，透過 `this.prompt = prompt` 將文字存進實體。
 
-這裡先把 `this.prompt` 理解成「這個實體的 `prompt`」。判斷 `this` 實際指向誰時，還要一起看函式的呼叫方式。
+`firstQuestion` 與 `secondQuestion` 是兩個不同的實體，各自保存自己的題目文字。
+
+> [!TIP] 屬性與方法 / Property and method
+> 屬性用來保存物件的資料，例如 `prompt`；方法則是物件可以執行的函式，例如 `showPrompt()`。
+
+這裡先把 `this.prompt` 理解成「這次呼叫所使用物件的 `prompt`」。判斷 `this` 實際指向誰時，還要一起看函式的呼叫方式。
 
 ## 物件找不到屬性時，會沿著原型鏈往上找
 
-`firstQuestion` 可以呼叫 `showPrompt`，但這個方法不是複製到每個實體裡。先用一般物件把查找過程拆開來看：
+每個實體都有自己的 `prompt`，但一般 class 方法不會複製到每個實體裡。可以使用 `Object.hasOwn` 檢查屬性是否直接存在於物件本身：
 
 ```js
-const questionActions = {
-  showPrompt() {
-    console.log(this.prompt);
-  },
-};
-
-const question = Object.create(questionActions);
-question.prompt = "this 是在哪個時機決定的？";
-
-question.showPrompt();
-// this 是在哪個時機決定的？
+console.log(Object.hasOwn(firstQuestion, "prompt"));
+// true
+console.log(Object.hasOwn(firstQuestion, "showPrompt"));
+// false
 ```
 
-`question` 自己有 `prompt`，但沒有 `showPrompt`。讀取 `question.showPrompt` 時，JavaScript 會先檢查 `question`，找不到後再到它的 prototype，也就是 `questionActions`。如果一路都找不到，查找會繼續到 `Object.prototype`，最後抵達 `null`。這條路徑稱為原型鏈（prototype chain）。
-
-回到前面的 class 範例，也能看到相同關係：
+雖然 `firstQuestion` 本身沒有 `showPrompt`，卻仍然可以呼叫它，原因就在 prototype。寫在 class 裡的一般方法會放在 `Question.prototype`：
 
 ```js
 console.log(Object.getPrototypeOf(firstQuestion) === Question.prototype);
@@ -78,7 +77,12 @@ console.log(firstQuestion.showPrompt === Question.prototype.showPrompt);
 // true
 ```
 
-Class body 裡的一般方法會放在 `Question.prototype`，所以不同實體可以沿著原型鏈找到同一個 `showPrompt`。Class 沒有讓 prototype 消失，只是把建立實體與共用方法的寫法集中在一起。
+> [!TIP] 原型 / Prototype
+> Prototype 是物件在自身找不到屬性時，會繼續查找的另一個物件，例如 `firstQuestion` 會接著查找 `Question.prototype`。
+
+讀取 `firstQuestion.showPrompt` 時，JavaScript 會依序查找 `firstQuestion`、`Question.prototype` 與 `Object.prototype`，直到找到 `showPrompt` 或抵達 `null`。這條路徑稱為原型鏈（prototype chain）。
+
+因此，各個實體能保存自己的 `prompt`，並共用 `Question.prototype` 上的 `showPrompt`。Class 只是把建立實體與定義共用方法的語法集中起來。
 
 > [!NOTE]
 > 修改 `Object.prototype` 等內建原型會影響其他物件的屬性查找，除非有非常明確的理由，否則應避免這樣做。
@@ -87,7 +91,7 @@ Class body 裡的一般方法會放在 `Question.prototype`，所以不同實體
 
 ## 一般函式的 `this` 由呼叫方式決定
 
-Prototype chain 決定方法在哪裡找到，`this` 則由呼叫方式決定。先看同一個函式被兩個物件使用時的結果：
+原型鏈只負責決定「去哪裡找到 `showTitle`」；找到函式之後，`this` 指向誰仍由呼叫方式決定。先看同一個函式被兩個物件使用時的結果：
 
 ```js
 const quiz = {
@@ -106,7 +110,7 @@ quiz.showTitle();   // Day 4
 review.showTitle(); // 複習題
 ```
 
-兩個物件使用的是同一個 `showTitle` 函式，但 `quiz.showTitle()` 的接收者（receiver）是 `quiz`，`review.showTitle()` 的接收者則是 `review`。呼叫時點號左邊的物件會成為 `this`。
+兩個物件共用了同一個 `showTitle` 函式；實際呼叫時，點號左邊的物件會成為 `this`。因此，`quiz.showTitle()` 的 `this` 是 `quiz`，`review.showTitle()` 的 `this` 則是 `review`。
 
 ## 方法變成回呼函式時，接收者可能遺失
 
@@ -119,7 +123,10 @@ runAction(firstQuestion.showPrompt);
 // TypeError：this 是 undefined
 ```
 
-`runAction` 最後以 `action()` 呼叫收到的函式，前面沒有 `firstQuestion.`。Class 方法會在嚴格模式（strict mode）下執行，因此這時的 `this` 是 `undefined`，讀取 `this.prompt` 便發生 TypeError。
+`runAction` 最後以 `action()` 呼叫收到的函式，前面沒有 `firstQuestion.`，因此沒有提供接收者，也就不會以 `firstQuestion` 作為 `this`。
+
+> [!NOTE]
+> Class 會自動使用嚴格模式；方法失去接收者時，`this` 是 `undefined`，因此讀取 `this.prompt` 會發生 TypeError。
 
 可以使用 `bind` 建立固定 `this` 的新函式：
 
@@ -133,12 +140,17 @@ runAction(boundShowPrompt); // Prototype 是什麼？
 
 ## 箭頭函式沒有自己的 `this`
 
-箭頭函式（arrow function）不會建立自己的 `this`，而是使用定義位置外層的 `this`。把它寫成 class 欄位時，欄位初始化會發生在實體上：
+另一種做法，是把方法寫成 class 欄位中的箭頭函式（arrow function）。箭頭函式不會建立自己的 `this`，而是沿用定義位置的 `this`：
 
 ```js
 class ArrowQuestion {
-  constructor(prompt) { this.prompt = prompt; }
-  showPrompt = () => console.log(this.prompt);
+  constructor(prompt) {
+    this.prompt = prompt;
+  }
+
+  showPrompt = () => {
+    console.log(this.prompt);
+  };
 }
 
 const arrowQuestion = new ArrowQuestion("箭頭函式會保留 this 嗎？");
@@ -146,9 +158,9 @@ const arrowCallback = arrowQuestion.showPrompt;
 arrowCallback(); // 箭頭函式會保留 this 嗎？
 ```
 
-`showPrompt` 是 class 欄位，每個實體各有一個箭頭函式；它沿用建立時的 `this`，所以取出後仍能使用。
+箭頭函式欄位會建立在每個實體上，並沿用建立時的 `this`。因此，即使取出後單獨呼叫，仍能讀取原實體的 `prompt`。
 
-代價是函式不再共用 prototype。方法經常當作回呼函式時，可以考慮箭頭函式欄位；其他方法傳遞時再使用 `bind`。
+一般 class 方法由 prototype 共用；箭頭函式欄位則每個實體各有一份。方法經常需要作為回呼函式時，再考慮使用 `bind` 或箭頭函式欄位。
 
 ## TypeTrail 中適合使用 Class 的地方
 
