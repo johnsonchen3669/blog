@@ -34,7 +34,7 @@ docker run --rm --user 1000:1000 -e HOME=/tmp/bun-home -e ASTRO_TELEMETRY_DISABL
 正式網站由 GitHub Actions 建置並部署到 GitHub Pages：
 
 - 推送到 `main` 時自動驗證並部署。
-- 每天台北時間 12:00 自動重建，發布 `pubDate` 已到且非草稿的文章。
+- 每天台北時間 20:00 自動重建，發布 `pubDate` 已到且非草稿的文章。
 - 需要手動重新部署時，在 GitHub Actions 的 `CI and Deploy` 工作流程選擇 `Run workflow`。
 
 GitHub repository 的 **Settings → Pages → Build and deployment → Source** 必須設為 **GitHub Actions**。
