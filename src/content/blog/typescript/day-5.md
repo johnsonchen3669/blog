@@ -180,20 +180,6 @@ const [questions, progress] = await Promise.all([
 
 從計時器、HTTP 請求到同時載入多份資料，判斷非同步流程都不能只看 `await` 寫在哪裡。還要追蹤結果何時可用、錯誤往哪裡傳，以及各項工作是否互相依賴。
 
-## AI API：一次拿完，或分段接收
-
-一般 HTTP 呼叫常用一個 Promise 表示完整結果。AI 回覆可能較長，API 也可能把結果分成多段送回。應用程式收到一段就能先處理，不必等全部內容完成：
-
-```js
-const events = await requestEvents();
-
-for await (const event of events) {
-  console.log(event);
-}
-```
-
-`requestEvents` 是用來說明控制流程的示意名稱，沒有對應特定 SDK。分段接收讓程式在完整結果產生前就開始處理，等待依然存在。實作時仍要依 API 文件確認每段資料的格式、完成訊號、錯誤與取消方式。
-
 ## 今日練習
 
 [day5 | 型旅 TypeTrail](https://typetrail.johnsonchen.dev/#/day/5)
