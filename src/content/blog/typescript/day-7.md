@@ -136,7 +136,7 @@ console.log(gradeAnswer("10", "10")); // 10
 - `module: "nodenext"`：依 Node.js 的規則處理模組，並參考 `package.json` 裡的 `"type": "module"`，把這裡的 `.ts` 輸出成 ES 模組。兩處設定要對上，Node.js 才能載入輸出的檔案。瀏覽器專案要依自己的建置方式選擇模組設定，無須照搬這一項。完整規則可參考以下文件。
 
 >[TypeScript 的設定檔說明](https://www.typescriptlang.org/docs/handbook/tsconfig-json)
->[模組文件](https://www.typescriptlang.org/docs/handbook/modules/reference.html#node16-nodenext)。
+>[模組文件](https://www.typescriptlang.org/docs/handbook/modules/reference.html#node16-nodenext)
 
 ## 跑檢查，再執行輸出的 JavaScript
 
