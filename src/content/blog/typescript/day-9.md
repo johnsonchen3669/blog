@@ -124,8 +124,6 @@ function showQuestion(question: Question) {
 
 這裡用 `import type`，因為 `Question` 只用來標註函式參數。要匯入程式執行時會呼叫的函式，就用一般的 `import`。
 
-範例路徑保留 `.js`，是配合前面 Node.js ES 模組的設定。下方 Angular 範例省略副檔名；實際寫法要看專案的建置方式。
-
 ## 延伸到 Angular：這個概念在框架中如何出現？
 
 Angular 元件也能使用同一個 `Question` 型別。下面是元件接收題目資料的部分範例：
