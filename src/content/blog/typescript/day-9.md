@@ -26,7 +26,7 @@ search: true
 
 ## 一筆題目需要哪些欄位
 
-物件型別（object type）描述物件有哪些屬性，以及每個屬性接受什麼型別。屬性（property）是物件中可以用名稱讀取的值，例如用 `question.prompt` 讀取題目文字。替物件結構取名，常見寫法有 `type` 和 `interface`。這裡用 `type` 示範：
+物件型別（object type）描述物件有哪些屬性，以及每個屬性接受什麼型別。屬性（property）是物件中可以用名稱讀取的值，例如用 `question.prompt` 讀取題目文字。同一份物件型別要重複使用時，可以用 `type` 替它取名，這稱為型別別名（type alias）。`interface` 也能描述物件型別；這裡先看 `type` 的寫法：
 
 ```ts
 type Question = {
@@ -43,6 +43,8 @@ const question: Question = {
   options: ["export", "import"],
 };
 ```
+
+這裡把物件型別命名為 `Question`，`const question: Question` 就會依這份規則檢查資料。
 
 `id` 存題目編號，`string[]` 表示字串陣列。這四個欄位都必須提供；少了 `options` 或在選項中放入數字，編譯器會指出錯誤。
 
@@ -120,7 +122,9 @@ function showQuestion(question: Question) {
 }
 ```
 
-這裡用 `import type`，因為 `Question` 只用來標註函式參數。TypeScript 會沿著路徑找到 `question-types.ts` 來檢查型別；
+這裡用 `import type`，因為 `Question` 只用來標註函式參數。要匯入程式執行時會呼叫的函式，就用一般的 `import`。
+
+範例路徑保留 `.js`，是配合前面 Node.js ES 模組的設定。下方 Angular 範例省略副檔名；實際寫法要看專案的建置方式。
 
 ## 延伸到 Angular：這個概念在框架中如何出現？
 
