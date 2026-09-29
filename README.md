@@ -39,6 +39,12 @@ docker run --rm --user 1000:1000 -e HOME=/tmp/bun-home -e ASTRO_TELEMETRY_DISABL
 
 後台欄位由根目錄 [`.pages.yml`](./.pages.yml) 定義，**該檔案是欄位的唯一來源**；調整欄位時需同步更新 `src/content/schema.ts`。產品評估與限制見 [`docs/cms-evaluation.md`](./docs/cms-evaluation.md)。
 
+後台儲存時的已知行為（實測記錄在評估文件第 6 節）：
+
+- 空欄位（例如空的「最後修改日期」）會從 frontmatter 移除。
+- 字串值外層的引號會被移除（YAML 等價）。
+- 內文連續空行會收斂成一個，且檔案結尾不會有換行。
+
 ### 草稿與排程發布
 
 - **草稿**：開啟「草稿」欄位。檔案會進 repo，但正式站不輸出（列表、RSS、sitemap、Pagefind 都不會出現）。

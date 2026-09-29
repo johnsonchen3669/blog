@@ -95,8 +95,8 @@ content:
         required: true
       - name: lastModDate
         label: 最後修改日期
-        description: 未使用時請保留空字串；此欄位為文字型別，避免被寫成 null 造成建置失敗。
-        type: string
+        description: 留空即不顯示「最後更新」；留空儲存時此欄位會從 frontmatter 移除（不影響建置）。
+        type: date
       - name: ogImage
         label: 自動產生 OG 圖
         description: 開啟時由站台自動產生分享圖；關閉則不產生。

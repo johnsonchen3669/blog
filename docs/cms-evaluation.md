@@ -71,7 +71,28 @@ CMS 只是另一種寫檔方式，因此：
 - 相對路徑只在文章固定位於 `src/content/blog/<series>/<file>.md`（深 3 層）時正確；若未來調整目錄深度，必須同步修改 `media.output` 前綴。
 - 若要改用 `public/`（`blog-public` 媒體來源，`output: /images/blog`），路徑不受深度影響，但**不會**經過 Astro 影像處理，需自行壓縮並失去 `srcset`。
 
-## 6. 預覽選項
+## 6. 儲存行為實測（忠實度測試）
+
+測試方式：在後台開啟既有文章後**不做任何修改**直接儲存，檢查產生的 commit diff。
+
+### 已測：`src/content/blog/typescript/day-1.md`
+
+| 觀察到的改寫 | 影響 | 處理 |
+| --- | --- | --- |
+| `description: "..."` 的引號被移除 | 無（YAML 等價） | 接受 |
+| 空的 `lastModDate: ''` 被移除 | 無（schema 為 optional union，空字串與缺少鍵在 `RenderPost.astro` 都視為 undefined） | 接受；`lastModDate` 已改為 `date` 型別以避免無效字串造成建置失敗 |
+| 內文連續空行被收斂成一個 | 僅空白差異，不影響版面 | 接受 |
+| 檔案結尾不再有換行（與 `.editorconfig` 的 `insert_final_newline` 慣例不同） | 無功能影響，但之後手改檔案可能再產生一次 diff | 接受（若要完全避免，需把 `body` 改成 `code` 欄位，犧牲所見即所得） |
+| 內文其餘內容（清單、程式碼區塊、段落） | **完全一致** | — |
+
+### 待測
+
+- 含 `> [!NOTE]` callouts 的文章（例如 `typescript/day-2`、`day-3`、`day-5`）是否也能原樣保留。
+- 圖片上傳後的落地路徑與插入語法（見第 5 節）。
+
+若 callouts 被改寫，替代方案是把 `body` 改成 `code` 欄位：改動只有一行，之後內文即為純文字編輯（零改寫），但失去視覺化編輯。
+
+## 7. 預覽選項
 
 | 方案 | 手機／遠端 | 內容範圍 | 需要新增 | 備註 |
 | --- | --- | --- | --- | --- |
@@ -90,17 +111,18 @@ const isPreview = import.meta.env.PUBLIC_PREVIEW === 'true'
 
 正式站不使用該旗標；任何含草稿的預覽都必須加上 `noindex` 並避免公開連結外流。
 
-## 7. 風險與對策
+## 8. 風險與對策
 
 | 風險 | 對策 |
 | --- | --- |
 | 富文本編輯器改寫既有 Markdown | 以「無修改儲存零 diff」驗證；必要時把 `body` 改成 `code` 欄位（純文字編輯） |
 | schema 未管理的鍵被刪除 | `settings.content.merge: true` |
-| `lastModDate: ''` 被轉成 null | 該欄位使用文字型別，並在建置時驗證 |
+| 空的 `lastModDate` 會被移除 | 無功能影響；欄位已改為 `date` 型別以避免無效字串造成建置失敗 |
+| 後台儲存會做輕度 Markdown 正規化（空行、檔尾換行） | 已知行為，記錄於第 6 節；若不可接受則把 `body` 改為 `code` 欄位 |
 | 圖片相對路徑與目錄深度綁定 | 文件載明規則；改變目錄結構時同步更新 `media.output` |
 | 後台更名檔案導致連結失效 | `operations.rename: false`，不開放更名 |
 | 無審核流程 | 以「草稿 + 排程」兩層防護；若日後需要審核，改用原生支援 editorial workflow 的 Sveltia CMS |
 
-## 8. 結論
+## 9. 結論
 
 Pages CMS 能用最低成本滿足需求：瀏覽器與手機可編輯、內容仍是 repo 內的 Markdown、零部署變更、零建置流程變更。導入步驟與設定見根目錄 `.pages.yml` 與 `README.md` 的「內容管理」章節。
