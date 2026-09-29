@@ -75,10 +75,11 @@ content:
         description: 同時決定新文章會放在哪個資料夾。
         type: select
         options:
-          - label: TypeScript
-            value: typescript
-          - label: Angular 新手練功日誌
-            value: angular-training
+          values:
+            - name: typescript
+              label: TypeScript
+            - name: angular-training
+              label: Angular 新手練功日誌
       - name: order
         label: 系列內順序
         description: 對應課程天數，也是新檔名 day-N.md 的依據。
