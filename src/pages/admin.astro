@@ -1,4 +1,6 @@
 ---
+// 站上 /admin/ 的轉址頁：GitHub Pages 無法做伺服器 3xx，
+// 以 noindex + meta refresh 前往 Pages CMS（深連結直接開本 repo）。
 const target = 'https://app.pagescms.org/johnsonchen3669/blog'
 ---
 
@@ -8,12 +10,220 @@ const target = 'https://app.pagescms.org/johnsonchen3669/blog'
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <meta http-equiv="refresh" content={`0; url=${target}`} />
-    <title>內容管理後台</title>
+    <title>前往內容管理後台…</title>
+    <style is:inline>
+      :root {
+        --paper: #0f1a24;
+        --ink: #e7eef3;
+        --muted: #9baab8;
+        --rule: #344756;
+        --cobalt: #7b9cff;
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --paper: #eef3f6;
+          --ink: #132238;
+          --muted: #536273;
+          --rule: #b9c8d2;
+          --cobalt: #2457d6;
+          color-scheme: light;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          'Noto Sans TC',
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.3;
+        background-image:
+          linear-gradient(var(--rule) 1px, transparent 1px),
+          linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: radial-gradient(
+          circle at 50% 42%,
+          black 0%,
+          transparent 78%
+        );
+      }
+      main {
+        position: relative;
+        z-index: 1;
+        width: min(420px, 88vw);
+        text-align: center;
+      }
+      .eyebrow {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 18px;
+      }
+      .route {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-bottom: 6px;
+      }
+      .route__line {
+        fill: none;
+        stroke: var(--cobalt);
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-dasharray: 0.5 6;
+        stroke-dashoffset: 0;
+      }
+      .route__origin {
+        fill: var(--muted);
+      }
+      .route__flag {
+        fill: var(--paper);
+        stroke: var(--cobalt);
+        stroke-width: 1.5;
+      }
+      .route__pulse {
+        fill: none;
+        stroke: var(--cobalt);
+        stroke-width: 1;
+        opacity: 0;
+        transform-origin: center;
+        transform-box: fill-box;
+        animation: pulse 2.1s ease-out 0.9s infinite;
+      }
+      .station {
+        font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        font-size: 12.5px;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        margin: 0 0 26px;
+      }
+      .station b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      h1 {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 0 10px;
+      }
+      .hint {
+        font-size: 13.5px;
+        color: var(--muted);
+        margin: 0;
+      }
+      .hint a {
+        color: var(--cobalt);
+        text-underline-offset: 4px;
+      }
+      .hint a:focus-visible {
+        outline: 2px solid var(--cobalt);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+      main > * {
+        animation: rise 0.5s ease-out both;
+      }
+      .route {
+        animation-delay: 0.1s;
+      }
+      .station {
+        animation-delay: 0.25s;
+      }
+      h1,
+      .hint {
+        animation-delay: 0.4s;
+      }
+      .route__draw {
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        animation: draw 0.9s ease-out 0.15s forwards;
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes pulse {
+        0% {
+          opacity: 0.9;
+          transform: scale(0.4);
+        }
+        75%,
+        100% {
+          opacity: 0;
+          transform: scale(3.2);
+        }
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        main > *,
+        .route__draw,
+        .route__pulse {
+          animation: none;
+        }
+        .route__draw {
+          stroke-dasharray: 0.5 6;
+          stroke-dashoffset: 0;
+        }
+      }
+    </style>
   </head>
   <body data-pagefind-ignore="all">
-    <p>
-      前往內容管理後台…若未自動跳轉，請
-      <a href={target}>點此開啟 Pages CMS</a>。
-    </p>
+    <main>
+      <p class="eyebrow">Field Notes · CMS Gateway</p>
+      <svg
+        class="route"
+        viewBox="0 0 300 64"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          class="route__line route__draw"
+          d="M 14 46 C 90 46, 120 18, 158 18 S 250 18, 282 28"></path>
+        <circle class="route__origin" cx="14" cy="46" r="3.5"></circle>
+        <circle class="route__pulse" cx="284" cy="28" r="8"></circle>
+        <g transform="translate(284 28)">
+          <path
+            class="route__flag"
+            d="M -4 8 L -4 -7 L -8 -7 L 1 -10.5 L -4 -4 L 0 -4 L 0 8 Z"
+            transform="rotate(-12)"></path>
+        </g>
+      </svg>
+      <p class="station">blog → <b>app.pagescms.org</b></p>
+      <h1 role="status" aria-live="polite">正在前往內容管理後台</h1>
+      <p class="hint">
+        開啟 <b>johnsonchen3669/blog</b>…若未自動跳轉，<a href={target}
+          >點此前往</a
+        >
+      </p>
+    </main>
   </body>
 </html>
