@@ -1,6 +1,6 @@
 ---
 title: AI 都會寫程式了，為什麼還要學 TypeScript？
-description: "說明「從 JavaScript 到 TypeScript」系列的學習方向與適合讀者。"
+description: 說明「從 JavaScript 到 TypeScript」系列的學習方向與適合讀者。
 slug: typescript/introduction
 series: typescript
 order: 1
@@ -10,7 +10,6 @@ tags:
   - ai
   - introduction
 pubDate: 2026-09-14
-lastModDate: ''
 draft: false
 ogImage: true
 toc: true
@@ -140,7 +139,6 @@ TypeScript 能檢查的，是我們已經寫下來，而且編譯器能判斷的
 當大家共用 `Question` 與 `QuestionType`，並讓相關程式接受型別檢查時，這類不一致就能在整合前被指出。
 
 與 AI 協作時，可以把既有型別和需求一起提供，要求它沿用專案已定義的資料格式。收到修改後，先執行型別檢查，再確認規則是否完整。例如：題目找不到時該回傳什麼？新增題型後，畫面是否有對應的處理？這些仍需要開發者理解需求後做出決定。
-
 
 ## 今日練習
 
