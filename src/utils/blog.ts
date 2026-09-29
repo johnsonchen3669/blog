@@ -115,7 +115,11 @@ export function getPostSeriesSlug(post: BlogPost) {
   if (post.data.series) return normalizeTaxonomyValue(post.data.series)
 
   const [first, second] = getBlogPostLegacyRouteParam(post).split('/')
-  if (first && second) return normalizeTaxonomyValue(first)
+  // 只有註冊於 series.ts 的系列才由資料夾推論；其他資料夾（如年份）一律不視為系列
+  if (first && second) {
+    const slug = normalizeTaxonomyValue(first)
+    if (BLOG_SERIES_MAP.has(slug)) return slug
+  }
 
   return undefined
 }

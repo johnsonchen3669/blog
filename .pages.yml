@@ -14,7 +14,6 @@ settings:
       rename: 'content(rename): {oldPath} -> {newPath}'
 
 media:
-  # 模式 B1：上傳到 src/assets，文章內寫入相對路徑，保留 Astro 圖片最佳化
   - name: blog-assets
     label: 文章圖片（src/assets，經 Astro 最佳化）
     input: src/assets/blog
@@ -74,6 +73,7 @@ content:
         label: 系列
         description: 同時決定新文章會放在哪個資料夾。
         type: select
+        required: true
         options:
           values:
             - name: typescript
@@ -84,6 +84,90 @@ content:
         label: 系列內順序
         description: 對應課程天數，也是新檔名 day-N.md 的依據。
         type: number
+        required: true
+      - name: tags
+        label: 標籤
+        type: string
+        list: true
+      - name: pubDate
+        label: 發布日期
+        description: 填入未來日期即為排程發布，需等每日排程重建後上線。
+        type: date
+        required: true
+      - name: lastModDate
+        label: 最後修改日期
+        description: 留空即不顯示「最後更新」；留空儲存時此欄位會從 frontmatter 移除（不影響建置）。
+        type: date
+      - name: ogImage
+        label: 自動產生 OG 圖
+        description: 開啟時由站台自動產生分享圖；關閉則不產生。
+        type: boolean
+      - name: toc
+        label: 顯示目錄
+        type: boolean
+      - name: share
+        label: 顯示分享按鈕
+        type: boolean
+      - name: giscus
+        label: 啟用留言
+        description: 使用 Giscus 留言系統。
+        type: boolean
+      - name: search
+        label: 納入站內搜尋
+        type: boolean
+      - name: draft
+        label: 草稿
+        description: 開啟時只會在本機開發環境出現，正式站不會輸出。
+        type: boolean
+      - name: body
+        label: 內文
+        type: rich-text
+        options:
+          format: markdown
+          switcher: true
+          media: blog-assets
+
+  - name: standalone
+    label: 一般文章（無系列）
+    type: collection
+    path: src/content/blog
+    subfolders: true
+    format: yaml-frontmatter
+    # exclude 為精確檔名／資料夾名比對；新增系列時要把該資料夾名加進來
+    exclude:
+      - series.ts
+      - typescript
+      - angular-training
+    # 建文時以「當年」自動歸檔；年份 = 建立日期，非排程發布年
+    filename:
+      template: '{year}/{fields.slug}.md'
+      field: false
+    operations:
+      rename: false
+    view:
+      layout: tree
+      fields: [title, pubDate, draft]
+      primary: title
+      sort: [pubDate, title]
+      search: [title, description, tags]
+      default:
+        sort: pubDate
+        order: desc
+    fields:
+      - name: title
+        label: 標題
+        description: 對應 SEO 標題，最多 60 字元。
+        type: string
+        required: true
+      - name: description
+        label: 摘要
+        description: 用於 meta description 與分享預覽；留空則使用站台描述。
+        type: text
+      - name: slug
+        label: URL slug
+        description: 決定網址 /blog/<slug>/；使用小寫英文與連字號，不需帶系列或年份前綴。
+        type: string
+        required: true
       - name: tags
         label: 標籤
         type: string
