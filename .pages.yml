@@ -40,10 +40,10 @@ content:
     format: yaml-frontmatter
     exclude:
       - series.ts
-    # 只影響新建檔案；既有檔名不會被更動
+    # 只影響新建檔案；既有檔名不會被更動。檔名一律由模板產生（day16-.md 那次的手動輸入證明需要鎖住）
     filename:
       template: '{series}/day-{order}.md'
-      field: create
+      field: false
     # 檔名對應網址，禁止在後台更名以免破壞既有連結
     operations:
       rename: false
