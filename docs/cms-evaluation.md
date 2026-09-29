@@ -75,7 +75,9 @@ CMS 只是另一種寫檔方式，因此：
 
 測試方式：在後台開啟既有文章後**不做任何修改**直接儲存，檢查產生的 commit diff。
 
-### 已測：`src/content/blog/typescript/day-1.md`
+### 已測：`typescript/day-1.md`（`7a49bbf`）、`typescript/day-2.md`（`6236429`）
+
+`day-2` 額外涵蓋 `> [!NOTE]` callouts 與相對路徑圖片引用。
 
 | 觀察到的改寫 | 影響 | 處理 |
 | --- | --- | --- |
@@ -83,14 +85,13 @@ CMS 只是另一種寫檔方式，因此：
 | 空的 `lastModDate: ''` 被移除 | 無（schema 為 optional union，空字串與缺少鍵在 `RenderPost.astro` 都視為 undefined） | 接受；`lastModDate` 已改為 `date` 型別以避免無效字串造成建置失敗 |
 | 內文連續空行被收斂成一個 | 僅空白差異，不影響版面 | 接受 |
 | 檔案結尾不再有換行（與 `.editorconfig` 的 `insert_final_newline` 慣例不同） | 無功能影響，但之後手改檔案可能再產生一次 diff | 接受（若要完全避免，需把 `body` 改成 `code` 欄位，犧牲所見即所得） |
-| 內文其餘內容（清單、程式碼區塊、段落） | **完全一致** | — |
+| 其餘內文：段落、清單、程式碼區塊、`> [!NOTE]` callouts、圖片相對路徑 | **完全一致（零改寫）** | — |
+
+**結論**：`rich-text` body 欄位可以保留，不需要退到 `code`。後台的改寫僅限於 YAML 等價的引號、空白正規化與空欄位省略，文章的語意與結構不受影響。
 
 ### 待測
 
-- 含 `> [!NOTE]` callouts 的文章（例如 `typescript/day-2`、`day-3`、`day-5`）是否也能原樣保留。
 - 圖片上傳後的落地路徑與插入語法（見第 5 節）。
-
-若 callouts 被改寫，替代方案是把 `body` 改成 `code` 欄位：改動只有一行，之後內文即為純文字編輯（零改寫），但失去視覺化編輯。
 
 ## 7. 預覽選項
 
