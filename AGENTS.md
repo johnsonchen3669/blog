@@ -6,7 +6,9 @@
 - `.pages.yml` 是後台欄位的唯一來源，調整欄位時必須同步更新 `src/content/schema.ts`：新增或移除後台的欄位都要兩邊一致。
 - 後台儲存即 commit 到 `main`，因此每次變更都必須能通過 `bun run check`、`bun run lint`、`bun run format` 與 `bun run build`。
 - 後台不開放檔案更名（`operations.rename: false`），避免既有文章網址失效。
-- 圖片一律使用相對路徑 `../../../assets/blog/<檔名>` 指向 `src/assets/blog/`，以保留 Astro 圖片最佳化；文章深度固定為 `src/content/blog/<series>/`，若改變目錄結構需同步調整 `.pages.yml` 的 `media[].output`。
+- 圖片一律使用相對路徑 `../../../assets/blog/<檔名>` 指向 `src/assets/blog/`，以保留 Astro 圖片最佳化；文章深度固定為 `src/content/blog/<資料夾>/<檔名>.md`（系列＝系列資料夾、一般文章＝年份資料夾），若改變目錄結構需同步調整 `.pages.yml` 的 `media[].output`。
+- 一般文章（無系列）由 `standalone` collection 管理：`filename` 模板 `{year}/{fields.slug}.md` 自動歸檔當年資料夾、`slug` 必填；`src/utils/blog.ts` 的 `getPostSeriesSlug` 只推論 `BLOG_SERIES_MAP` 註冊的系列，年份資料夾不會變成偽系列。
+- 新增系列時需同步三處：`src/content/blog/series.ts`（`BLOG_SERIES_MAP`）、`.pages.yml` 系列 collection 的 `series` options、一般文章 collection 的 `exclude`。
 - 評估與限制記錄在 `docs/cms-evaluation.md`。
 
 ## 文章原始檔

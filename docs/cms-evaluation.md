@@ -68,6 +68,7 @@ CMS 只是另一種寫檔方式，因此：
 
 - 目前 `.pages.yml` 的 `blog-assets` 媒體來源即為此設定：`input: src/assets/blog`、`output: ../../../assets/blog`，並指定給 `body` 欄位使用。
 - 已實測（Day 16）：上傳圖落在 `src/assets/blog/typescript/`，文章內寫入 `![alt](../../../assets/blog/typescript/<name>.png)`，建置時由 Astro 產生 `dist/_astro/` 下的響應式 webp 變體（1.35 MB → 25–97 KB）與 `srcset`；詳見第 6 節。
+- **單一媒體來源全站通用**：一般文章放在 `src/content/blog/<年份>/`，與系列文章同深度（3 層）→ 前綴 `../../../assets/blog/` 不會因文章類型不同而改變。
 - 相對路徑只在文章固定位於 `src/content/blog/<series>/<file>.md`（深 3 層）時正確；若未來調整目錄深度，必須同步修改 `media.output` 前綴。
 - 若要改用 `public/`（`blog-public` 媒體來源，`output: /images/blog`），路徑不受深度影響，但**不會**經過 Astro 影像處理，需自行壓縮並失去 `srcset`。
 
@@ -107,6 +108,20 @@ CMS 只是另一種寫檔方式，因此：
 ### 檔名注意事項
 
 後台建立 `day-16` 文章時，檔名輸入框產生了 `day16-.md`（手動輸入造成）。已將設定改為 `filename.field: false`：新文章檔名一律由模板 `{series}/day-{order}.md` 自動產生，無法手動輸入。檔名不影響網址（由 `slug` 決定），但影響「`filename` 模板」與文章排序的習慣一致性。
+
+## 6.1 一般文章（無系列）
+
+一般文章（無系列）放 **`src/content/blog/<年份>/<檔名>.md`**，由 `.pages.yml` 的 `standalone` collection 管理：
+
+- **年份歸檔**：檔名模板 `{year}/{fields.slug}.md` → 建文時自動放入當年資料夾（資料夾由 GitHub 建檔自動建立）。年份 = 建立當下的年份（不是排程發布年），跨年排程不搬資料夾。
+- **網址乾淨**：`slug` 為後台必填，URL = `/blog/<slug>/`（不帶年份前綴）。
+  - 依據：`src/utils/blog.ts` 的 `getPostSeriesSlug` 只對 **`series.ts`（`BLOG_SERIES_MAP`）註冊的系列**做資料夾推論，年份資料夾不會被當成偽系列（否則 URL 會带上 `2026/`、文章頁出現「2026」chip、生成 `/series/2026/` 頁）。
+  - 若手寫檔未填 `slug`，URL 會變成 `/blog/<年份>/<檔名>/`（可接受的 fallback）；後台建立的一律有 slug。
+- **欄位**：與系列文章相同的欄位但**不含**系列／順序（form 不提供）；`description/tags/pubDate/ogImage/toc/share/giscus/search/draft/body` 一致。
+- **圖片**：與系列文同一媒體來源（`blog-assets`），前綴一樣是 `../../../assets/blog/`。
+- **列表行為**：Blog 首頁列表、標籤、RSS、sitemap、prev/next（依日期全站排序）自動涵蓋；文章 kicker 顯示 `FIELD NOTE / DEVELOPMENT`。
+- **維護點**：未來新增系列時，要同步 ① `series.ts`（`BLOG_SERIES_MAP`）② `.pages.yml` 系列 collection 的 `series` options ③ `.pages.yml` 一般文章 collection 的 `exclude`（加該系列資料夾名，排除精確比對）。
+- **可見性重疊**：「部落格文章」collection 的 tree 也會顯示年份資料夾（只是清單可見性，無害）；慣用入口——系列文用「部落格文章」，一般文用「一般文章」。
 
 ## 7. 預覽選項
 
