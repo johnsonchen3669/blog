@@ -12,9 +12,10 @@ tags:
   - branded-types
 pubDate: 2026-09-29
 ogImage: true
-toc: false
+toc: true
 share: false
 giscus: true
 search: true
 draft: true
+lastModDate: 2026-09-29
 ---
