@@ -67,7 +67,7 @@ CMS 只是另一種寫檔方式，因此：
 結論：**使用 CMS 上傳仍可保有 Astro 圖片最佳化**，條件是圖片必須落在 `src/assets`，且寫入文章的路徑是相對路徑。
 
 - 目前 `.pages.yml` 的 `blog-assets` 媒體來源即為此設定：`input: src/assets/blog`、`output: ../../../assets/blog`，並指定給 `body` 欄位使用。
-- 上傳新圖會落在 `src/assets/blog/<slug>.webp`，文章內插入 `![alt](../../../assets/blog/<slug>.webp)`，建置時由 Astro 輸出 `dist/_astro/<name>.<hash>.webp` 與 `srcset`。
+- 已實測（Day 16）：上傳圖落在 `src/assets/blog/typescript/`，文章內寫入 `![alt](../../../assets/blog/typescript/<name>.png)`，建置時由 Astro 產生 `dist/_astro/` 下的響應式 webp 變體（1.35 MB → 25–97 KB）與 `srcset`；詳見第 6 節。
 - 相對路徑只在文章固定位於 `src/content/blog/<series>/<file>.md`（深 3 層）時正確；若未來調整目錄深度，必須同步修改 `media.output` 前綴。
 - 若要改用 `public/`（`blog-public` 媒體來源，`output: /images/blog`），路徑不受深度影響，但**不會**經過 Astro 影像處理，需自行壓縮並失去 `srcset`。
 
@@ -89,9 +89,24 @@ CMS 只是另一種寫檔方式，因此：
 
 **結論**：`rich-text` body 欄位可以保留，不需要退到 `code`。後台的改寫僅限於 YAML 等價的引號、空白正規化與空欄位省略，文章的語意與結構不受影響。
 
-### 待測
+### 待測 → 已完成：圖片上傳實測（Day 16，`ea7caa7`–`c236644`）
 
-- 圖片上傳後的落地路徑與插入語法（見第 5 節）。
+在後台建立 `typescript` 新文章（frontmatter 欄位正常、正文用工具列插入 2 張圖），結果：
+
+| 驗證項目 | 結果 |
+| --- | --- |
+| 落地路徑 | `src/assets/blog/typescript/`（媒體庫中瀏覽到 `typescript/` 子資料夾時，子路徑會接在 `input` 之後保留） |
+| 寫入的 Markdown | `![alt](../../../assets/blog/typescript/<name>.png)` —— 與既有文章相同格式，`../` 相對路徑**未被正規化** |
+| 相對路徑正確性 | 深層 3 層的文章皆可用同一前綴（`output: ../../../assets/blog`） |
+| Commit 結構 | 建立文章（1 commit）、各張圖片（獨立 media commits）、嵌入圖片（update commits），訊息可辨識 |
+| Astro 最佳化 | 建置輸出 `/_astro/day-16-*.<hash>_*Z<w>.webp` 多組響應式變體（原始 1.35 MB → 25–97 KB webp），HTML 具備 `srcset`／寬高／lazy |
+| 圖片格式 | 原檔為 PNG（1.2–1.4 MB）；建置時自動轉 webp，repo 內檔案偏大，若在意 repo 體積可在上傳前先轉 webp |
+
+**結論：模式 B1（`src/assets` + 相對路徑）驗證成功**，「用 CMS 上傳」與「Astro 圖片最佳化」可以並存。
+
+### 檔名注意事項
+
+後台建立 `day-16` 文章時，檔名輸入框產生了 `day16-.md`（手動輸入造成）。已將設定改為 `filename.field: false`：新文章檔名一律由模板 `{series}/day-{order}.md` 自動產生，無法手動輸入。檔名不影響網址（由 `slug` 決定），但影響「`filename` 模板」與文章排序的習慣一致性。
 
 ## 7. 預覽選項
 
