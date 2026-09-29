@@ -59,6 +59,10 @@ docker run --rm --user 1000:1000 -e HOME=/tmp/bun-home -e ASTRO_TELEMETRY_DISABL
 - `slug` 必填，網址為 `/blog/<slug>/`；`slug` 用小寫英文與連字號即可。
 - 同樣支援草稿、排程、標籤與圖片（前綴與系列文相同）。
 
+### 後台入口
+
+站上的 [/admin/](https://johnsonchen.dev/admin/) 會自動轉址到 Pages CMS（`app.pagescms.org`，並直接帶到本 repo）。純靜態站無法做伺服器 3xx，這是含 `noindex` 的 meta refresh 頁面（`src/pages/admin.astro`）。
+
 ### 圖片
 
 - 後台上傳的圖片會存到 `src/assets/blog/`，插入文章時寫成相對路徑 `../../../assets/blog/<檔名>`，建置時仍由 Astro 產生 `srcset` 與最佳化檔案。
