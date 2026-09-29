@@ -1,5 +1,14 @@
 # 專案規則
 
+## 內容管理後台
+
+- 後台使用 Pages CMS（Git-based、免費），設定檔為根目錄 `.pages.yml`。
+- `.pages.yml` 是後台欄位的唯一來源，調整欄位時必須同步更新 `src/content/schema.ts`：新增或移除後台的欄位都要兩邊一致。
+- 後台儲存即 commit 到 `main`，因此每次變更都必須能通過 `bun run check`、`bun run lint`、`bun run format` 與 `bun run build`。
+- 後台不開放檔案更名（`operations.rename: false`），避免既有文章網址失效。
+- 圖片一律使用相對路徑 `../../../assets/blog/<檔名>` 指向 `src/assets/blog/`，以保留 Astro 圖片最佳化；文章深度固定為 `src/content/blog/<series>/`，若改變目錄結構需同步調整 `.pages.yml` 的 `media[].output`。
+- 評估與限制記錄在 `docs/cms-evaluation.md`。
+
 ## 文章原始檔
 
 - TypeScript 系列文章的原始檔位於 `/home/johnson3669/workspace/articles/ts/articles/`。

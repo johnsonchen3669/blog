@@ -1,0 +1,126 @@
+# Pages CMS configuration — https://pagescms.org/docs
+# 這個檔案是後台欄位的唯一來源；修改欄位請同步更新 src/content/schema.ts 與文件。
+
+settings:
+  # 儲存時保留 schema 未管理的鍵，避免未來新增的 frontmatter 欄位被刪除
+  content:
+    merge: true
+  commit:
+    identity: user
+    templates:
+      create: 'content(create): {path}'
+      update: 'content(update): {path}'
+      delete: 'content(delete): {path}'
+      rename: 'content(rename): {oldPath} -> {newPath}'
+
+media:
+  # 模式 B1：上傳到 src/assets，文章內寫入相對路徑，保留 Astro 圖片最佳化
+  - name: blog-assets
+    label: 文章圖片（src/assets，經 Astro 最佳化）
+    input: src/assets/blog
+    output: ../../../assets/blog
+    rename: safe
+    categories: [image]
+    extensions: [webp, png, jpg, jpeg]
+  # 備案：上傳到 public，路徑為絕對路徑，但不會經過 Astro 最佳化
+  - name: blog-public
+    label: 文章圖片（public，無最佳化）
+    input: public/images/blog
+    output: /images/blog
+    rename: safe
+    categories: [image]
+    extensions: [webp, png, jpg, jpeg]
+
+content:
+  - name: blog
+    label: 部落格文章
+    type: collection
+    path: src/content/blog
+    subfolders: true
+    format: yaml-frontmatter
+    exclude:
+      - series.ts
+    # 只影響新建檔案；既有檔名不會被更動
+    filename:
+      template: '{series}/day-{order}.md'
+      field: create
+    # 檔名對應網址，禁止在後台更名以免破壞既有連結
+    operations:
+      rename: false
+    view:
+      layout: tree
+      fields: [title, series, order, pubDate, draft]
+      primary: title
+      sort: [pubDate, order, title]
+      search: [title, description, tags]
+      default:
+        sort: pubDate
+        order: desc
+    fields:
+      - name: title
+        label: 標題
+        description: 對應 SEO 標題，最多 60 字元。
+        type: string
+        required: true
+      - name: description
+        label: 摘要
+        description: 用於 meta description 與分享預覽；留空則使用站台描述。
+        type: text
+      - name: slug
+        label: URL slug
+        description: 覆寫預設網址路徑。留空則依檔案路徑產生。
+        type: string
+      - name: series
+        label: 系列
+        description: 同時決定新文章會放在哪個資料夾。
+        type: select
+        options:
+          - label: TypeScript
+            value: typescript
+          - label: Angular 新手練功日誌
+            value: angular-training
+      - name: order
+        label: 系列內順序
+        description: 對應課程天數，也是新檔名 day-N.md 的依據。
+        type: number
+      - name: tags
+        label: 標籤
+        type: string
+        list: true
+      - name: pubDate
+        label: 發布日期
+        description: 填入未來日期即為排程發布，需等每日排程重建後上線。
+        type: date
+        required: true
+      - name: lastModDate
+        label: 最後修改日期
+        description: 未使用時請保留空字串；此欄位為文字型別，避免被寫成 null 造成建置失敗。
+        type: string
+      - name: ogImage
+        label: 自動產生 OG 圖
+        description: 開啟時由站台自動產生分享圖；關閉則不產生。
+        type: boolean
+      - name: toc
+        label: 顯示目錄
+        type: boolean
+      - name: share
+        label: 顯示分享按鈕
+        type: boolean
+      - name: giscus
+        label: 啟用留言
+        description: 使用 Giscus 留言系統。
+        type: boolean
+      - name: search
+        label: 納入站內搜尋
+        type: boolean
+      - name: draft
+        label: 草稿
+        description: 開啟時只會在本機開發環境出現，正式站不會輸出。
+        type: boolean
+      - name: body
+        label: 內文
+        type: rich-text
+        options:
+          format: markdown
+          switcher: true
+          media: blog-assets
