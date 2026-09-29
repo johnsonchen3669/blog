@@ -1,6 +1,6 @@
 ---
 title: JavaScript 是動態型別，問題到底出在哪裡？
-description: "介紹 JavaScript 動態型別與隱含轉型，理解同一個運算為什麼可能得到不同結果。"
+description: 介紹 JavaScript 動態型別與隱含轉型，理解同一個運算為什麼可能得到不同結果。
 slug: typescript/javascript-dynamic-typing
 series: typescript
 order: 2
@@ -10,7 +10,6 @@ tags:
   - dynamic-typing
   - type-coercion
 pubDate: 2026-09-15
-lastModDate: ''
 draft: false
 ogImage: true
 toc: true
@@ -93,7 +92,6 @@ console.log(typeof numberResult); // number
 開頭的 `+` 與這裡的 `-` 都沒有拋出錯誤，卻依照運算子的規則得到不同結果：前者是字串串接，後者是數字運算。
 
 ![運算子如何要求不同的型別轉換](../../../assets/blog/typescript/day-02-implicit-coercion-checkpoints.png)
-
 
 隱式轉換不一定是錯誤，但當轉換藏在運算裡時，我們必須同時記住資料來源與運算子的規則。
 
