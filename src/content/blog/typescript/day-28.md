@@ -131,7 +131,7 @@ quantity 要接收 number；字串 "2" 應驗證失敗。
 修改後，核對原有欄位與回傳格式是否保留，再檢查相關測試結果。請 AI 提供實際執行的檢查與失敗項目，也方便分清楚「程式已修改」與「驗收已完成」。
 
 > [!TIP] 可操作範例 / Demo project
-> [Pizza 範例的 day-28 分支](https://github.com/johnsonchen3669/type-demo-2026/tree/day-28)提供表單驗證、測試與開發 Prompt。Day 28 沿用 Day 27 的表單，新增內容主要是開發 Prompt 與驗收測試。Demo 的「本日重點」提供開發說明入口；安裝與操作方式放在 README。
+> [Pizza 範例的 day-28 分支](https://github.com/johnsonchen3669/type-demo-2026/tree/day-28)提供表單驗證、測試與開發 Prompt。Day 28 沿用 Day 27 的表單，新增內容主要是開發 Prompt 與驗收測試。
 
 ## 今日練習
 
