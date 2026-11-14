@@ -74,7 +74,7 @@
   },
   "simple-git-hooks": {
     "pre-commit": "bunx lint-staged",
-    "commit-msg": "sh .githooks/commit-msg"
+    "commit-msg": "sh .githooks/commit-msg $1"
   },
   "lint-staged": {
     "*": [
