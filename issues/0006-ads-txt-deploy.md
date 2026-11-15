@@ -1,8 +1,8 @@
 ---
 title: 'ads.txt 與部署管線的整合'
 labels: [wayfinder:task]
-state: open
-assignee: null
+state: closed
+assignee: goose
 parent: MAP-adsense.md
 blocked_by: [0001-adsense-account-signup]
 ---
@@ -20,4 +20,14 @@ blocked_by: [0001-adsense-account-signup]
 ## Progress
 
 - 2026-11-15：部署查證結論——真正部署是 GitHub Pages（`.github/workflows/ci.yml`），`vercel.json` 僅 giscus CORS 設定；`public/` 原樣進靜態輸出，故放 `public/ads.txt` 兩個平台都生效。已建檔：`google.com, pub-4122726849294037, DIRECT, f08c47fec0942fa0`。
-- 待辦：部署後 curl `https://johnsonchen.dev/ads.txt` 驗證可讀；Google 端生效需爬取（數天～數週，AdSense 後台可 Check for updates）。
+- 2026-11-15：部署後 curl 驗證 ✅ `https://johnsonchen.dev/ads.txt` HTTP 200、內容 `google.com, pub-4122726849294037, DIRECT, f08c47fec0942fa0` 與本票建檔一致。Google 端生效需爬取（數天～數週，AdSense 後台可 Check for updates）。
+
+## Resolution
+
+✅ 完成（2026-11-15）：
+
+1. **ads.txt 內容**：單行 `google.com, pub-4122726849294037, DIRECT, f08c47fec0942fa0`，放 `public/ads.txt`（格式依研究票 0002 結論）。
+2. **實際部署平台＝GitHub Pages**（`.github/workflows/ci.yml`，push `main` 觸發）；`vercel.json` 僅 giscus CORS 設定，Vercel 有同步部署但非主要目標。`public/` 原樣進靜態輸出，單一檔案兩平台都生效。
+3. **生效 URL 已驗證**：<https://johnsonchen.dev/ads.txt>（HTTP 200、內容逐字正確）。
+
+遺留（不阻塞關票）：Google 端爬取生效需數天～數週，AdSense 後台可用 Check for updates 確認。

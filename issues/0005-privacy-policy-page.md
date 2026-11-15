@@ -28,3 +28,5 @@ blocked_by: []
 **新增/修改**：`src/pages/privacy.mdx`（新頁）、`src/components/base/Footer.astro`（頁尾連結）。
 
 供 0008 檢查：送審前 `/privacy/` 可達、頁尾連結可點、三點必載可 grep（`adssettings.google.com`／`aboutads.info`／Cookie）。
+
+**Amendment（2026-11-15，frontend-design＋technical-writing 複檢）**：依 `skills/frontend-design/`（收錄自 anthropics/skills，commit `88d8b08`）與 technical-writing 重修內容層——三點揭露改項目符號（非序列不用數字編號）、分號串句拆解、缺受詞補正；版型對齊 `RenderPost` 結構（正文收 820px 版心）＋頁尾連結不折行（commit `c5cd45b`）。桌機 1280／手機 375 截圖驗收通過。
