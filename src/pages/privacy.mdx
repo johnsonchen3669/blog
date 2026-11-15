@@ -1,0 +1,58 @@
+---
+title: '隱私權政策'
+description: 'johnsonchen.dev 隱私權政策：Cookie 與廣告（Google AdSense）、第三方廠商、資料使用方式與你的選擇。'
+ogImage: true
+---
+
+import BaseLayout from '~/layouts/BaseLayout.astro'
+
+<BaseLayout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  ogImage={frontmatter.ogImage}
+>
+  <article class="prose post-content">
+    <header class="post-header">
+      <p class="field-kicker">FIELD NOTE / PRIVACY</p>
+      <h1>隱私權政策</h1>
+      <p class="post-subtitle">最後更新：2026 年 11 月 15 日</p>
+    </header>
+
+    本站（johnsonchen.dev，Johnson Chen 的開發筆記）由個人維護。本政策說明你在瀏覽本站時可能被蒐集哪些資訊、這些資訊如何被使用，以及你可以做哪些選擇。本站力求蒐集最少的資料；下列內容以誠實揭露為原則，不作超出實作的承諾。
+
+    ## Cookie 與廣告（Google AdSense）
+
+    本站使用 Google AdSense 投放廣告。Google 與其第三方合作夥伴的資料使用，受以下規範約束：
+
+    1. 第三方（含 Google）會使用 Cookie（包含 advertising cookies），依據你過去造訪本站或其他網站的紀錄來投放廣告。
+    2. Google 與其合作夥伴的 advertising cookies 用於向你投放個人化廣告，並衡量廣告成效。這類 Cookie 的使用讓廣告能依你的興趣顯示。
+    3. 你可以隨時停用個人化廣告：前往 [Google 廣告設定](https://adssettings.google.com/)（adssettings.google.com）關閉個人化；或前往 [aboutads.info](https://www.aboutads.info/) 了解第三方廠商的退出（opt-out）方式。
+
+    關於 Google 如何使用 Cookie 與資料，詳見 [Google 隱私權與條款](https://policies.google.com/technologies/ads)。
+
+    技術實作上，本站每個頁面會載入 Google 的廣告函式庫（adsbygoogle.js）；廣告本身在你捲動接近版位時才會請求與顯示，並保留未填滿的版位空間顯示提示文字，不做浮動或覆蓋式廣告。
+
+    ## 其他第三方
+
+    - **giscus（文章評論）**：評論功能由 [giscus](https://giscus.app/) 提供，以你的 GitHub 帳號登入後發言。評論內容與身分依 [GitHub 的隱私權政策](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement) 處理；giscus 本身不追蹤你。
+    - **託管平台**：本站為靜態網站，由 GitHub Pages 部署（並有 Vercel 同步部署）。託管平台可能在伺服器紀錄中保存 IP 位址等基本連線資訊，用於安全與除錯。
+
+    ## 本站不做什麼
+
+    - 不使用分析工具（如 Google Analytics），不建立訪客輪廓。
+    - 站內搜尋由 Pagefind 在你的瀏覽器本機執行，搜尋詞不會送出到任何伺服器。
+    - 字型由本站自行託管（@fontsource），不連第三方字型 CDN。
+    - 不主動蒐集你的姓名、Email 等個人資料；除非你自行在評論中留下。
+
+    ## 你可以做什麼
+
+    - 在瀏覽器設定中停用或限制 Cookie（停用後廣告仍可能顯示，但非個人化）。
+    - 依上文連結停用 Google 個人化廣告或退出第三方廠商。
+    - 若對本政策有疑問，或要求更正、刪除你在評論中留下的內容，可透過 GitHub（[johnsonchen3669](https://github.com/johnsonchen3669)）聯絡站長。
+
+    ## 政策更新
+
+    本服務（廣告、評論、託管）的實作若有變動，本政策會隨之更新，並在本頁標註最新日期。
+
+  </article>
+</BaseLayout>

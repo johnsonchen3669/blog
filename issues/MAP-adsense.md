@@ -31,6 +31,7 @@ blocked_by: []
 - [底部定位錨點的合規界線與去留](0009-anchor-placement-compliance.md)：照 Ray 實站方案定案——第四版位＝側欄 sticky rail 廣告（in-flow 容器＋`position:sticky`，僅大螢幕啟用），非浮動框；官方 anchor 格式屬 Auto Ads 此路不通；載入一律待命懶載入 `auto`＋full-width-responsive。
 - [原型：版位與待命廣告元件的樣張](0003-prototype-ad-placements.md)：變體 A「待命線框」定稿；尺寸＝90px 橫幅／rail 280px×2、文案三句定稿、列表穿插全列表（首頁不含）、**AdBlock 提示不做**、rail 兩個廣告單元、Fill empty in-page ads 關閉；ADR 0001 已開。
 - [實作：AdSlot 元件與載入時機整合進版面](0007-implement-adslot.md)：五個版位實裝完成（commit `8a66d03`）——AdSlot/AdRail＋待命載入 client＋`src/config/ads.ts` 佔位設定；真 ID 由 0004 填入＋`enabled: true` 即開始請求；ADR 0001 附 Amendment（rail margin 定位技術備案）。
+- [隱私權政策頁的內容與揭露範圍](0005-privacy-policy-page.md)：`/privacy/` zh-TW 單頁完成——揭露範圍＝全站實際資料流（AdSense 必載三點＋giscus＋託管 log＋「不做什麼」清單）、入口頁尾；送審前最低合規就緒。
 
 ## Not yet specified
 

@@ -10,5 +10,8 @@ const currentYear = new Date().getFullYear()
     <span class="utility-label">End of field note</span>
     <p>© {currentYear} {SITE.author}．以 Astro 建構，內容持續校正。</p>
   </div>
-  <Link href="/rss.xml">RSS</Link>
+  <nav aria-label="頁尾連結">
+    <Link href="/privacy/">隱私權政策</Link>
+    <Link href="/rss.xml">RSS</Link>
+  </nav>
 </footer>
