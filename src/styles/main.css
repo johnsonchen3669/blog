@@ -740,7 +740,12 @@ input:focus-visible {
   margin: 7px 0 0;
   font-size: 12px;
 }
-.site-footer > a {
+.site-footer nav {
+  display: flex;
+  gap: 14px;
+}
+.site-footer > a,
+.site-footer nav a {
   color: var(--cobalt) !important;
   font: 600 12px/1 var(--mono);
   opacity: 1 !important;
