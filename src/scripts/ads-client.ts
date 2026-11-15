@@ -17,6 +17,11 @@ let scriptPromise: Promise<void> | null = null
 
 function loadAdsenseScript(): Promise<void> {
   scriptPromise ??= new Promise((resolve, reject) => {
+    // BaseLayout <head> 已有驗證片段（0001）：同款腳本已在頁面即直接就緒，避免重複載入。
+    if (document.querySelector('script[src*="adsbygoogle.js"]')) {
+      resolve()
+      return
+    }
     const script = document.createElement('script')
     script.async = true
     script.crossOrigin = 'anonymous'

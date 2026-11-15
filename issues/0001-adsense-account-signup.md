@@ -17,3 +17,8 @@ blocked_by: []
 4. 完成帳號基本設定（付款 profile 等）並提交網站審核。
 
 完成時記錄（後續票依賴這些事實）：發佈商 ID、採用的驗證方式、審核提交時間、後台可建立廣告單元的時間點。
+
+## Progress
+
+- 2026-11-15：發佈商 ID 取得：`ca-pub-4122726849294037`（帳號類型 Individual、付款國家台灣）。驗證方式採 **(A) AdSense 程式碼片段**——已進 `src/layouts/BaseLayout.astro` `<head>`（`is:inline`，AdSense 要求保留）；ads.txt 同步上 `public/ads.txt`（0006 一併解）。
+- 待回報：審核提交時間、後台可建廣告單元的時間點。

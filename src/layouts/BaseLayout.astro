@@ -71,6 +71,15 @@ const style = enableSlideEnterAnim
       {tags}
       {section}
     />
+    {
+      /* AdSense 網域驗證片段＋廣告函式庫（0001；AdSense 要求保留於 <head>）。
+        client 與 src/config/ads.ts 的 ADS.client 相同；廣告單元仍是待命載入（捲動接近才 ins+push）。 */
+    }
+    <script
+      is:inline
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4122726849294037"
+      crossorigin="anonymous"></script>
   </head>
   <body
     class="site-body"

@@ -5,7 +5,7 @@ export const ADS = {
   /** 啟用真實廣告請求；false 時版位只顯示待命框，不發任何網路請求。 */
   enabled: false,
   /** 發佈商 ID（ca-pub-…）。TODO(0004)：換成真的發佈商 ID。 */
-  client: 'ca-pub-XXXXXXXXXXXXXXXX',
+  client: 'ca-pub-4122726849294037',
   /** 各版位的廣告單元 slot ID。TODO(0004)：後台建單元後依對照表填入。 */
   slots: {
     articleStart: 'TODO-0004-article-start',
