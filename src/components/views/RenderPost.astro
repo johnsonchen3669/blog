@@ -12,6 +12,8 @@ import Toc from '~/components/toc/Toc.astro'
 import ShareLink from '~/components/widgets/ShareLink.astro'
 import Giscus from '~/components/widgets/Giscus.astro'
 import ImageViewer from '~/components/widgets/ImageViewer.astro'
+import AdSlot from '~/components/ads/AdSlot.astro'
+import AdRail from '~/components/ads/AdRail.astro'
 import { FEATURES } from '~/config'
 import { getPostSeriesMeta, getPostTags } from '~/utils/blog'
 
@@ -79,6 +81,8 @@ const draftWarning = `這篇文章仍是草稿，只會出現在開發環境。`
       <PostTaxonomy {post} />
     </header>
 
+    <AdSlot placement="articleStart" />
+
     <div class="post-layout">
       {
         tocEnabled && (
@@ -93,8 +97,10 @@ const draftWarning = `這篇文章仍是草稿，只會出現在開發環境。`
         {frontmatter.draft && <Warning html={draftWarning} />}
         <Content />
       </div>
+      <AdRail />
     </div>
 
+    <AdSlot placement="articleEnd" />
     <PostNavigation {previousPost} {nextPost} />
   </article>
 

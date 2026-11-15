@@ -1,0 +1,14 @@
+---
+import AdSlot from './AdSlot.astro'
+
+// sticky rail 廣告（第四版位；0009 Resolution／ADR 0001）：
+// 文章版面右 margin 的 in-flow 容器，僅大螢幕（≥1100×600、fine pointer）sticky top:6rem；
+// 兩個廣告單元上格／下格（railSkyTop、railSkyBottom，照 Ray）。小螢幕回流頁內區塊。
+---
+
+<div class="ad-rail print:hidden" data-ad-rail>
+  <div class="ad-rail__inner">
+    <AdSlot placement="railSkyTop" />
+    <AdSlot placement="railSkyBottom" />
+  </div>
+</div>

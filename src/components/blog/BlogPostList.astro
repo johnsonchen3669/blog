@@ -2,6 +2,7 @@
 import { render } from 'astro:content'
 
 import ListItem from '~/components/views/ListItem.astro'
+import AdSlot from '~/components/ads/AdSlot.astro'
 import { getBlogPostPath } from '~/utils/blog'
 
 import type { BlogPost } from '~/utils/blog'
@@ -11,6 +12,9 @@ interface Props {
 }
 
 const { posts } = Astro.props
+
+// 列表每 N 篇穿插一個廣告版位（0003 定案；末篇後不插）。
+const LIST_AD_EVERY = 5
 ---
 
 <div class="blog-post-list" aria-label="Blog post list">
@@ -24,19 +28,25 @@ const { posts } = Astro.props
           post.data.minutesRead || remarkPluginFrontmatter.minutesRead
 
         return (
-          <ListItem
-            idx={idx}
-            collectionType="blog"
-            href={getBlogPostPath(post)}
-            redirect={post.data.redirect}
-            postSlug={post.id}
-            title={post.data.title}
-            video={post.data.video}
-            radio={post.data.radio}
-            date={post.data.pubDate}
-            minutesRead={minutesRead}
-            platform={post.data.platform}
-          />
+          <>
+            <ListItem
+              idx={idx}
+              collectionType="blog"
+              href={getBlogPostPath(post)}
+              redirect={post.data.redirect}
+              postSlug={post.id}
+              title={post.data.title}
+              video={post.data.video}
+              radio={post.data.radio}
+              date={post.data.pubDate}
+              minutesRead={minutesRead}
+              platform={post.data.platform}
+            />
+            {/* 每 5 篇穿插一個廣告版位（0003 定案；首頁無列表不含） */}
+            {(idx + 1) % LIST_AD_EVERY === 0 && idx < posts.length - 1 && (
+              <AdSlot placement="listInline" />
+            )}
+          </>
         )
       })
     )

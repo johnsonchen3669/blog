@@ -1,0 +1,31 @@
+---
+import '~/styles/ads.css'
+
+import { AD_HEIGHTS, ADS } from '~/config/ads'
+
+import type { AdPlacement } from '~/config/ads'
+
+// 廣告版位元件（0007 實裝；0003 變體 A 定稿）。
+// 待命載入：本元件只渲染預留框＋合規小標「Sponsored Links」；
+// 捲動接近才由 ~/scripts/ads-client 插入 <ins class="adsbygoogle">＋push({})。
+interface Props {
+  placement: AdPlacement
+}
+
+const { placement } = Astro.props
+---
+
+<div
+  class="ad-slot print:hidden"
+  data-ad-placement={placement}
+  style={`--ad-height: ${AD_HEIGHTS[placement]}px`}
+>
+  <span class="ad-slot__label">Sponsored Links</span>
+  <div class="ad-slot__stage" data-ad-stage data-ad-unit={ADS.slots[placement]}>
+    <p class="ad-slot__copy">廣告版位已待命，捲動至版位後開始。</p>
+  </div>
+</div>
+
+<script>
+  import '~/scripts/ads-client'
+</script>

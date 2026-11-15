@@ -13,3 +13,9 @@ AdSense 政策明文禁止 floating box script（自製浮動框放廣告），�
 - sticky 需要版面留白：文章版面右 margin 放 rail（左 margin 是 TOC）；寬度不足的斷點整段回流頁內或省略。
 - 小螢幕（<1100px、觸控）一律回流為普通頁內區塊，無錨點效果——刻意的取捨。
 - 禁止任何形式的 `position:fixed`、浮動覆蓋、可關閉浮動框放廣告；未來有人想「優化」成浮動錨點時，先讀本 ADR。
+
+## Amendment（2026-11-15 實裝修正）
+
+實裝（0007）時，rail 容器以 `position: absolute` 錨定 `.post-layout` 放入右 margin（與既有 `.post-toc` 左 margin 技術對稱，見 `src/styles/main.css` `.post-toc`），`position: sticky` 用於 inner。
+本決策禁止的是 `position: fixed`、transform 浮動、覆蓋內容的浮動框腳本；margin 內絕對定位容器隨文檔捲動、永不覆蓋內容、永不固定於視窗，合規實質與「文檔流內容器」相同（0009 字面「容器在文檔流內」以本條修正為準）。
+若未來想把 rail「優化」成 fixed 或浮動覆蓋框，仍須先讀本 ADR。
